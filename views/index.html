@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css"/>
+</head>
+<body>
+<div class="columns">
+    <div class="column"></div>
+    <div class="column">
+    <form action="/api/policy" method="get">
+        <div class="field">
+            <label class="label">Currency</label>
+            <div class="control">
+                <div class="select">
+                    <select name="currency">
+                        <option value="CHF">CHF</option>
+                        <option value="EUR">EUR</option>
+                        <option value="USD">USD</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Blockchain Type</label>
+            <div class="control">
+                <label class="radio">
+                    <input type="radio" name="bcType" value="public">
+                    Public
+                </label>
+                <label class="radio">
+                    <input type="radio" name="bcType" value="private">
+                    Private
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Cost vs. performance</label>
+            <div class="control">
+                <label class="radio">
+                    <input type="radio" name="cost" value="economic">
+                    Economic
+                </label>
+                <label class="radio">
+                    <input type="radio" name="cost" value="balanced">
+                    Balanced
+                </label>
+                <label class="radio">
+                    <input type="radio" name="cost" value="performance">
+                    High-Performance
+                </label>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <button type="submit" class="button is-link">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    </div>
+    <div class="column"></div>
+</div>
+</body>
+</html>
