@@ -1,5 +1,9 @@
 const request = require('request-promise');
 
+function estimateCost() {
+    
+}
+
 module.exports.fetchBlockchainCost = (currency) => {
     const options = {
         uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
