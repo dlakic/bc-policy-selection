@@ -20,3 +20,15 @@ module.exports.handlePolicy = (req, res) => {
         );
 };
 
+module.exports.showPolicy = (req, res) => {
+
+    const policy = {
+        preferredBC: constants.blockchains[req.body.preferredBC].name,
+        currency: req.body.currency,
+        cost: req.body.cost,
+        bcType: req.body.bcType,
+    };
+    console.log(policy);
+    return res.status(200).render('result', {policy});
+};
+

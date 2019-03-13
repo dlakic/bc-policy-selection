@@ -22,14 +22,14 @@
         <div class="container">
             <div class="columns is-vcentered">
                 <div class="column"></div>
-                <div class="column">
-                    <form action="/api/policy" method="get">
+                <div class="column is-two-thirds">
+                    <form action="/api/show" method="post">
                         <div class="border">
                             <div class="field">
                                 <label class="label">Choose preferred Blockchain implementations</label>
                                 <div class="control">
                                     <div class="select">
-                                        <select name="bc-solution">
+                                        <select name="preferredBC">
                                             <option value="BC">Bitcoin</option>
                                             <option value="ETH">Ethereum</option>
                                             <option value="XLM">Stellar</option>
@@ -37,6 +37,7 @@
                                             <option value="IOTA">IOTA</option>
                                             <option value="HYP">Hyperledger</option>
                                             <option value="MLC">Multichain</option>
+                                            <option value="PSG">Postgres(No Blockchain)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -101,7 +102,6 @@
                     </form>
 
                 </div>
-                <div class="column"></div>
             </div>
         </div>
     </div>

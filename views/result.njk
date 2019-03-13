@@ -2,14 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Policy-based Blockchain Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css"/>
 </head>
 <body>
-<p>Your recommended Blockchain is {{ blockchain }} </p>
-<p>You chose the following policy: </p>
-<p>Currency: {{ policy.currency }} </p>
-<p>Blockchain Type: {{ policy.bcType }} </p>
-<p>Cost Policy: {{ policy.cost }} </p>
-
+<section class="hero is-small is-info">
+    <div class="hero-body">
+        <div class="container">
+            <h4 class="title">
+                Policy-based Blockchain Selection
+            </h4>
+        </div>
+    </div>
+</section>
+<section class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-vcentered">
+                <div class="column"></div>
+                <div class="column is-two-thirds">
+                    <h1 class="title">You chose the following policy: </h1>
+                    <p>Your preferred Blockchain: {{ policy.preferredBC }} </p>
+                    <p>Currency: {{ policy.currency }} </p>
+                    <p>Blockchain Type: {{ policy.bcType }} </p>
+                    <p>Cost Policy: {{ policy.cost }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
 </html>

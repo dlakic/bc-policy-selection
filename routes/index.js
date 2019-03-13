@@ -6,6 +6,7 @@ const policyController = require('../controller/policy-controller');
 router.get('/', (req,res) => {
   res.render('index.html');
 });
-router.get('/api/policy', policyController.handlePolicy);
+router.post('/api/policy', policyController.handlePolicy);
+router.post('/api/show', policyController.showPolicy);
 
 module.exports = router;
