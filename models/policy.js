@@ -1,11 +1,16 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const policySchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     preferredBC: {
         type: Array,
         required: true,
     },
-    currency:{
+    currency: {
         type: String,
         required: true,
     },
@@ -13,7 +18,7 @@ const policySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    bcType:{
+    bcType: {
         type: String,
         required: true,
     },
@@ -21,4 +26,4 @@ const policySchema = new mongoose.Schema({
 
 const Policy = mongoose.model('Policy', policySchema);
 
-export default Policy;
+module.exports = Policy;

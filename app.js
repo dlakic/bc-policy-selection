@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -7,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const nunjucks = require('nunjucks');
+const mongoose = require('mongoose');
 
 const routes = require('./routes');
 
@@ -33,6 +33,10 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useCreateIndex: true,  useFindAndModify: false });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
 
 app.use(routes);
 
