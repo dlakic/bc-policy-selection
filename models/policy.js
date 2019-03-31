@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
 
 const policySchema = new mongoose.Schema({
-    username: {
+    policyId: {
         type: String,
         required: true,
         unique: true,
     },
+    client: {
+        type: String,
+        required: true,
+    },
     preferredBC: {
         type: Array,
-        required: true,
     },
     currency: {
         type: String,
@@ -16,12 +19,22 @@ const policySchema = new mongoose.Schema({
     },
     cost: {
         type: String,
-        required: true,
     },
     bcType: {
         type: String,
-        required: true,
     },
+    bcThroghput: {
+        type: Number,
+    },
+    bcBlocktime: {
+        type: Number,
+    },
+    bcBlockSize: {
+        type: Number,
+    },
+    bcSmartContract: {
+        type: Boolean,
+    },S
 });
 
 const Policy = mongoose.model('Policy', policySchema);
