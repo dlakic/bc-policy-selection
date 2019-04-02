@@ -1,0 +1,74 @@
+{% extends "layout.njk" %}
+{% block content %}
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns is-vcentered">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th><abbr title="Number">No.</abbr></th>
+                                <th>Username</th>
+                                <th><abbr title="Preferred Blockchains">BC</abbr></th>
+                                <th><abbr title="Blockchain Type">Type</abbr></th>
+                                <th><abbr title="Max. Cost Threshold">Cost</abbr></th>
+                                <th><abbr title="Interval For Cost Threshold">Interv.</abbr></th>
+                                <th><abbr title="Cost Threshold Currency">Currency</abbr></th>
+                                <th><abbr title="Transactions Per Second">TPS</abbr></th>
+                                <th><abbr title="Block Time">Time</abbr></th>
+                                <th><abbr title="Block Size">Size</abbr></th>
+                                <th><abbr title="Data Size">D. Size</abbr></th>
+                                <th>Smart Contract</th>
+                                <th><abbr title="Smart Contract Languages">Lang</abbr></th>
+                                <th>Edit</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th><abbr title="Number">No.</abbr></th>
+                                <th>Username</th>
+                                <th><abbr title="Preferred Blockchains">BC</abbr></th>
+                                <th><abbr title="Blockchain Type">Type</abbr></th>
+                                <th><abbr title="Max. Cost Threshold">Cost</abbr></th>
+                                <th><abbr title="Interval For Cost Threshold">Interv.</abbr></th>
+                                <th><abbr title="Cost Threshold Currency">Currency</abbr></th>
+                                <th><abbr title="Transactions Per Second">TPS</abbr></th>
+                                <th><abbr title="Block Time">Time</abbr></th>
+                                <th><abbr title="Block Size">Size</abbr></th>
+                                <th><abbr title="Data Size">D. Size</abbr></th>
+                                <th>Smart Contract</th>
+                                <th><abbr title="Smart Contract Languages">Lang</abbr></th>
+                                <th>Edit</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for policy in policies %}
+                                <tr>
+                                    <th>{{ loop.index }}</th>
+                                    <td>{{ policy.username }}</td>
+                                    <td>{{ policy.preferredBC }}</td>
+                                    <td>{{ policy.bcType }}</td>
+                                    <td>{{ policy.cost }}</td>
+                                    <td>{{ policy.interval }}</td>
+                                    <td>{{ policy.currency }}</td>
+                                    <td>{{ policy.bcTps }}</td>
+                                    <td>{{ policy.bcBlocktime }}</td>
+                                    <td>{{ policy.bcBlockSize }}</td>
+                                    <td>{{ policy.bcDataSize }}</td>
+                                    <td>{{ policy.bcSmartContract }}</td>
+                                    <td>{{ policy.bcSmartContractLanguages }}</td>
+                                    <th><a class="button is-link" href="/policy?id={{ policy._id }}">Edit Policy</a></th>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>noData</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

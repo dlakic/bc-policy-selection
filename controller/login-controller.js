@@ -1,15 +1,14 @@
 // TODO: implement Proper Login
 let PolicyModel = require('../models/policy');
 module.exports.handleLogin = (req, res) => {
-    const username = req.body.username;
 
-    PolicyModel.findOne({'username': username})
+    PolicyModel.findOne({'_id': req.param.id})
         .then(queriedPolicy => {
             if (queriedPolicy) {
                 return res.status(200).render('index', {policy : queriedPolicy});
             } else {
                 const policy = {
-                    username: username,
+                    username: '',
                     preferredBC: [],
                     currency: '',
                     cost: '',

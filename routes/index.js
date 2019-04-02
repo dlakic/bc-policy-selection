@@ -8,6 +8,10 @@ router.get('/', (req,res) => {
   res.render('login.html');
 });
 
+router.get('/policies', policyController.listPolicies);
+router.get('/blockchains', policyController.listBlockchains);
+router.get('/policy', policyController.editPolicy);
+
 router.get('*', (req,res) => {
   res.redirect('/');
 });

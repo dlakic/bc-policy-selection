@@ -1,6 +1,61 @@
 const costAPI = require('../api/cost-estimation');
 const constants = require('../constants');
-let PolicyModel = require('../models/policy');
+const PolicyModel = require('../models/policy');
+const BlockchainModel = require('../models/blockchain');
+
+module.exports.listPolicies = (req, res) => {
+
+    PolicyModel.find({})
+        .then((policies) => {
+            return res.status(200).render('policies', {policies})
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).render('error', err)
+        });
+
+};
+
+module.exports.editPolicy = (req, res) => {
+    if(req.query.id) {
+        PolicyModel.findOne({'_id': req.query.id})
+            .then(queriedPolicy => {
+                if (queriedPolicy) {
+                    console.log(queriedPolicy);
+                    return res.status(200).render('index', {policy : queriedPolicy});
+                } else {
+                    const policy = {
+                        username: '',
+                        preferredBC: [],
+                        currency: '',
+                        cost: '',
+                        bcType: '',
+
+                    };
+                    return res.status(200).render('index', {policy : policy});
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).render('error', err)
+            });
+    }
+};
+
+
+module.exports.listBlockchains = (req, res) => {
+
+    BlockchainModel.find({})
+        .then((policies) => {
+            return res.status(200).send(policies);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).render('error', err)
+        });
+};
+
+
 
 module.exports.handlePolicy = (req, res) => {
 

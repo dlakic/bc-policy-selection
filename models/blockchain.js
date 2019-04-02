@@ -1,16 +1,21 @@
 const mongoose = require('mongoose');
 
 const blockchainSchema = new mongoose.Schema({
-    id: {
+    nameShort: {
         type: String,
         required: true,
         unique: true,
     },
-    public: {
-        type: Boolean,
+    name: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    type: {
+        type: String,
         required: true,
     },
-    throughput: {
+    tps: {
         type: Number,
         required: true,
     },
@@ -22,10 +27,28 @@ const blockchainSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    maxTrxSize: {
+        type: Number,
+        required: true,
+    },
     smartContract: {
         type: Boolean,
         required: true,
     },
+    smartContractLanguages: {
+        type: Array,
+        required: true,
+    },
+    // TODO: Maybe do this dynamically via api and not store directly into bcdata
+    price: {
+        type: Number,
+        required: true,
+    },
+    trxFee: {
+        type: Number,
+        required: true,
+    },
+
 });
 
 const Blockchain = mongoose.model('Blockchain', blockchainSchema);

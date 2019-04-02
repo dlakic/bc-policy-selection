@@ -1,22 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Policy-based Blockchain Selection</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css"/>
-</head>
-<body>
-<section class="hero is-small is-info">
-    <div class="hero-body">
-        <div class="container">
-            <h4 class="title">
-                Policy-based Blockchain Selection
-            </h4>
-        </div>
-    </div>
-</section>
+{% extends "layout.njk" %}
+{% block content %}
 <section class="hero">
     <div class="hero-body">
         <div class="container">
@@ -30,7 +13,7 @@
                             <div class="control">
                                 <div class="select is-multiple">
                                     <select class="select" name="preferredBC" multiple="multiple">
-                                        <option value="BC" {{ "selected" if policy.preferredBC.includes("BC") }}>Bitcoin
+                                        <option value="BTC" {{ "selected" if policy.preferredBC.includes("BTC") }}>Bitcoin
                                         </option>
                                         <option value="ETH" {{ "selected" if policy.preferredBC.includes("ETH") }}>Ethereum
                                         </option>
@@ -82,7 +65,7 @@
                         </div>
 
                         <div class="field">
-                            <label class="label">Cost vs. performance</label>
+                            <label class="label">Throughput</label>
                             <div class="control">
                                 <label class="radio">
                                     <input type="radio" name="cost"
@@ -118,5 +101,4 @@
         </div>
     </div>
 </section>
-</body>
-</html>
+{% endblock %}
