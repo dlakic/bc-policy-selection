@@ -20,26 +20,25 @@ module.exports.editPolicy = (req, res) => {
     if(req.query.id) {
         PolicyModel.findOne({'_id': req.query.id})
             .then(queriedPolicy => {
-                if (queriedPolicy) {
-                    console.log(queriedPolicy);
-                    return res.status(200).render('index', {policy : queriedPolicy});
-                } else {
-                    const policy = {
-                        username: '',
-                        preferredBC: [],
-                        currency: '',
-                        cost: '',
-                        bcType: '',
-
-                    };
-                    return res.status(200).render('index', {policy : policy});
-                }
+                console.log(queriedPolicy);
+                return res.status(200).render('index', {policy : queriedPolicy});
             })
             .catch(err => {
                 console.error(err);
-                res.status(500).render('error', err)
+                res.status(500).render('error', {error:err})
             });
+    } else {
+        const policy = {
+            username: '',
+            preferredBC: [],
+            currency: '',
+            cost: '',
+            bcType: '',
+
+        };
+        return res.status(200).render('index', {policy : policy});
     }
+
 };
 
 
@@ -83,6 +82,14 @@ module.exports.savePolicy = (req, res) => {
         currency: req.body.currency,
         cost: req.body.cost,
         bcType: req.body.bcType,
+        bcSmartContract: req.body.bcSmartContract,
+        bcSmartContractLanguages: req.body.bcSmartContractLanguages,
+        interval: req.body.interval,
+        bcTps: req.body.bcTps,
+        bcBlocktime: req.body.bcBlocktime,
+        bcDataSize: req.body.bcDataSize,
+
+
     };
     console.log(providedPolicy);
 

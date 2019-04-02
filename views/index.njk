@@ -1,104 +1,218 @@
 {% extends "layout.njk" %}
 {% block content %}
-<section class="hero">
-    <div class="hero-body">
-        <div class="container">
-            <div class="columns is-vcentered">
-                <div class="column"></div>
-                <div class="column is-two-thirds">
-                    <form action="/api/save" method="post">
-
-                        <div class="field">
-                            <label class="label">Choose preferred Blockchain implementations</label>
-                            <div class="control">
-                                <div class="select is-multiple">
-                                    <select class="select" name="preferredBC" multiple="multiple">
-                                        <option value="BTC" {{ "selected" if policy.preferredBC.includes("BTC") }}>Bitcoin
-                                        </option>
-                                        <option value="ETH" {{ "selected" if policy.preferredBC.includes("ETH") }}>Ethereum
-                                        </option>
-                                        <option value="XLM" {{ "selected" if policy.preferredBC.includes("XLM") }}>Stellar
-                                        </option>
-                                        <option value="EOS" {{ "selected" if policy.preferredBC.includes("EOS") }}>EOS</option>
-                                        <option value="IOTA" {{ "selected" if policy.preferredBC.includes("IOTA") }}>IOTA
-                                        </option>
-                                        <option value="HYP" {{ "selected" if policy.preferredBC.includes("HYP") }}>
-                                            Hyperledger
-                                        </option>
-                                        <option value="MLC" {{ "selected" if policy.preferredBC.includes("MLC") }}>Multichain
-                                        </option>
-                                        <option value="PSG" {{ "selected" if policy.preferredBC.includes("PSG") }}>Postgres (No
-                                            Blockchain)
-                                        </option>
-                                    </select>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns is-vcentered">
+                    <div class="column"></div>
+                    <div class="column">
+                        <form action="/api/save" method="post">
+                            <div class="field">
+                                <label class="label">Username</label>
+                                <input class="input" type="text" id="username" name="username"
+                                       value="{{ policy.username }}">
+                            </div>
+                            <div class="field">
+                                <label class="label">Choose preferred Blockchain implementations</label>
+                                <div class="control">
+                                    <div class="select is-multiple">
+                                        <select class="select" name="preferredBC" multiple="multiple">
+                                            <option value="BTC" {{ "selected" if policy.preferredBC.includes("BTC") }}>
+                                                Bitcoin
+                                            </option>
+                                            <option value="ETH" {{ "selected" if policy.preferredBC.includes("ETH") }}>
+                                                Ethereum
+                                            </option>
+                                            <option value="XLM" {{ "selected" if policy.preferredBC.includes("XLM") }}>
+                                                Stellar
+                                            </option>
+                                            <option value="EOS" {{ "selected" if policy.preferredBC.includes("EOS") }}>
+                                                EOS
+                                            </option>
+                                            <option value="IOTA" {{ "selected" if policy.preferredBC.includes("IOTA") }}>
+                                                IOTA
+                                            </option>
+                                            <option value="HYP" {{ "selected" if policy.preferredBC.includes("HYP") }}>
+                                                Hyperledger
+                                            </option>
+                                            <option value="MLC" {{ "selected" if policy.preferredBC.includes("MLC") }}>
+                                                Multichain
+                                            </option>
+                                            <option value="PSG" {{ "selected" if policy.preferredBC.includes("PSG") }}>
+                                                Postgres (No
+                                                Blockchain)
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Currency</label>
-                            <div class="control">
-                                <div class="select">
-                                    <select name="currency">
-                                        <option value="CHF" {{ "selected" if policy.currency == "CHF" }}>CHF</option>
-                                        <option value="EUR" {{ "selected" if policy.currency == "EUR" }}>EUR</option>
-                                        <option value="USD" {{ "selected" if policy.currency == "USD" }}>USD</option>
-                                    </select>
+                            <div class="field">
+                                <label class="label">Blockchain Type</label>
+                                <div class="control">
+                                    <label class="radio">
+                                        <input type="radio" name="bcType"
+                                               value="public" {{ "checked" if policy.bcType == "public" }}>
+                                        Public
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio" name="bcType"
+                                               value="private" {{ "checked" if policy.bcType == "private" }}>
+                                        Private
+                                    </label>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Blockchain Type</label>
-                            <div class="control">
-                                <label class="radio">
-                                    <input type="radio" name="bcType"
-                                           value="public" {{ "checked" if policy.bcType == "public" }}>
-                                    Public
-                                </label>
-                                <label class="radio">
-                                    <input type="radio" name="bcType"
-                                           value="private" {{ "checked" if policy.bcType == "private" }}>
-                                    Private
-                                </label>
+                            <div class="field">
+                                <label class="label">Max. Cost</label>
+                                <input class="input" type="number" step="0.01" id="cost" name="cost"
+                                       value="{{ policy.cost }}">
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="currency">
+                                            <option value="CHF" {{ "selected" if policy.currency == "CHF" }}>CHF
+                                            </option>
+                                            <option value="EUR" {{ "selected" if policy.currency == "EUR" }}>EUR
+                                            </option>
+                                            <option value="USD" {{ "selected" if policy.currency == "USD" }}>USD
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="interval">
+                                            <option value="daily" {{ "selected" if policy.interval == "daily" }}>daily
+                                            </option>
+                                            <option value="monthly" {{ "selected" if policy.interval == "monthly" }}>monthly
+                                            </option>
+                                            <option value="yearly" {{ "selected" if policy.interval == "yearly" }}>yearly
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Throughput</label>
-                            <div class="control">
-                                <label class="radio">
-                                    <input type="radio" name="cost"
-                                           value="economic" {{ "checked" if policy.cost == "economic" }}>
-                                    Economic
-                                </label>
-                                <label class="radio">
-                                    <input type="radio" name="cost"
-                                           value="balanced" {{ "checked" if policy.cost == "balanced" }}>
-                                    Balanced
-                                </label>
-                                <label class="radio">
-                                    <input type="radio" name="cost"
-                                           value="performance" {{ "checked" if policy.cost == "performance" }}>
-                                    High-Performance
-                                </label>
+                            <div class="field">
+                                <label class="label">Min. Transactions per second</label>
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="bcTps">
+                                            <option value="4" {{ "selected" if policy.bcTps == 4 }}>4
+                                            </option>
+                                            <option value="10" {{ "selected" if policy.bcTps == 10 }}>10
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcTps == 20 }}>20
+                                            </option>
+                                            <option value="250" {{ "selected" if policy.bcTps == 250 }}>250
+                                            </option>
+                                            <option value="500" {{ "selected" if policy.bcTps == 500 }}>500
+                                            </option>
+                                            <option value="1000" {{ "selected" if policy.bcTps == 1000 }}>1000
+                                            </option>
+                                            <option value="6000" {{ "selected" if policy.bcTps == 6000 }}>6000
+                                            </option>
+                                            <option value="more" {{ "selected" if policy.bcTps == "more" }}>More
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Sample data</label>
-                            <input type="file" name="sample-data">
-                        </div>
-                        <input type="hidden" id="username" name="username" value="{{ policy.username }}">
-                        <div class="field">
-                            <div class="control">
-                                <button type="submit" class="button is-link">Submit</button>
+                            <div class="field">
+                                <label class="label">Min. Block Size</label>
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="bcBlockSize">
+                                            <option value="4" {{ "selected" if policy.bcBlockSize == 4 }}>4
+                                            </option>
+                                            <option value="10" {{ "selected" if policy.bcBlockSize == 10 }}>10
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                            <div class="field">
+                                <label class="label">Max. Block Time</label>
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="bcBlockTime">
+                                            <option value="0" {{ "selected" if policy.bcBlocktime == 0 }}>0
+                                            </option>
+                                            <option value="0.5" {{ "selected" if policy.bcBlocktime == 0.5 }}>0.5
+                                            </option>
+                                            <option value="5" {{ "selected" if policy.bcBlocktime == 5 }}>5
+                                            </option>
+                                            <option value="15" {{ "selected" if policy.bcBlocktime == 15 }}>15
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcBlocktime == 20 }}>20
+                                            </option>
+                                            <option value="60" {{ "selected" if policy.bcBlocktime == 60 }}>60
+                                            </option>
+                                            <option value="600" {{ "selected" if policy.bcBlocktime == 600 }}>600
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Min. Data Size</label>
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="bcDataSize">
+                                            <option value=28 {{ "selected" if policy.bcDataSize == 28 }}>28
+                                            </option>
+                                            <option value="10" {{ "selected" if policy.bcDataSize == 10 }}>10
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
+                                            </option>
+                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Smart Contract Support Needed</label>
+                                <div class="control">
+                                    <label class="radio">
+                                        <input type="radio" name="bcSmartContract"
+                                               value="true" {{ "checked" if policy.bcSmartContract }}>
+                                        Yes
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio" name="bcSmartContract"
+                                               value="private" {{ "checked" if not policy.bcSmartContract }}>
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <button type="submit" class="button is-link">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="column"></div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock %}
