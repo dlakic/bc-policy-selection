@@ -17,31 +17,15 @@
                                 <div class="control">
                                     <div class="select is-multiple">
                                         <select class="select" name="preferredBC" multiple="multiple">
-                                            <option value="BTC" {{ "selected" if policy.preferredBC.includes("BTC") }}>
-                                                Bitcoin
-                                            </option>
-                                            <option value="ETH" {{ "selected" if policy.preferredBC.includes("ETH") }}>
-                                                Ethereum
-                                            </option>
-                                            <option value="XLM" {{ "selected" if policy.preferredBC.includes("XLM") }}>
-                                                Stellar
-                                            </option>
-                                            <option value="EOS" {{ "selected" if policy.preferredBC.includes("EOS") }}>
-                                                EOS
-                                            </option>
-                                            <option value="IOTA" {{ "selected" if policy.preferredBC.includes("IOTA") }}>
-                                                IOTA
-                                            </option>
-                                            <option value="HYP" {{ "selected" if policy.preferredBC.includes("HYP") }}>
-                                                Hyperledger
-                                            </option>
-                                            <option value="MLC" {{ "selected" if policy.preferredBC.includes("MLC") }}>
-                                                Multichain
-                                            </option>
-                                            <option value="PSG" {{ "selected" if policy.preferredBC.includes("PSG") }}>
-                                                Postgres (No
-                                                Blockchain)
-                                            </option>
+                                            {% for blockchain in blockchains %}
+                                                <option value={{ blockchain.nameShort }} {{ "selected" if policy.preferredBC.includes(blockchain.nameShort) }}>
+                                                    {{ blockchain.name }}
+                                                </option>
+                                            {% else %}
+                                                <option>
+                                                    NoData
+                                                </option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -95,22 +79,15 @@
                                 <div class="control">
                                     <div class="select">
                                         <select name="bcTps">
-                                            <option value="4" {{ "selected" if policy.bcTps == 4 }}>4
-                                            </option>
-                                            <option value="10" {{ "selected" if policy.bcTps == 10 }}>10
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcTps == 20 }}>20
-                                            </option>
-                                            <option value="250" {{ "selected" if policy.bcTps == 250 }}>250
-                                            </option>
-                                            <option value="500" {{ "selected" if policy.bcTps == 500 }}>500
-                                            </option>
-                                            <option value="1000" {{ "selected" if policy.bcTps == 1000 }}>1000
-                                            </option>
-                                            <option value="6000" {{ "selected" if policy.bcTps == 6000 }}>6000
-                                            </option>
-                                            <option value="more" {{ "selected" if policy.bcTps == "more" }}>More
-                                            </option>
+                                            {% for blockchain in blockchains %}
+                                                <option value="{{ blockchain.tps }}" {{ "selected" if policy.bcTps == blockchain.tps }}>
+                                                    {{ blockchain.tps }}
+                                                </option>
+                                            {% else %}
+                                                <option>
+                                                    NoData
+                                                </option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -120,22 +97,15 @@
                                 <div class="control">
                                     <div class="select">
                                         <select name="bcBlockSize">
-                                            <option value="4" {{ "selected" if policy.bcBlockSize == 4 }}>4
-                                            </option>
-                                            <option value="10" {{ "selected" if policy.bcBlockSize == 10 }}>10
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcBlockSize == 20 }}>20
-                                            </option>
+                                            {% for blockchain in blockchains %}
+                                                <option value="{{ blockchain.blockSize }}" {{ "selected" if policy.bcBlockSize == blockchain.blockSize }}>
+                                                    {{ blockchain.blockSize }}
+                                                </option>
+                                            {% else %}
+                                                <option>
+                                                    NoData
+                                                </option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -145,20 +115,15 @@
                                 <div class="control">
                                     <div class="select">
                                         <select name="bcBlockTime">
-                                            <option value="0" {{ "selected" if policy.bcBlocktime == 0 }}>0
-                                            </option>
-                                            <option value="0.5" {{ "selected" if policy.bcBlocktime == 0.5 }}>0.5
-                                            </option>
-                                            <option value="5" {{ "selected" if policy.bcBlocktime == 5 }}>5
-                                            </option>
-                                            <option value="15" {{ "selected" if policy.bcBlocktime == 15 }}>15
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcBlocktime == 20 }}>20
-                                            </option>
-                                            <option value="60" {{ "selected" if policy.bcBlocktime == 60 }}>60
-                                            </option>
-                                            <option value="600" {{ "selected" if policy.bcBlocktime == 600 }}>600
-                                            </option>
+                                            {% for blockchain in blockchains %}
+                                                <option value="{{ blockchain.blockTime}}" {{ "selected" if policy.bcBlockTime == blockchain.blockTime }}>
+                                                    {{ blockchain.blockTime }}
+                                                </option>
+                                            {% else %}
+                                                <option>
+                                                    NoData
+                                                </option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -168,22 +133,15 @@
                                 <div class="control">
                                     <div class="select">
                                         <select name="bcDataSize">
-                                            <option value=28 {{ "selected" if policy.bcDataSize == 28 }}>28
-                                            </option>
-                                            <option value="10" {{ "selected" if policy.bcDataSize == 10 }}>10
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
-                                            </option>
-                                            <option value="20" {{ "selected" if policy.bcDataSize == 20 }}>20
-                                            </option>
+                                            {% for blockchain in blockchains %}
+                                                <option value="{{ blockchain.maxTrxSize}}" {{ "selected" if policy.bcDataSize == blockchain.maxTrxSize }}>
+                                                    {{ blockchain.maxTrxSize }}
+                                                </option>
+                                            {% else %}
+                                                <option>
+                                                    NoData
+                                                </option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -198,7 +156,7 @@
                                     </label>
                                     <label class="radio">
                                         <input type="radio" name="bcSmartContract"
-                                               value="private" {{ "checked" if not policy.bcSmartContract }}>
+                                               value="false" {{ "checked" if not policy.bcSmartContract }}>
                                         No
                                     </label>
                                 </div>

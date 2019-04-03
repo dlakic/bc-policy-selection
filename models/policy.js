@@ -23,7 +23,7 @@ const policySchema = new mongoose.Schema({
     bcTps: {
         type: Number,
     },
-    bcBlocktime: {
+    bcBlockTime: {
         type: Number,
     },
     bcBlockSize: {
