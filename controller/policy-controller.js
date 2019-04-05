@@ -2,9 +2,10 @@ const costAPI = require('../api/cost-estimation');
 const constants = require('../constants');
 const PolicyModel = require('../models/policy');
 const BlockchainModel = require('../models/blockchain');
+const UserModel = require('../models/user');
+
 
 module.exports.listPolicies = (req, res) => {
-
     PolicyModel.find({})
         .then((policies) => {
             return res.status(200).render('policies', {policies})
@@ -13,9 +14,8 @@ module.exports.listPolicies = (req, res) => {
             console.error(err);
             res.status(500).render('error', {error:err})
         });
-
 };
-//TODO: DO THIS Properly!
+
 module.exports.editPolicy = (req, res) => {
     BlockchainModel.find({})
         .then((blockchains) => {
@@ -45,13 +45,10 @@ module.exports.editPolicy = (req, res) => {
             console.error(err);
             res.status(500).render('error', {error:err})
         });
-
-
 };
 
 
 module.exports.listBlockchains = (req, res) => {
-
     BlockchainModel.find({})
         .then((blockchains) => {
             return res.status(200).send(blockchains);
@@ -61,27 +58,6 @@ module.exports.listBlockchains = (req, res) => {
             res.status(500).render('error', {error:err})
         });
 };
-
-
-
-/*module.exports.handlePolicy = (req, res) => {
-
-    const policy = {
-        currency: req.query.currency,
-        cost: req.query.cost,
-        bcType: req.query.bcType,
-    };
-
-    if (req.query.bcType === 'private') {
-        return res.status(200).render('result', {blockchain: constants.blockchains.multichain.name, policy});
-    }
-
-    const blockChainCost = costAPI.fetchBlockchainCost(policy.currency)
-        .then((result) => {
-                res.status(200).send(result);
-            }
-        );
-};*/
 
 module.exports.savePolicy = (req, res) => {
     const providedPolicy = {
@@ -99,17 +75,14 @@ module.exports.savePolicy = (req, res) => {
         bcDataSize: parseInt(req.body.bcDataSize, 10),
     };
 
-    console.log(req.body);
-
+    //TODO: Retrieve USerdata if available. Otherwise store new user
     PolicyModel.findOneAndUpdate({'username': providedPolicy.username}, providedPolicy, {upsert: true})
         .then(() => {
-
             return res.status(200).render('result', {policy: providedPolicy});
         })
         .catch(err => {
             console.error(err);
             res.status(500).render('error', {error:err})
         });
-
 };
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const policyController = require('../controller/policy-controller');
+const transactionController = require('../controller/transaction-controller');
 
 /* GET home page. */
 
@@ -12,6 +13,7 @@ router.get('*', (req,res) => {
   res.redirect('/');
 });
 
-router.post('/api/save', policyController.savePolicy);
+router.post('/api/save-policy', policyController.savePolicy);
+router.post('/api/create-transaction', transactionController.handleTransaction);
 
 module.exports = router;
