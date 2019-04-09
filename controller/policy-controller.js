@@ -3,86 +3,72 @@ const constants = require('../constants');
 const PolicyModel = require('../models/policy');
 const BlockchainModel = require('../models/blockchain');
 const UserModel = require('../models/user');
+const PolicyRepository = require('../repositories/policy-repository');
+const BlockchainRepository = require('../repositories/blockchain-repository');
+const util = require('../util');
 
 
-module.exports.listPolicies = (req, res) => {
-    PolicyModel.find({})
-        .then((policies) => {
-            return res.status(200).render('policies', {policies})
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).render('error', {error:err})
-        });
+module.exports.listPolicies = async (req, res) => {
+    try {
+        const policies = await PolicyRepository.getAllPolicies();
+        return res.status(200).render('policies', {policies});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).render('error', {error: err});
+    }
+
 };
 
-module.exports.editPolicy = (req, res) => {
-    BlockchainModel.find({})
-        .then((blockchains) => {
-            if(req.query.id) {
-                PolicyModel.findOne({'_id': req.query.id})
-                    .then(queriedPolicy => {
-                        console.log(queriedPolicy);
-                        return res.status(200).render('index', {policy : queriedPolicy, blockchains});
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        res.status(500).render('error', {error:err})
-                    });
-            } else {
-                const policy = {
-                    username: '',
-                    preferredBC: [],
-                    currency: '',
-                    cost: '',
-                    bcType: '',
+module.exports.editPolicy = async (req, res) => {
+    try {
+        const blockchains = await BlockchainRepository.getAllBlockchains();
+        if (req.query.id) {
+            const policy = await PolicyRepository.getPolicy(req.query.id);
+            console.log(policy);
+            return res.status(200).render('policy', {policy: policy, blockchains});
+        } else {
+            console.log(util.buildPolicy());
+            return res.status(200).render('policy', {policy: util.buildPolicy(), blockchains});
+        }
 
-                };
-                return res.status(200).render('index', {policy : policy , blockchains});
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).render('error', {error:err})
-        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).render('error', {error: err})
+    }
 };
 
 
-module.exports.listBlockchains = (req, res) => {
-    BlockchainModel.find({})
-        .then((blockchains) => {
-            return res.status(200).send(blockchains);
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).render('error', {error:err})
-        });
+module.exports.listBlockchains = async (req, res) => {
+    try {
+        const blockchains = await BlockchainRepository.getAllBlockchains();
+        return res.status(200).send(blockchains);
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).render('error', {error: err})
+    }
 };
 
-module.exports.savePolicy = (req, res) => {
-    const providedPolicy = {
-        username: req.body.username,
-        preferredBC: req.body.preferredBC,
-        currency: req.body.currency,
-        cost: parseFloat(req.body.cost),
-        bcType: req.body.bcType,
-        bcSmartContract: req.body.bcSmartContract,
-        bcSmartContractLanguages: req.body.bcSmartContractLanguages,
-        interval: req.body.interval,
-        bcTps: parseInt(req.body.bcTps, 10),
-        bcBlockTime: parseInt(req.body.bcBlockTime, 10),
-        bcBlockSize: parseInt(req.body.bcBlockSize, 10),
-        bcDataSize: parseInt(req.body.bcDataSize, 10),
-    };
+module.exports.savePolicy = async (req, res) => {
+    const providedPolicy = util.buildPolicy(req.body);
 
-    //TODO: Retrieve USerdata if available. Otherwise store new user
-    PolicyModel.findOneAndUpdate({'username': providedPolicy.username}, providedPolicy, {upsert: true})
-        .then(() => {
-            return res.status(200).render('result', {policy: providedPolicy});
-        })
-        .catch(err => {
+    if (req.body._id) {
+        try {
+            const updatedPolicy = await PolicyRepository.getPolicyAndUpdate(req.body._id, providedPolicy);
+            return res.status(200).render('result', {policy: updatedPolicy});
+        } catch (err) {
             console.error(err);
-            res.status(500).render('error', {error:err})
-        });
+            return res.status(500).render('error', {error: err});
+        }
+    } else {
+        try {
+            const createdPolicy = await PolicyRepository.createPolicy(providedPolicy);
+            return res.status(200).render('result', {policy: createdPolicy});
+        } catch (err) {
+            console.error(err);
+            return res.status(500).render('error', {error: err});
+        }
+    }
+
 };
 
