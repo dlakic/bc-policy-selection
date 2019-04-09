@@ -1,10 +1,8 @@
 const costAPI = require('../api/cost-estimation');
 const constants = require('../constants');
-const PolicyModel = require('../models/policy');
-const BlockchainModel = require('../models/blockchain');
-const UserModel = require('../models/user');
 const PolicyRepository = require('../repositories/policy-repository');
 const BlockchainRepository = require('../repositories/blockchain-repository');
+const UserRepository = require('../repositories/user-repository');
 const util = require('../util');
 
 
@@ -42,7 +40,6 @@ module.exports.listBlockchains = async (req, res) => {
     try {
         const blockchains = await BlockchainRepository.getAllBlockchains();
         return res.status(200).send(blockchains);
-
     } catch (err) {
         console.error(err);
         return res.status(500).render('error', {error: err})
@@ -51,10 +48,15 @@ module.exports.listBlockchains = async (req, res) => {
 
 module.exports.savePolicy = async (req, res) => {
     const providedPolicy = util.buildPolicy(req.body);
+    const user = await UserRepository.getUserByName(req.body.username);
+    console.log(user);
 
     if (req.body._id) {
         try {
             const updatedPolicy = await PolicyRepository.getPolicyAndUpdate(req.body._id, providedPolicy);
+            if (!user || user.length === 0) {
+                await UserRepository.createUser(req.body.username);
+            }
             return res.status(200).render('result', {policy: updatedPolicy});
         } catch (err) {
             console.error(err);
@@ -63,6 +65,9 @@ module.exports.savePolicy = async (req, res) => {
     } else {
         try {
             const createdPolicy = await PolicyRepository.createPolicy(providedPolicy);
+            if (!user || user.length === 0) {
+                await UserRepository.createUser(req.body.username);
+            }
             return res.status(200).render('result', {policy: createdPolicy});
         } catch (err) {
             console.error(err);
