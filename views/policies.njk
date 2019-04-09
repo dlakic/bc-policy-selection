@@ -9,8 +9,8 @@
                     <div class="column is-one-fifth">
                         <a class="button is-link is-pulled-right" href="/policy">Create new Policy</a>
                     </div>
-                    <div class="column">
-                        <table class="table">
+                    <div class="column is-full">
+                        <table class="table is-striped is-narrow is-fullwidth">
                             <thead>
                             <tr>
                                 <th><abbr title="Number">No.</abbr></th>
@@ -30,25 +30,6 @@
                                 <th>Delete</th>
                             </tr>
                             </thead>
-                            <tfoot>
-                            <tr>
-                                <th><abbr title="Number">No.</abbr></th>
-                                <th>Username</th>
-                                <th><abbr title="Preferred Blockchains">BC</abbr></th>
-                                <th><abbr title="Blockchain Type">Type</abbr></th>
-                                <th><abbr title="Max. Cost Threshold">Cost</abbr></th>
-                                <th><abbr title="Interval For Cost Threshold">Interv.</abbr></th>
-                                <th><abbr title="Cost Threshold Currency">Currency</abbr></th>
-                                <th><abbr title="Transactions Per Second">TPS</abbr></th>
-                                <th><abbr title="Block Time">Time</abbr></th>
-                                <th><abbr title="Block Size">Size</abbr></th>
-                                <th><abbr title="Data Size">D. Size</abbr></th>
-                                <th>Smart Contract</th>
-                                <th><abbr title="Smart Contract Languages">Lang</abbr></th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                            </tfoot>
                             <tbody>
                             {% for policy in policies %}
                                 <tr>
@@ -65,14 +46,15 @@
                                     <td>{{ policy.bcDataSize }}</td>
                                     <td>{{ policy.bcSmartContract }}</td>
                                     <td>{{ policy.bcSmartContractLanguages }}</td>
-                                    <th><a class="button is-link" href="/policy?id={{ policy._id }}">Edit Policy</a>
-                                    </th>
-                                    <th>
+                                    <td>
+                                        <a class="button is-link" href="/policy?id={{ policy._id }}">Edit Policy</a>
+                                    </td>
+                                    <td>
                                         <button class="button is-danger delete-button"
                                                 id="delete-policy-{{ policy._id }}" value="{{ policy._id }}">Delete
                                             Policy
                                         </button>
-                                    </th>
+                                    </td>
                                 </tr>
                             {% else %}
                                 <tr>
