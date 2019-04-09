@@ -69,6 +69,21 @@ module.exports.savePolicy = async (req, res) => {
             return res.status(500).render('error', {error: err});
         }
     }
+};
 
+module.exports.deletePolicy = async (req, res) => {
+    const policyId = req.params.id;
+
+    if (policyId) {
+        try {
+            await PolicyRepository.deletePolicy(policyId);
+            return res.status(200).send({message: 'Policy deleted Successfully'});
+        } catch (err) {
+            console.error(err);
+            return res.status(500).render('error', {error: err});
+        }
+    } else {
+        return res.status(400).render('error', {error: 'No Policy Id provided'});
+    }
 };
 

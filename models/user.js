@@ -8,15 +8,19 @@ const userSchema = new mongoose.Schema({
     },
     costDaily: {
         type: Number,
+        default: 0,
     },
     costWeekly: {
         type: Number,
+        default: 0,
     },
     costMonthly: {
         type: Number,
+        default: 0,
     },
     costYearly: {
         type: Number,
+        default: 0,
     },
 });
 

@@ -14,6 +14,7 @@ router.get('*', (req,res) => {
 });
 
 router.post('/api/save-policy', policyController.savePolicy);
+router.delete('/api/delete-policy/:id', policyController.deletePolicy);
 router.post('/api/create-transaction', transactionController.handleTransaction);
 
 module.exports = router;

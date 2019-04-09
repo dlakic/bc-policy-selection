@@ -3,7 +3,13 @@
     <section class="hero">
         <div class="hero-body">
             <div class="container">
-                <div class="columns is-vcentered">
+                <div class="columns is-vcentered is-multiline">
+                    <div class="column is-four-fifths">
+                    </div>
+                    <div class="column is-one-fifth">
+                        <a class="button is-link is-pulled-right" href="/policy">Create new Policy</a>
+                    </div>
+                    <div class="column">
                         <table class="table">
                             <thead>
                             <tr>
@@ -21,6 +27,7 @@
                                 <th>Smart Contract</th>
                                 <th><abbr title="Smart Contract Languages">Lang</abbr></th>
                                 <th>Edit</th>
+                                <th>Delete</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -39,6 +46,7 @@
                                 <th>Smart Contract</th>
                                 <th><abbr title="Smart Contract Languages">Lang</abbr></th>
                                 <th>Edit</th>
+                                <th>Delete</th>
                             </tr>
                             </tfoot>
                             <tbody>
@@ -57,7 +65,14 @@
                                     <td>{{ policy.bcDataSize }}</td>
                                     <td>{{ policy.bcSmartContract }}</td>
                                     <td>{{ policy.bcSmartContractLanguages }}</td>
-                                    <th><a class="button is-link" href="/policy?id={{ policy._id }}">Edit Policy</a></th>
+                                    <th><a class="button is-link" href="/policy?id={{ policy._id }}">Edit Policy</a>
+                                    </th>
+                                    <th>
+                                        <button class="button is-danger delete-button"
+                                                id="delete-policy-{{ policy._id }}" value="{{ policy._id }}">Delete
+                                            Policy
+                                        </button>
+                                    </th>
                                 </tr>
                             {% else %}
                                 <tr>
@@ -69,6 +84,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 {% endblock %}
