@@ -1,5 +1,3 @@
-const costAPI = require('../api/cost-estimation');
-const constants = require('../constants');
 const PolicyRepository = require('../repositories/policy-repository');
 const BlockchainRepository = require('../repositories/blockchain-repository');
 const UserRepository = require('../repositories/user-repository');
@@ -21,7 +19,7 @@ module.exports.editPolicy = async (req, res) => {
     try {
         const blockchains = await BlockchainRepository.getAllBlockchains();
         if (req.query.id) {
-            const policy = await PolicyRepository.getPolicy(req.query.id);
+            const policy = await PolicyRepository.getPolicyById(req.query.id);
             console.log(policy);
             return res.status(200).render('policy', {policy: policy, blockchains});
         } else {
@@ -91,4 +89,3 @@ module.exports.deletePolicy = async (req, res) => {
         return res.status(400).render('error', {error: 'No Policy Id provided'});
     }
 };
-

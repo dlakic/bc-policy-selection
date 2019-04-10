@@ -1,23 +1,28 @@
-const PolicyModel = require('../models/policy');
-const blockchainSelector = require('../business-logic/blockchain-selector')
+const PolicyRepository = require('../repositories/policy-repository');
+const blockchainSelector = require('../business-logic/blockchain-selector');
 
-module.exports.handleTransaction = (req, res) => {
+module.exports.handleTransaction = async (req, res) => {
     if (!req.body.username) {
         const error = new Error("No username provided");
         error.statusCode = 400;
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
 
-    PolicyModel.find({'username': req.body.username})
-        .then((policies) => {
-            const selectedBlockchain = blockchainSelector.selectBlockchain(policies[0]);
-            console.log(selectedBlockchain);
-            return res.status(200).send(selectedBlockchain)
-        })
-        .catch(err => {
-            console.error(err);
-            return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
-        });
+    try {
+        const policies = await PolicyRepository.getPoliciesByUsername(req.body.username);
+        if(!policies || policies.length === 0) {
+            const error = new Error("No Policies Found with the provided username");
+            error.statusCode = 404;
+            return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+        }
+        //TODO: for all policies
+        const selectedBlockchain =  await blockchainSelector.selectBlockchain(policies[1]);
+        return res.status(200).send(selectedBlockchain)
+    } catch (err) {
+        console.error(err);
+        return res.status(500).render('error', {error: err});
+    }
+
 };
 
 /*module.exports.handlePolicy = (req, res) => {

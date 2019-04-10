@@ -7,9 +7,11 @@ const policySchema = new mongoose.Schema({
     },
     preferredBC: {
         type: Array,
+        default: [],
     },
     currency: {
         type: String,
+        default: 'CHF',
     },
     cost: {
         type: Number,
@@ -34,9 +36,11 @@ const policySchema = new mongoose.Schema({
     },
     bcSmartContract: {
         type: Boolean,
+        default: false,
     },
     bcSmartContractLanguages: {
         type: Array,
+        default: [],
     },
 });
 

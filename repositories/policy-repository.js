@@ -13,7 +13,7 @@ function getAllPolicies() {
     });
 }
 
-function getPolicy(id) {
+function getPolicyById(id) {
     return new Promise((resolve, reject) => {
     PolicyModel.findOne({'_id': id})
         .then(queriedPolicy => {
@@ -23,6 +23,20 @@ function getPolicy(id) {
             console.error(err);
             reject(err);
         });
+    });
+}
+
+function getPoliciesByUsername(username) {
+    return new Promise((resolve, reject) => {
+        PolicyModel.find({'username': username})
+            .then(queriedPolicy => {
+                console.log(queriedPolicy);
+                resolve(queriedPolicy)
+            })
+            .catch(err => {
+                console.error(err);
+                reject(err);
+            });
     });
 }
 
@@ -67,7 +81,8 @@ function getPolicyAndUpdate(id, policy) {
 
 module.exports = {
     getAllPolicies,
-    getPolicy,
+    getPolicyById,
+    getPoliciesByUsername,
     createPolicy,
     deletePolicy,
     getPolicyAndUpdate,

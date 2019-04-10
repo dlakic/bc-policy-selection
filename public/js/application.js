@@ -19,4 +19,3 @@ deletePolicyElements.forEach(function (element) {
         deletePolicy(element.value);
     }, false);
 });
-
