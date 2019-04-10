@@ -20,6 +20,20 @@ module.exports.selectBlockchain = async (policy) => {
         return blockchainPool;
     }
 
+    // filter out all Blockchains that do not correspond with the tps threshold
+    blockchainPool = blockchainPool.filter(blockchain => blockchain.tps >= policy.bcTps);
+
+    if (blockchainPool.length === 1) {
+        return blockchainPool;
+    }
+
+    // filter out all Blockchains that do not correspond with the blocktime threshold
+    blockchainPool = blockchainPool.filter(blockchain => blockchain.blockTime <= policy.bcBlockTime);
+
+    if (blockchainPool.length === 1) {
+        return blockchainPool;
+    }
+
     if (blockchainPool.length === 0) {
         const conflictError = new Error("Policy conflict detected");
         conflictError.statusCode = 500;

@@ -16,12 +16,12 @@ function buildPolicy(requestBody = null) {
 
     } else {
         policy.username = requestBody.username;
-        policy.preferredBC = requestBody.preferredBC;
+        policy.preferredBC = requestBody.preferredBC || [];
         policy.currency = requestBody.currency;
         policy.cost = parseFloat(requestBody.cost);
         policy.bcType = requestBody.bcType;
-        policy.bcSmartContract = requestBody.bcSmartContract;
-        policy.bcSmartContractLanguages = requestBody.bcSmartContractLanguages;
+        policy.bcSmartContract = requestBody.bcSmartContract || false;
+        policy.bcSmartContractLanguages = requestBody.bcSmartContractLanguages || [];
         policy.interval = requestBody.interval;
         policy.bcTps = parseInt(requestBody.bcTps, 10);
         policy.bcBlockTime = parseInt(requestBody.bcBlockTime, 10);
