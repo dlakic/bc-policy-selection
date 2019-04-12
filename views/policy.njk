@@ -11,8 +11,7 @@
                     In case only a single one is selected, the policy will disregard all other parameters and use the chosen blockchain.
                     In case none is chosen, the selection process uses all available Blockchains for selection.
                 </div>
-                <div id="username-error" class="notification is-danger">
-                    ERROR: Please Provide a username
+                <div id="error" class="notification is-danger">
                 </div>
                 <div class="columns is-vcentered">
                     <div class="column"></div>
@@ -80,6 +79,9 @@
                                     <div class="control">
                                         <div class="select">
                                             <select name="interval">
+                                                <option value=''>
+                                                    Please choose...
+                                                </option>
                                                 <option value="daily" {{ "selected" if policy.interval == "daily" }}>daily
                                                 </option>
                                                 <option value="monthly" {{ "selected" if policy.interval == "monthly" }}>

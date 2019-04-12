@@ -3,6 +3,7 @@ let firstSubmit = true;
 console.log(window.location);
 if (window.location.pathname === '/policy' && window.location.search !== '') {
     document.querySelector('#more-info').style.display = 'block';
+    firstSubmit = false;
 }
 
 function deletePolicy(id) {
@@ -13,7 +14,6 @@ function deletePolicy(id) {
             if (err) {
                 console.log(err);
             } else {
-                console.log(res);
                 window.location.replace("/");
             }
         });
@@ -33,9 +33,10 @@ function savePolicy(data) {
         .send(data)
         .end((err, res) => {
             if (err) {
-                console.log(err);
-            } else {
                 console.log(res);
+                document.querySelector('#error').innerHTML = 'ERROR: ' + res.body.message;
+                return document.querySelector('#error').style.display = 'block';
+            } else {
                 window.location.replace("/");
             }
         });
@@ -46,9 +47,10 @@ function submitPolicy(id) {
     const form = document.querySelector(id);
     const jsonFormData = toJSON(form);
     if (!jsonFormData.username) {
-        return document.querySelector('#username-error').style.display = 'block';
+        document.querySelector('#error').innerHTML = 'ERROR: Please Provide a username';
+        return document.querySelector('#error').style.display = 'block';
     } else {
-        document.querySelector('#username-error').style.display = 'none';
+        document.querySelector('#error').style.display = 'none';
     }
     if (jsonFormData.preferredBC && jsonFormData.preferredBC.length !== 1) {
         document.querySelector('#more-info').style.display = 'block';

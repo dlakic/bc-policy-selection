@@ -52,7 +52,17 @@ module.exports.savePolicy = async (req, res) => {
     }
     const providedPolicy = util.buildPolicy(req.body);
     const user = await UserRepository.getUserByName(req.body.username);
-    console.log(user);
+
+    if(user) {
+        let userPolicies = await PolicyRepository.getPoliciesByUsername(req.body.username);
+        userPolicies = userPolicies.filter(policy => policy.interval === req.body.interval && !policy._id.equals(req.body._id));
+        console.log(userPolicies);
+        if(userPolicies && userPolicies.length > 0) {
+            const error = new Error(`This user already has a policy for interval ${req.body.interval}`);
+            error.statusCode = 400;
+            return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+        }
+    }
 
     if (req.body._id) {
         try {
