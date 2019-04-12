@@ -45,6 +45,11 @@ module.exports.listBlockchains = async (req, res) => {
 };
 
 module.exports.savePolicy = async (req, res) => {
+    if(!req.body.username) {
+        const error = new Error("No username provided");
+        error.statusCode = 400;
+        return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+    }
     const providedPolicy = util.buildPolicy(req.body);
     const user = await UserRepository.getUserByName(req.body.username);
     console.log(user);

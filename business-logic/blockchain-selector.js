@@ -30,6 +30,9 @@ module.exports.selectBlockchain = async (policy) => {
     // filter out all Blockchains that do not correspond with the blocktime threshold
     blockchainPool = blockchainPool.filter(blockchain => blockchain.blockTime <= policy.bcBlockTime);
 
+    // filter out all Blockchains that do not correspond with the datasize threshold
+    blockchainPool = blockchainPool.filter(blockchain => blockchain.maxTrxSize >= policy.bcDataSize);
+
     if (blockchainPool.length === 1) {
         return blockchainPool;
     }

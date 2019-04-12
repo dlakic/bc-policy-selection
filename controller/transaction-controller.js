@@ -16,7 +16,7 @@ module.exports.handleTransaction = async (req, res) => {
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
         //TODO: for all policies
-        const selectedBlockchain =  await blockchainSelector.selectBlockchain(policies[1]);
+        const selectedBlockchain =  await blockchainSelector.selectBlockchain(policies[0]);
         return res.status(200).send(selectedBlockchain)
     } catch (err) {
         console.error(err);

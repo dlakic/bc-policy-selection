@@ -14,6 +14,9 @@ function buildPolicy(requestBody = null) {
         policy.bcBlockSize = 0;
         policy.bcDataSize = 0;
 
+    } else if(requestBody.preferredBC && requestBody.preferredBC.length === 1) {
+        policy.username = requestBody.username;
+        policy.preferredBC = requestBody.preferredBC
     } else {
         policy.username = requestBody.username;
         policy.preferredBC = requestBody.preferredBC || [];
