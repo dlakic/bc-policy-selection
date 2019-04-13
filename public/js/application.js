@@ -1,9 +1,13 @@
 //TODO: Extract to appropriate njk template
 let firstSubmit = true;
-console.log(window.location);
 if (window.location.pathname === '/policy' && window.location.search !== '') {
-    document.querySelector('#more-info').style.display = 'block';
-    firstSubmit = false;
+    const multiSelectElement = document.querySelector('#preferredBC');
+    const multiselectValues = getMultiSelectValues(multiSelectElement);
+
+    if (multiselectValues.length !== 1) {
+        document.querySelector('#more-info').style.display = 'block';
+        firstSubmit = false;
+    }
 }
 
 function deletePolicy(id) {
@@ -42,12 +46,39 @@ function savePolicy(data) {
         });
 }
 
+function validateForm(data) {
+    const errors = [];
+    if (!data.username) {
+        errors.push('Please Provide a username');
+    }
+
+    if (!data.cost && data.preferredBC.length !== 1) {
+        errors.push('Please Provide a max. cost');
+    }
+
+    if (!data.interval && data.preferredBC.length !== 1 && !firstSubmit) {
+        errors.push('Please Provide a cost interval');
+    }
+
+    return errors;
+}
+
+function buildErrorString(errors) {
+    let errorString = '';
+    errors.forEach(function (error) {
+        errorString += '<li>' + error + '</li>';
+    });
+    return errorString;
+}
+
 // TODO: validation and Errormessages
 function submitPolicy(id) {
     const form = document.querySelector(id);
     const jsonFormData = toJSON(form);
-    if (!jsonFormData.username) {
-        document.querySelector('#error').innerHTML = 'ERROR: Please Provide a username';
+    const errors = validateForm(jsonFormData);
+    console.log(errors);
+    if (errors.length > 0) {
+        document.querySelector('#error').innerHTML = 'ERROR: ' + '<ul>' + buildErrorString(errors) + '</ul>';
         return document.querySelector('#error').style.display = 'block';
     } else {
         document.querySelector('#error').style.display = 'none';
@@ -70,6 +101,20 @@ document.querySelector('#submit-policy-form').addEventListener("click", function
 }, false);
 
 
+function getMultiSelectValues(element) {
+    const value = [];
+    let opt;
+    let options = element.options;
+    for (let j = 0; j < options.length; j++) {
+        opt = options[j];
+        if (opt.selected) {
+            value.push(opt.value || opt.text);
+        }
+    }
+
+    return value;
+}
+
 function toJSON(form) {
     const obj = {};
     const elements = form.querySelectorAll("input, select, textarea");
@@ -78,15 +123,7 @@ function toJSON(form) {
         let name = element.name;
         let value;
         if (element.multiple) {
-            value = [];
-            let opt;
-            let options = element.options;
-            for (var j = 0; j < options.length; j++) {
-                opt = options[j];
-                if (opt.selected) {
-                    value.push(opt.value || opt.text);
-                }
-            }
+            value = getMultiSelectValues(element);
         } else {
             value = element.value;
         }
@@ -97,4 +134,3 @@ function toJSON(form) {
 
     return obj;
 }
-

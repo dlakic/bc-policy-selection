@@ -18,6 +18,7 @@ const policySchema = new mongoose.Schema({
     },
     interval: {
         type: String,
+        enum: ['daily', 'weekly', 'monthly', 'yearly', 'default']
     },
     bcType: {
         type: String,

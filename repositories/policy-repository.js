@@ -30,7 +30,6 @@ function getPoliciesByUsername(username) {
     return new Promise((resolve, reject) => {
         PolicyModel.find({'username': username})
             .then(queriedPolicy => {
-                console.log(queriedPolicy);
                 resolve(queriedPolicy)
             })
             .catch(err => {

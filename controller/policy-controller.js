@@ -20,10 +20,8 @@ module.exports.editPolicy = async (req, res) => {
         const blockchains = await BlockchainRepository.getAllBlockchains();
         if (req.query.id) {
             const policy = await PolicyRepository.getPolicyById(req.query.id);
-            console.log(policy);
             return res.status(200).render('policy', {policy: policy, blockchains});
         } else {
-            console.log(util.buildPolicy());
             return res.status(200).render('policy', {policy: util.buildPolicy(), blockchains});
         }
 
@@ -53,10 +51,10 @@ module.exports.savePolicy = async (req, res) => {
     const providedPolicy = util.buildPolicy(req.body);
     const user = await UserRepository.getUserByName(req.body.username);
 
+    // Check policy interval conflicts
     if(user) {
         let userPolicies = await PolicyRepository.getPoliciesByUsername(req.body.username);
         userPolicies = userPolicies.filter(policy => policy.interval === req.body.interval && !policy._id.equals(req.body._id));
-        console.log(userPolicies);
         if(userPolicies && userPolicies.length > 0) {
             const error = new Error(`This user already has a policy for interval ${req.body.interval}`);
             error.statusCode = 400;
@@ -67,6 +65,8 @@ module.exports.savePolicy = async (req, res) => {
     if (req.body._id) {
         try {
             const updatedPolicy = await PolicyRepository.getPolicyAndUpdate(req.body._id, providedPolicy);
+
+            // if user does not exist, create user
             if (!user || user.length === 0) {
                 await UserRepository.createUser(req.body.username);
             }
@@ -78,6 +78,8 @@ module.exports.savePolicy = async (req, res) => {
     } else {
         try {
             const createdPolicy = await PolicyRepository.createPolicy(providedPolicy);
+
+            // if user does not exist, create user
             if (!user || user.length === 0) {
                 await UserRepository.createUser(req.body.username);
             }
