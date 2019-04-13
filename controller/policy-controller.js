@@ -19,11 +19,13 @@ module.exports.listPolicies = async (req, res) => {
 module.exports.editPolicy = async (req, res) => {
     try {
         const blockchains = await BlockchainRepository.getAllBlockchains();
+        const choosableParams = util.cleanNumericalParams(blockchains);
+        console.log(choosableParams)
         if (req.query.id) {
             const policy = await PolicyRepository.getPolicyById(req.query.id);
-            return res.status(200).render('policy', {policy: policy, blockchains});
+            return res.status(200).render('policy', {policy, choosableParams, blockchains});
         } else {
-            return res.status(200).render('policy', {policy: util.buildPolicy(), blockchains});
+            return res.status(200).render('policy', {policy: util.buildPolicy(), choosableParams, blockchains});
         }
 
     } catch (err) {

@@ -105,9 +105,9 @@
                                     <div class="control">
                                         <div class="select">
                                             <select id="bcTps" name="bcTps">
-                                                {% for blockchain in blockchains %}
-                                                    <option value="{{ blockchain.tps }}" {{ "selected" if policy.bcTps == blockchain.tps }}>
-                                                        {{ blockchain.tps }}
+                                                {% for tps in choosableParams.tps %}
+                                                    <option value="{{ tps }}" {{ "selected" if policy.bcTps == tps }}>
+                                                        {{ tps }}
                                                     </option>
                                                 {% else %}
                                                     <option>
@@ -123,9 +123,9 @@
                                     <div class="control">
                                         <div class="select">
                                             <select id="bcBlockSize" name="bcBlockSize">
-                                                {% for blockchain in blockchains %}
-                                                    <option value="{{ blockchain.blockSize }}" {{ "selected" if policy.bcBlockSize == blockchain.blockSize }}>
-                                                        {{ blockchain.blockSize }}
+                                                {% for blockSize in choosableParams.blockSize %}
+                                                    <option value="{{ blockSize }}" {{ "selected" if policy.bcBlockSize == blockSize }}>
+                                                        {{ blockSize }}
                                                     </option>
                                                 {% else %}
                                                     <option>
@@ -141,9 +141,9 @@
                                     <div class="control">
                                         <div class="select">
                                             <select id="bcBlockTime" name="bcBlockTime">
-                                                {% for blockchain in blockchains %}
-                                                    <option value="{{ blockchain.blockTime }}" {{ "selected" if policy.bcBlockTime == blockchain.blockTime }}>
-                                                        {{ blockchain.blockTime }}
+                                                {% for blockTime in choosableParams.blockTime %}
+                                                    <option value="{{ blockTime }}" {{ "selected" if policy.bcBlockTime == blockTime }}>
+                                                        {{ blockTime }}
                                                     </option>
                                                 {% else %}
                                                     <option>
@@ -159,9 +159,9 @@
                                     <div class="control">
                                         <div class="select">
                                             <select id="bcDataSize" name="bcDataSize">
-                                                {% for blockchain in blockchains %}
-                                                    <option value="{{ blockchain.maxTrxSize }}" {{ "selected" if policy.bcDataSize == blockchain.maxTrxSize }}>
-                                                        {{ blockchain.maxTrxSize }}
+                                                {% for maxTrxSize in choosableParams.maxTrxSize %}
+                                                    <option value="{{ maxTrxSize }}" {{ "selected" if policy.bcDataSize == maxTrxSize }}>
+                                                        {{ maxTrxSize }}
                                                     </option>
                                                 {% else %}
                                                     <option>

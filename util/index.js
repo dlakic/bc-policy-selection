@@ -14,7 +14,7 @@ function buildPolicy(requestBody = null) {
         policy.bcBlockSize = 0;
         policy.bcDataSize = 0;
 
-    } else if(requestBody.preferredBC && requestBody.preferredBC.length === 1) {
+    } else if (requestBody.preferredBC && requestBody.preferredBC.length === 1) {
         policy.username = requestBody.username;
         policy.preferredBC = requestBody.preferredBC;
         policy.interval = 'default';
@@ -36,6 +36,33 @@ function buildPolicy(requestBody = null) {
     return policy;
 }
 
+function cleanNumericalParams(blockchains) {
+    const tps = [];
+    const blockSize = [];
+    const blockTime = [];
+    const maxTrxSize = [];
+
+    blockchains.forEach(blockchain => {
+        tps.push(blockchain.tps);
+        blockSize.push(blockchain.blockSize);
+        blockTime.push(blockchain.blockTime);
+        maxTrxSize.push(blockchain.maxTrxSize);
+    });
+
+    tps.sort((a, b) => a - b);
+    blockSize.sort((a, b) => a - b);
+    blockTime.sort((a, b) => a - b);
+    maxTrxSize.sort((a, b) => a - b);
+
+    return {
+        tps: [...new Set(tps)],
+        blockSize: [...new Set(blockSize)],
+        blockTime: [...new Set(blockTime)],
+        maxTrxSize: [...new Set(maxTrxSize)],
+    }
+}
+
 module.exports = {
     buildPolicy,
+    cleanNumericalParams,
 };
