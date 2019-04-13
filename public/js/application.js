@@ -76,7 +76,6 @@ function submitPolicy(id) {
     const form = document.querySelector(id);
     const jsonFormData = toJSON(form);
     const errors = validateForm(jsonFormData);
-    console.log(errors);
     if (errors.length > 0) {
         document.querySelector('#error').innerHTML = 'ERROR: ' + '<ul>' + buildErrorString(errors) + '</ul>';
         return document.querySelector('#error').style.display = 'block';
@@ -124,10 +123,14 @@ function toJSON(form) {
         let value;
         if (element.multiple) {
             value = getMultiSelectValues(element);
+        } else if(element.type === 'radio') {
+            if(element.checked) {
+                value = element.value;
+            }
         } else {
             value = element.value;
         }
-        if (name) {
+        if (name && !obj[name]) {
             obj[name] = value;
         }
     }

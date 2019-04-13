@@ -38,8 +38,8 @@ module.exports.selectBlockchain = async (policy) => {
     }
 
     if (blockchainPool.length === 0) {
-        const conflictError = new Error("Policy conflict detected");
-        conflictError.statusCode = 500;
+        const conflictError = new Error("Policy conflict detected, no blockchain with provided parameters available");
+        conflictError.statusCode = 400;
         throw conflictError
     }
 

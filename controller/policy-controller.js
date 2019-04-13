@@ -1,6 +1,7 @@
 const PolicyRepository = require('../repositories/policy-repository');
 const BlockchainRepository = require('../repositories/blockchain-repository');
 const UserRepository = require('../repositories/user-repository');
+const blockchainSelector = require('../business-logic/blockchain-selector');
 const util = require('../util');
 
 
@@ -60,6 +61,12 @@ module.exports.savePolicy = async (req, res) => {
             error.statusCode = 400;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
+    }
+
+    try {
+        await blockchainSelector.selectBlockchain(providedPolicy);
+    } catch (err) {
+        return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
     }
 
     if (req.body._id) {
