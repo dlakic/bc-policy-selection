@@ -1,12 +1,21 @@
 const UserRepository = require('../repositories/user-repository');
+const blockchainSelector = require('./blockchain-selector');
+const costCalculator = require('./cost-calculator');
+
 module.exports.selectPolicy = async (policies, username) => {
-    console.log(username);
     const user = await UserRepository.getUserByName(username);
 
     const dailyPolicy = policies.find(policy => policy.interval === 'daily');
 
     if (dailyPolicy) {
-        if(dailyPolicy.cost > user.costDaily) {
+        if(dailyPolicy.cost >= user.costDaily) {
+            const validBlockchainsForPolicy = await blockchainSelector.selectBlockchain(dailyPolicy);
+            const costs = await costCalculator.calculateCostForPolicy(dailyPolicy, validBlockchainsForPolicy);
+            console.log(costs);
+            //TODO: return cheapest
+            if(dailyPolicy.cost >= user.cost) {
+
+            }
             return dailyPolicy;
         }
     }
@@ -14,7 +23,7 @@ module.exports.selectPolicy = async (policies, username) => {
     const weeklyPolicy = policies.find(policy => policy.interval === 'weekly');
 
     if (weeklyPolicy) {
-        if(weeklyPolicy.cost > user.costWeekly) {
+        if(weeklyPolicy.cost >= user.costWeekly) {
             return weeklyPolicy;
         }
     }
@@ -22,7 +31,7 @@ module.exports.selectPolicy = async (policies, username) => {
     const monthlyPolicy = policies.find(policy => policy.interval === 'monthly');
 
     if (monthlyPolicy) {
-        if(monthlyPolicy.cost > user.costMonthly) {
+        if(monthlyPolicy.cost >= user.costMonthly) {
             return monthlyPolicy;
         }
     }
@@ -30,7 +39,7 @@ module.exports.selectPolicy = async (policies, username) => {
     const yearlyPolicy = policies.find(policy => policy.interval === 'yearly');
 
     if (yearlyPolicy) {
-        if(yearlyPolicy.cost > user.costYearly) {
+        if(yearlyPolicy.cost >= user.costYearly) {
             return yearlyPolicy;
         }
     }

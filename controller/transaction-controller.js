@@ -1,6 +1,7 @@
 const PolicyRepository = require('../repositories/policy-repository');
 const blockchainSelector = require('../business-logic/blockchain-selector');
 const policySelector = require('../business-logic/policy-selector');
+const costCalculator = require('../business-logic/cost-calculator');
 
 module.exports.handleTransaction = async (req, res) => {
     const username = req.body.username;
@@ -18,9 +19,10 @@ module.exports.handleTransaction = async (req, res) => {
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
         const policy = await policySelector.selectPolicy(policies, username);
-        console.log(policy);
+        /*const cost = await costCalculator.calculateCostForPolicy(policy);
+        return res.status(200).send(cost)*/
         const selectedBlockchain =  await blockchainSelector.selectBlockchain(policy);
-        return res.status(200).send(selectedBlockchain)
+        return res.status(200).send(selectedBlockchain);
     } catch (err) {
         console.error(err);
         return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
