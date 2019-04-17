@@ -10,7 +10,7 @@
                     <div class="column is-four-fifths">
                     </div>
                     <div class="column is-one-fifth">
-                        <a class="button is-link is-pulled-right" href="/policy">Create new Policy</a>
+                        <a class="button is-link is-pulled-right" href="/policy{{ '?username=' + username if username }}">Create new Policy</a>
                     </div>
                     <div class="column is-full">
                         <table class="table is-striped is-narrow is-fullwidth">
@@ -27,8 +27,7 @@
                                 <th><abbr title="Block Time">Time</abbr></th>
                                 <th><abbr title="Block Size">Size</abbr></th>
                                 <th><abbr title="Data Size">D. Size</abbr></th>
-                                <th>Smart Contract</th>
-                                <th><abbr title="Smart Contract Languages">Lang</abbr></th>
+                                <th><abbr title="Touring Complete">Compl.</abbr></th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -48,7 +47,6 @@
                                     <td>{{ policy.bcBlockSize }}</td>
                                     <td>{{ policy.bcDataSize }}</td>
                                     <td>{{ policy.bcSmartContract }}</td>
-                                    <td>{{ policy.bcSmartContractLanguages }}</td>
                                     <td>
                                         <a class="button is-link" href="/policy?id={{ policy._id }}">Edit Policy</a>
                                     </td>
@@ -72,4 +70,6 @@
         </div>
         </div>
     </section>
+
+    <script src="../js/policy-list.js"></script>
 {% endblock %}

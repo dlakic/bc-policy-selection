@@ -1,7 +1,8 @@
-function buildPolicy(requestBody = null) {
+function buildPolicy(requestBody = null, username) {
     const policy = {};
+    const policyUsername = username ? username : '';
     if (!requestBody) {
-        policy.username = '';
+        policy.username = policyUsername;
         policy.preferredBC = [];
         policy.currency = '';
         policy.cost = 0;
@@ -62,7 +63,13 @@ function cleanNumericalParams(blockchains) {
     }
 }
 
+
+function sortPoliciesByPriority(policies) {
+    const order = ['daily', 'weekly', 'monthly', 'yearly', 'default'];
+    return policies.sort((a, b) => order.indexOf(a.interval) > order.indexOf(b.interval));
+}
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
+    sortPoliciesByPriority,
 };

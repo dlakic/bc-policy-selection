@@ -7,8 +7,10 @@
                     Create/Edit Policy
                 </h2>
                 <div id="preferred-bc-info" class="notification is-info">
-                    Select multiple, a single or no blockchain as a preference. This determines which blockchains will be chosen from in this policy.
-                    In case only a single one is selected, the policy will disregard all other parameters and use the chosen blockchain.
+                    Select multiple, a single or no blockchain as a preference. This determines which blockchains will
+                    be chosen from in this policy.
+                    In case only a single one is selected, the policy will disregard all other parameters and use the
+                    chosen blockchain.
                     In case none is chosen, the selection process uses all available blockchains for selection.
                 </div>
                 <div id="error" class="notification is-danger">
@@ -20,10 +22,11 @@
                             <div class="field">
                                 <label class="label" for="username">Username</label>
                                 <input class="input" type="text" id="username" name="username"
-                                       value="{{ policy.username }}">
+                                       value="{{ policy.username }}" {{ "disabled" if policy.username }}>
                             </div>
                             <div class="field">
-                                <label class="label" for="preferredBC">Choose preferred blockchain implementations</label>
+                                <label class="label" for="preferredBC">Choose preferred blockchain
+                                    implementations</label>
                                 <div class="control">
                                     <div class="select is-multiple">
                                         <select id="preferredBC" class="select" name="preferredBC" multiple="multiple">
@@ -191,7 +194,9 @@
                             </div>
                             <div class="field">
                                 <div class="control">
-                                    <button type="submit" id="submit-policy-form" class="button is-link is-pulled-right">Submit</button>
+                                    <button type="submit" id="submit-policy-form"
+                                            class="button is-link is-pulled-right">Submit
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -201,4 +206,6 @@
             </div>
         </div>
     </section>
+
+    <script src="/js/policy.js"></script>
 {% endblock %}
