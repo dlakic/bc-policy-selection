@@ -1,4 +1,18 @@
-module.exports.blockchains = {
+const blockchainTypes = {
+    PUBLIC: 'public',
+    PRIVATE: 'private',
+    BOTH: 'both',
+};
+
+const intervals = {
+    DEFAULT: 'default',
+    DAILY: 'daily',
+    WEEKLY: 'weekly',
+    MONTHLY: 'monthly',
+    YEARLY: 'yearly,'
+};
+
+const blockchains = {
     BTC: {
         name: 'Bitcoin',
         nameShort: 'BTC',
@@ -40,4 +54,10 @@ module.exports.blockchains = {
         type: 'private'
     },
 
+};
+
+module.exports = {
+    blockchainTypes,
+    intervals,
+    blockchains,
 };

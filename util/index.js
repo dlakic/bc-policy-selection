@@ -1,3 +1,7 @@
+const constants = require('../constants');
+
+const {DEFAULT, DAILY, WEEKLY, MONTHLY, YEARLY} = constants.intervals;
+
 function buildPolicy(requestBody = null, username) {
     const policy = {};
     const policyUsername = username ? username : '';
@@ -65,11 +69,56 @@ function cleanNumericalParams(blockchains) {
 
 
 function sortPoliciesByPriority(policies) {
-    const order = ['daily', 'weekly', 'monthly', 'yearly', 'default'];
+    const order = [DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT];
     return policies.sort((a, b) => order.indexOf(a.interval) > order.indexOf(b.interval));
 }
+
+function getLowerThresholdsNoDefault(threshold) {
+
+    if (threshold === DAILY) {
+        return [];
+    }
+
+    if (threshold === WEEKLY) {
+        return [DAILY];
+    }
+
+    if (threshold === MONTHLY) {
+        return [DAILY,WEEKLY];
+    }
+
+    if(threshold === YEARLY) {
+        return [DAILY, WEEKLY, MONTHLY];
+    }
+
+    return [];
+}
+
+function getHigherThresholdsNoDefault(threshold) {
+
+    if (threshold === DAILY) {
+        return [WEEKLY, MONTHLY, YEARLY];
+    }
+
+    if (threshold === WEEKLY) {
+        return [MONTHLY, YEARLY];
+    }
+
+    if (threshold === MONTHLY) {
+        return [YEARLY];
+    }
+
+    if(threshold === YEARLY) {
+        return [];
+    }
+
+    return [];
+}
+
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
     sortPoliciesByPriority,
+    getLowerThresholdsNoDefault,
+    getHigherThresholdsNoDefault,
 };
