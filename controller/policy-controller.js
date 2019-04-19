@@ -1,6 +1,7 @@
 const PolicyRepository = require('../repositories/policy-repository');
 const BlockchainRepository = require('../repositories/blockchain-repository');
 const UserRepository = require('../repositories/user-repository');
+const policySelector = require('../business-logic/policy-selector');
 const blockchainSelector = require('../business-logic/blockchain-selector');
 const util = require('../util');
 
@@ -20,6 +21,9 @@ module.exports.listPolicies = async (req, res) => {
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
         let policies = await PolicyRepository.getPoliciesByUsername(username);
+        if(policies && policies.length !==0) {
+            await policySelector.selectPolicy(policies, username);
+        }
         policies = util.sortPoliciesByPriority(policies);
         return res.status(200).render('policies', {policies, username});
 

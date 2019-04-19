@@ -17,6 +17,7 @@
                             <thead>
                             <tr>
                                 <th><abbr title="Number">No.</abbr></th>
+                                <th>Active</th>
                                 <th>Username</th>
                                 <th><abbr title="Preferred Blockchains">BC</abbr></th>
                                 <th><abbr title="Blockchain Type">Type</abbr></th>
@@ -36,6 +37,17 @@
                             {% for policy in policies %}
                                 <tr>
                                     <th>{{ loop.index }}</th>
+                                    <td>
+                                        {% if policy.isActive %}
+                                            <span class="tag is-success">
+                                                Active
+                                            </span>
+                                        {% else %}
+                                            <span class="tag is-danger">
+                                                Inactive
+                                            </span>
+                                        {% endif %}
+                                    </td>
                                     <td>{{ policy.username }}</td>
                                     <td>{{ policy.preferredBC }}</td>
                                     <td>{{ policy.bcType }}</td>
