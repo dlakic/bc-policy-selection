@@ -10,6 +10,7 @@ router.get('/policies/:username', policyController.listPolicies);
 router.get('/blockchains', policyController.listBlockchains);
 router.get('/policy', policyController.editPolicy);
 router.get('/user-not-exist-check/:username', userController.checkIfUserDoesNotExist);
+router.get('/blockchain-cost/:blockchain', transactionController.getBlockchainCost);
 router.get('*', (req, res) => {
     res.redirect('/');
 });

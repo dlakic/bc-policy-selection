@@ -53,11 +53,18 @@ const blockchains = {
         nameShort: 'PSG',
         type: 'private'
     },
+};
 
+const exchanges = {
+    WEI_TO_ETH: 1000000000000000000,
+    GWEI_TO_ETH: 1000000000,
+    SATOSHIS_TO_BTC: 100000000,
+    BYTE_TO_KBYTE: 1024,
 };
 
 module.exports = {
     blockchainTypes,
     intervals,
     blockchains,
+    exchanges
 };

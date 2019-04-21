@@ -1,22 +1,56 @@
 const constants = require('../constants');
 const ratesAPI = require('../api/bc-rates');
+const bcCosts = require('../api/bc-fees');
+const transformUtil = require('../util/unit-transformations');
+
+module.exports.calculateCostForBlockchain = async (bcKey) => {
+    const blockchainRate = await ratesAPI.fetchBlockchainCost('CHF', bcKey);
+    if (bcKey === constants.blockchains.BTC.nameShort) {
+        const costOne = await bcCosts.fetchBTCFeesInSatoshiPerByteBCFees();
+        const costTwo = await bcCosts.fetchBTCFeesInSatoshiPerByteBlockCypher();
+        const costsInSatoshi = transformUtil.avgCost(costOne, costTwo);
+        // convert to BTC
+        const costInBTC = {};
+        Object.keys(costsInSatoshi).forEach((profile) => {
+            costInBTC[profile] = transformUtil.satoshisToBtc(costsInSatoshi[profile]);
+        });
+        // convert to money
+        const costs = {};
+        Object.keys(costInBTC).map((profile) => {
+            costs[profile] = costInBTC[profile] * blockchainRate[bcKey];
+        });
+        return costs;
+    }
+    if (bcKey === constants.blockchains.ETH.nameShort) {
+        //TODO: calculate for ETH
+    }
+    if (bcKey === constants.blockchains.XLM.nameShort) {
+        return {[bcKey]: 0.00001 * blockchainRate[bcKey]};
+    }
+    if (bcKey === constants.blockchains.EOS.nameShort) {
+        //TODO: calculate for EOS
+    }
+    if (bcKey === constants.blockchains.MIOTA.nameShort) {
+        return {[bcKey]: 0};
+    }
+};
 
 async function calculateCosts(blockchainRates) {
     const costs = {};
     Object.keys(blockchainRates).forEach(bcKey => {
-        if(bcKey === constants.blockchains.BTC.nameShort) {
+        if (bcKey === constants.blockchains.BTC.nameShort) {
             //TODO: calculate for BTC
         }
-        if(bcKey === constants.blockchains.ETH.nameShort) {
+        if (bcKey === constants.blockchains.ETH.nameShort) {
             //TODO: calculate for ETH
         }
-        if(bcKey === constants.blockchains.XLM.nameShort) {
+        if (bcKey === constants.blockchains.XLM.nameShort) {
             //TODO: calculate for XLM
         }
-        if(bcKey === constants.blockchains.EOS.nameShort) {
+        if (bcKey === constants.blockchains.EOS.nameShort) {
             //TODO: calculate for EOS
         }
-        if(bcKey === constants.blockchains.MIOTA.nameShort) {
+        if (bcKey === constants.blockchains.MIOTA.nameShort) {
             //TODO: calculate for MIOTA
         }
     });
@@ -31,15 +65,14 @@ async function calculateCostForPublicBlockchains(currency, publicBlockchainPool)
 }
 
 
-
 module.exports.calculateCostForPolicy = async (policy, blockchainPool) => {
     const publicBlockchainPool = blockchainPool.filter(blockchain => blockchain.type === 'public');
     const privateBlockchainPool = blockchainPool.filter(blockchain => blockchain.type === 'private');
-    if(publicBlockchainPool.length !== 0) {
+    if (publicBlockchainPool.length !== 0) {
         return await calculateCostForPublicBlockchains(policy.currency, publicBlockchainPool);
     }
 
-    if(privateBlockchainPool.length !== 0) {
+    if (privateBlockchainPool.length !== 0) {
         //TODO: calculate for private bcs
     }
 
