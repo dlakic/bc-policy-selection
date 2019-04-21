@@ -3,6 +3,7 @@ const BlockchainRepository = require('../repositories/blockchain-repository');
 const UserRepository = require('../repositories/user-repository');
 const policySelector = require('../business-logic/policy-selector');
 const blockchainSelector = require('../business-logic/blockchain-selector');
+const policyValidator = require('../business-logic/policy-validator');
 const util = require('../util');
 
 module.exports.listPolicies = async (req, res) => {
@@ -14,17 +15,18 @@ module.exports.listPolicies = async (req, res) => {
     }
 
     try {
-        const user =  await UserRepository.getUserByName(username);
+        const user = await UserRepository.getUserByName(username);
         if (!user || user.length === 0) {
             const error = new Error("User does not exist");
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
         let policies = await PolicyRepository.getPoliciesByUsername(username);
-        if(policies && policies.length !==0) {
+        if (policies && policies.length !== 0) {
             await policySelector.selectPolicy(policies, username);
         }
         policies = util.sortPoliciesByPriority(policies);
+        console.log(policies);
         return res.status(200).render('policies', {policies, username});
 
     } catch (err) {
@@ -74,13 +76,13 @@ module.exports.savePolicy = async (req, res) => {
 
     // Check policy interval conflicts
     if (user) {
-        let userPolicies = await PolicyRepository.getPoliciesByUsername(providedPolicy.username);
-        userPolicies = userPolicies.filter(policy => policy.interval === providedPolicy.interval && !policy._id.equals(req.body._id));
-        if (userPolicies && userPolicies.length > 0) {
-            const error = new Error(`This user already has a policy for interval ${providedPolicy.interval}`);
-            error.statusCode = 400;
-            return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+        try {
+            let userPolicies = await PolicyRepository.getPoliciesByUsername(providedPolicy.username);
+            await policyValidator.validatePolicy(userPolicies, providedPolicy, user);
+        } catch (err) {
+            return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
         }
+
     }
 
     try {

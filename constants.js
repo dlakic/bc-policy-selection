@@ -9,7 +9,7 @@ const intervals = {
     DAILY: 'daily',
     WEEKLY: 'weekly',
     MONTHLY: 'monthly',
-    YEARLY: 'yearly,'
+    YEARLY: 'yearly'
 };
 
 const blockchains = {

@@ -70,10 +70,10 @@ function cleanNumericalParams(blockchains) {
 
 function sortPoliciesByPriority(policies) {
     const order = [DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT];
-    return policies.sort((a, b) => order.indexOf(a.interval) > order.indexOf(b.interval));
+    return policies.sort((a, b) => order.indexOf(a.interval) - order.indexOf(b.interval));
 }
 
-function getLowerThresholdsNoDefault(threshold) {
+function getLowerIntervals(threshold) {
 
     if (threshold === DAILY) {
         return [];
@@ -84,17 +84,17 @@ function getLowerThresholdsNoDefault(threshold) {
     }
 
     if (threshold === MONTHLY) {
-        return [DAILY,WEEKLY];
+        return [DAILY, WEEKLY];
     }
 
-    if(threshold === YEARLY) {
+    if (threshold === YEARLY) {
         return [DAILY, WEEKLY, MONTHLY];
     }
 
     return [];
 }
 
-function getHigherThresholdsNoDefault(threshold) {
+function getHigherIntervals(threshold) {
 
     if (threshold === DAILY) {
         return [WEEKLY, MONTHLY, YEARLY];
@@ -108,7 +108,7 @@ function getHigherThresholdsNoDefault(threshold) {
         return [YEARLY];
     }
 
-    if(threshold === YEARLY) {
+    if (threshold === YEARLY) {
         return [];
     }
 
@@ -119,6 +119,6 @@ module.exports = {
     buildPolicy,
     cleanNumericalParams,
     sortPoliciesByPriority,
-    getLowerThresholdsNoDefault,
-    getHigherThresholdsNoDefault,
+    getLowerIntervals,
+    getHigherIntervals,
 };

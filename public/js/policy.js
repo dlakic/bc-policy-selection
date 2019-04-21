@@ -19,8 +19,10 @@ function savePolicy(data) {
         .end((err, res) => {
             if (err) {
                 console.log(res);
-                document.querySelector('#error').innerHTML = 'ERROR: ' + res.body.message;
-                return document.querySelector('#error').style.display = 'block';
+                const errorDiv = document.querySelector('#error');
+                errorDiv.innerHTML = 'ERROR: ' + res.body.message;
+                window.scrollTo(0, 0);
+                return errorDiv.style.display = 'block';
             } else {
                 window.location.replace("/policies/" + data.username );
             }
