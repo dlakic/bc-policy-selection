@@ -60,6 +60,7 @@ const exchanges = {
     GWEI_TO_ETH: 1000000000,
     SATOSHIS_TO_BTC: 100000000,
     BYTE_TO_KBYTE: 1024,
+    GAS_PER_BYTE: 625,
 };
 
 module.exports = {

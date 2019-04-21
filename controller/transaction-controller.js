@@ -49,7 +49,7 @@ module.exports.getBlockchainCost = async (req, res) => {
         const costs = await costCalculator.calculateCostForBlockchain(blockchainNameShort);
         return res.status(200).send(costs);
     } catch (err) {
-
+        return res.status(500).send(err)
     }
 
 

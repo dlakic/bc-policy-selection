@@ -3,17 +3,13 @@ const ratesAPI = require('../api/bc-rates');
 const bcCosts = require('../api/bc-fees');
 const transformUtil = require('../util/unit-transformations');
 
+//TODO: return per profile
 module.exports.calculateCostForBlockchain = async (bcKey) => {
     const blockchainRate = await ratesAPI.fetchBlockchainCost('CHF', bcKey);
     if (bcKey === constants.blockchains.BTC.nameShort) {
-        const costOne = await bcCosts.fetchBTCFeesInSatoshiPerByteBCFees();
-        const costTwo = await bcCosts.fetchBTCFeesInSatoshiPerByteBlockCypher();
-        const costsInSatoshi = transformUtil.avgCost(costOne, costTwo);
-        // convert to BTC
-        const costInBTC = {};
-        Object.keys(costsInSatoshi).forEach((profile) => {
-            costInBTC[profile] = transformUtil.satoshisToBtc(costsInSatoshi[profile]);
-        });
+        const costOne = await bcCosts.fetchBTCFeesInBTCPerByteBCFees();
+        const costTwo = await bcCosts.fetchBTCFeesInBTCPerByteBlockCypher();
+        const costInBTC = transformUtil.avgCost(costOne, costTwo);
         // convert to money
         const costs = {};
         Object.keys(costInBTC).map((profile) => {
@@ -22,7 +18,16 @@ module.exports.calculateCostForBlockchain = async (bcKey) => {
         return costs;
     }
     if (bcKey === constants.blockchains.ETH.nameShort) {
-        //TODO: calculate for ETH
+        //FixME: Kinda broken
+        const costOne = await bcCosts.fetchETHFeesPerGasBlockCypher();
+        const costTwo = await bcCosts.fetchETHFeesPerGasEtherchain();
+        const costInETH = transformUtil.avgCost(costOne, costTwo);
+        // convert to money
+        const costs = {};
+        Object.keys(costInETH).map((profile) => {
+            costs[profile] = costInETH[profile] * blockchainRate[bcKey] * 2100;
+        });
+        return costs;
     }
     if (bcKey === constants.blockchains.XLM.nameShort) {
         return {[bcKey]: 0.00001 * blockchainRate[bcKey]};

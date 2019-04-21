@@ -16,12 +16,12 @@ function ethToWei(eth) {
     return eth * WEI_TO_ETH
 }
 
-function satoshisToBtc(sat) {
+function satoshisPerByteToBtcPerByte(sat) {
     return sat / SATOSHIS_TO_BTC
 }
 
-function kbyteToByte(kbyte) {
-    return kbyte / BYTE_TO_KBYTE
+function satoshisPerKbToBtcperByte(sat) {
+    return sat / SATOSHIS_TO_BTC / BYTE_TO_KBYTE
 }
 
 function avgCost(costOne, costTwo) {
@@ -37,7 +37,7 @@ module.exports = {
     gweiToWei,
     weiToEth,
     ethToWei,
-    satoshisToBtc,
-    kbyteToByte,
+    satoshisPerByteToBtcPerByte,
+    satoshisPerKbToBtcperByte,
     avgCost
 };
