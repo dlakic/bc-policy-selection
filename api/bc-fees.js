@@ -42,6 +42,7 @@ module.exports.fetchETHFeesPerGasEtherchain = () => {
     const options = {
         uri: 'https://www.etherchain.org/api/gasPriceOracle',
         json: true,
+        // This header is needed since the api has a cloudflare protection for some reason.
         headers: {
             'User-Agent': 'PostmanRuntime/7.11.0'
         }
