@@ -25,7 +25,7 @@ module.exports.calculateCostForBlockchain = async (bcKey) => {
         // convert to money
         const costs = {};
         Object.keys(costInETH).map((profile) => {
-            costs[profile] = costInETH[profile] * blockchainRate[bcKey] * 2100;
+            costs[profile] = costInETH[profile] * blockchainRate[bcKey] * 2100; //todo: convert in byte
         });
         return costs;
     }
@@ -33,7 +33,8 @@ module.exports.calculateCostForBlockchain = async (bcKey) => {
         return {[bcKey]: 0.00001 * blockchainRate[bcKey]};
     }
     if (bcKey === constants.blockchains.EOS.nameShort) {
-        //TODO: calculate for EOS
+        const ramCost = await bcCosts.fetchRAMPriceInEOS();
+        return ramCost;
     }
     if (bcKey === constants.blockchains.MIOTA.nameShort) {
         return {[bcKey]: 0};

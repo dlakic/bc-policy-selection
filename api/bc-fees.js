@@ -80,3 +80,30 @@ module.exports.fetchETHFeesPerGasBlockCypher = () => {
     })
 };
 
+module.exports.fetchRAMPriceInEOS = () => {
+    const options = {
+        uri: 'http://mainnet.eoscanada.com/v1/chain/get_table_rows',
+        method: 'POST',
+        body: {
+            scope: "eosio",
+            code: "eosio",
+            table: "rammarket",
+            json: true
+        },
+        json: true
+    };
+    return new Promise((resolve, reject) => {
+        request(options).then((response) => {
+            // calculation of ram price according to bancor's formula
+            const data = response.rows[0];
+            const ramBalance = parseInt(data['quote']['balance'].slice(0,-4),10);
+            const eosBalance = parseInt(data['base']['balance'].slice(0,-4), 10);
+            const price = ramBalance/eosBalance;
+            resolve({
+               price
+            });
+        }).catch((err) => {
+            reject(err);
+        });
+    })
+};
