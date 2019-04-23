@@ -13,11 +13,13 @@ module.exports.selectBlockchain = async (policy) => {
         return blockchainPool;
     }
 
-    // filter out all Blockchains that do not correspond with wanted bcType
-    blockchainPool = blockchainPool.filter(blockchain => blockchain.type === policy.bcType);
+    if(policy.bcType !== 'indifferent') {
+        // filter out all Blockchains that do not correspond with wanted bcType
+        blockchainPool = blockchainPool.filter(blockchain => blockchain.type === policy.bcType);
 
-    if (blockchainPool.length === 1) {
-        return blockchainPool;
+        if (blockchainPool.length === 1) {
+            return blockchainPool;
+        }
     }
 
     // filter out all Blockchains that do not correspond with the tps threshold

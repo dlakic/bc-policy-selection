@@ -43,16 +43,6 @@ module.exports.validatePolicy = async (userPolicies, policyToValidate, user) => 
     // Daily threshold policies need to have lower max cost than weekly, monthly and yearly
     if (policyToValidate.interval === DAILY) {
         return validateCostsForInterval(policyToValidate, otherPolicies, DAILY);
-        /* const policiesToCompareTo = otherPolicies.filter(policy => policy.interval !== DEFAULT && policy.interval !== DAILY);
-         if (policiesToCompareTo && policiesToCompareTo.length > 0) {
-             const policiesWithInvalidLowerCostThreshold = policiesToCompareTo.filter(policy => policy.cost < policyToValidate.cost);
-             if (policiesWithInvalidLowerCostThreshold && policiesWithInvalidLowerCostThreshold.length > 0) {
-                 const conflictError = new Error(`Policy conflict detected: A policy with interval ${policiesWithInvalidLowerCostThreshold[0].interval} has a lower cost threshold of ${policiesWithInvalidLowerCostThreshold[0].cost}`);
-                 conflictError.statusCode = 400;
-                 throw conflictError
-             }
-
-         }*/
     }
 
     // Weekly threshold policies need to have lower max cost than monthly and yearly and higher than daily

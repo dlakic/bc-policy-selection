@@ -11,13 +11,12 @@ function buildPolicy(requestBody = null, username) {
         policy.currency = '';
         policy.cost = 0;
         policy.bcType = '';
-        policy.bcSmartContract = false;
-        policy.bcSmartContractLanguages = [];
+        policy.bcTuringComplete = false;
         policy.interval = '';
-        policy.bcTps = 0;
         policy.bcBlockTime = 0;
-        policy.bcBlockSize = 0;
         policy.bcDataSize = 0;
+        policy.split = false;
+        policy.costProfile = '';
 
     } else if (requestBody.preferredBC && requestBody.preferredBC.length === 1) {
         policy.username = requestBody.username;
@@ -29,13 +28,13 @@ function buildPolicy(requestBody = null, username) {
         policy.currency = requestBody.currency;
         policy.cost = parseFloat(requestBody.cost);
         policy.bcType = requestBody.bcType;
-        policy.bcSmartContract = requestBody.bcSmartContract || false;
-        policy.bcSmartContractLanguages = requestBody.bcSmartContractLanguages || [];
+        policy.bcTuringComplete = requestBody.bcTuringComplete || false;
         policy.interval = requestBody.interval;
         policy.bcTps = parseInt(requestBody.bcTps, 10);
         policy.bcBlockTime = parseInt(requestBody.bcBlockTime, 10);
-        policy.bcBlockSize = parseInt(requestBody.bcBlockSize, 10);
         policy.bcDataSize = parseInt(requestBody.bcDataSize, 10);
+        policy.split = requestBody.split;
+        policy.costProfile = requestBody.costProfile;
     }
 
     return policy;
@@ -43,25 +42,21 @@ function buildPolicy(requestBody = null, username) {
 
 function cleanNumericalParams(blockchains) {
     const tps = [];
-    const blockSize = [];
     const blockTime = [];
     const maxTrxSize = [];
 
     blockchains.forEach(blockchain => {
         tps.push(blockchain.tps);
-        blockSize.push(blockchain.blockSize);
         blockTime.push(blockchain.blockTime);
         maxTrxSize.push(blockchain.maxTrxSize);
     });
 
     tps.sort((a, b) => a - b);
-    blockSize.sort((a, b) => a - b);
     blockTime.sort((a, b) => a - b);
     maxTrxSize.sort((a, b) => a - b);
 
     return {
         tps: [...new Set(tps)],
-        blockSize: [...new Set(blockSize)],
         blockTime: [...new Set(blockTime)],
         maxTrxSize: [...new Set(maxTrxSize)],
     }

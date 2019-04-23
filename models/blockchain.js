@@ -23,29 +23,12 @@ const blockchainSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    blockSize: {
-        type: Number,
-        required: true,
-    },
     maxTrxSize: {
         type: Number,
         required: true,
     },
-    smartContract: {
+    turingComplete: {
         type: Boolean,
-        required: true,
-    },
-    smartContractLanguages: {
-        type: Array,
-        required: true,
-    },
-    // TODO: Maybe do this dynamically via api and not store directly into bcdata
-    price: {
-        type: Number,
-        required: true,
-    },
-    trxFee: {
-        type: Number,
         required: true,
     },
 

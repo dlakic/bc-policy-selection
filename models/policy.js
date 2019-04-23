@@ -11,6 +11,7 @@ const policySchema = new mongoose.Schema({
     },
     currency: {
         type: String,
+        enum: ['CHF', 'EUR', 'USD'],
         default: 'CHF',
     },
     cost: {
@@ -29,20 +30,22 @@ const policySchema = new mongoose.Schema({
     bcBlockTime: {
         type: Number,
     },
-    bcBlockSize: {
-        type: Number,
-    },
     bcDataSize: {
         type: Number,
     },
-    bcSmartContract: {
+    bcTuringComplete: {
         type: Boolean,
         default: false,
     },
-    bcSmartContractLanguages: {
-        type: Array,
-        default: [],
+    split: {
+        type: Boolean,
+        default: false,
     },
+    costProfile: {
+        type: String,
+        enum: ['economic', 'performance'],
+        default: 'economic',
+    }
 });
 
 const Policy = mongoose.model('Policy', policySchema);

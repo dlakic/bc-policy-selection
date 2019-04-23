@@ -58,6 +58,11 @@
                                                    value="private" {{ "checked" if policy.bcType == "private" }}>
                                             Private
                                         </label>
+                                        <label class="radio">
+                                            <input type="radio" name="bcType"
+                                                   value="indifferent" {{ "checked" if policy.bcType == "indifferent" }}>
+                                            Indifferent
+                                        </label>
                                     </div>
                                 </div>
                                 <div class="field">
@@ -123,24 +128,6 @@
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <label class="label" for="bcBlockSize">Min. Block Size</label>
-                                    <div class="control">
-                                        <div class="select">
-                                            <select id="bcBlockSize" name="bcBlockSize">
-                                                {% for blockSize in choosableParams.blockSize %}
-                                                    <option value="{{ blockSize }}" {{ "selected" if policy.bcBlockSize == blockSize }}>
-                                                        {{ blockSize }}
-                                                    </option>
-                                                {% else %}
-                                                    <option>
-                                                        NoData
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="field">
                                     <label class="label" for="bcBlockTime">Max. Block Time</label>
                                     <div class="control">
                                         <div class="select">
@@ -177,18 +164,48 @@
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <label class="label">Smart Contract Support Needed</label>
+                                    <label class="label">Turing completeness</label>
                                     <div class="control">
                                         <label class="radio">
-                                            <input type="radio" name="bcSmartContract"
-                                                   value="true" {{ "checked" if policy.bcSmartContract }}>
+                                            <input type="radio" name="bcTuringComplete"
+                                                   value="true" {{ "checked" if policy.bcTuringComplete }}>
                                             Yes
                                         </label>
                                         <label class="radio">
-                                            <input type="radio" name="bcSmartContract"
-                                                   value="false" {{ "checked" if not policy.bcSmartContract }}>
+                                            <input type="radio" name="bcTuringComplete"
+                                                   value="false" {{ "checked" if not policy.bcTuringComplete }}>
                                             No
                                         </label>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="label">Allow Split Transations</label>
+                                    <div class="control">
+                                        <label class="radio">
+                                            <input type="radio" name="split"
+                                                   value="true" {{ "checked" if policy.split }}>
+                                            Yes
+                                        </label>
+                                        <label class="radio">
+                                            <input type="radio" name="split"
+                                                   value="false" {{ "checked" if not policy.split }}>
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <label class="label" for="costProfile">Cost Profile</label>
+                                        <div class="select">
+                                            <select id="costProfile" name="costProfile">
+                                                <option value="performance" {{ "selected" if policy.costProfile == "performance" }}>
+                                                    performance
+                                                </option>
+                                                <option value="economic" {{ "selected" if policy.costProfile == "economic" }}>
+                                                    economic
+                                                </option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <input type="hidden" name="_id" value="{{ policy._id }}">

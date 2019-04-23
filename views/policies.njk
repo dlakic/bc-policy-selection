@@ -26,9 +26,10 @@
                                 <th><abbr title="Cost Threshold Currency">Currency</abbr></th>
                                 <th><abbr title="Transactions Per Second">TPS</abbr></th>
                                 <th><abbr title="Block Time">Time</abbr></th>
-                                <th><abbr title="Block Size">Size</abbr></th>
                                 <th><abbr title="Data Size">D. Size</abbr></th>
                                 <th><abbr title="Touring Complete">Compl.</abbr></th>
+                                <th><abbr title="Allow Split Transactions">Split</abbr></th>
+                                <th><abbr title="Cost Profile">Profile</abbr></th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -56,9 +57,10 @@
                                     <td>{{ policy.currency }}</td>
                                     <td>{{ policy.bcTps }}</td>
                                     <td>{{ policy.bcBlockTime }}</td>
-                                    <td>{{ policy.bcBlockSize }}</td>
                                     <td>{{ policy.bcDataSize }}</td>
-                                    <td>{{ policy.bcSmartContract }}</td>
+                                    <td>{{ policy.bcTuringComplete }}</td>
+                                    <td>{{ policy.split }}</td>
+                                    <td>{{ policy.costProfile }}</td>
                                     <td>
                                         <a class="button is-link table-button" href="/policy?id={{ policy._id }}">Edit Policy</a>
                                     </td>
