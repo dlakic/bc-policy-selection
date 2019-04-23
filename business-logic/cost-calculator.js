@@ -5,11 +5,10 @@ const util = require('../util');
 const transformUtil = require('../util/unit-transformations');
 
 //TODO: return per profile
-module.exports.calculateCostForBlockchain = async (bcKey, currency, bytes, profile='low') => {
+async function calculateCostForBlockchain(bcKey, blockchainRates, bytes, profile = 'low') {
     if (util.isTransactionFeeFreeBlockchain(bcKey)) {
         return {[bcKey]: 0};
     }
-    const blockchainRate = await ratesAPI.fetchBlockchainCost(currency, bcKey);
     if (bcKey === constants.blockchains.BTC.nameShort) {
         const costOne = await bcCosts.fetchBTCFeesInBTCPerByteBCFees();
         const costTwo = await bcCosts.fetchBTCFeesInBTCPerByteBlockCypher();
@@ -17,7 +16,7 @@ module.exports.calculateCostForBlockchain = async (bcKey, currency, bytes, profi
         // convert to money
         const costs = {};
         Object.keys(costInBTC).map((profile) => {
-            costs[profile] = costInBTC[profile] * blockchainRate[bcKey];
+            costs[profile] = costInBTC[profile] * blockchainRates[bcKey];
         });
         // cost per Byte
         return {[bcKey]: costs[profile]};
@@ -29,41 +28,29 @@ module.exports.calculateCostForBlockchain = async (bcKey, currency, bytes, profi
         // convert to money
         const costs = {};
         Object.keys(costInETH).map((profile) => {
-            costs[profile] = costInETH[profile] * blockchainRate[bcKey] * constants.exchanges.GAS_PER_BYTE;
+            costs[profile] = costInETH[profile] * blockchainRates[bcKey] * constants.exchanges.GAS_PER_BYTE;
         });
         // cost per Byte
         return {[bcKey]: costs[profile]};
     }
     if (bcKey === constants.blockchains.XLM.nameShort) {
         // cost per operation
-        return {[bcKey]: 0.00001 * blockchainRate[bcKey]};
+        return {[bcKey]: 0.00001 * blockchainRates[bcKey]};
     }
     if (bcKey === constants.blockchains.EOS.nameShort) {
         const ramCost = await bcCosts.fetchRAMPriceInEOS();
         // cost per Byte
-        return {[bcKey]: ramCost * blockchainRate[bcKey]}
+        return {[bcKey]: ramCost * blockchainRates[bcKey]}
     }
     return {[bcKey]: 0};
-};
+}
 
 async function calculateCosts(blockchainRates) {
+    let blockchainCosts;
     const costs = {};
-    Object.keys(blockchainRates).forEach(bcKey => {
-        if (bcKey === constants.blockchains.BTC.nameShort) {
-            //TODO: calculate for BTC
-        }
-        if (bcKey === constants.blockchains.ETH.nameShort) {
-            //TODO: calculate for ETH
-        }
-        if (bcKey === constants.blockchains.XLM.nameShort) {
-            //TODO: calculate for XLM
-        }
-        if (bcKey === constants.blockchains.EOS.nameShort) {
-            //TODO: calculate for EOS
-        }
-        if (bcKey === constants.blockchains.MIOTA.nameShort) {
-            //TODO: calculate for MIOTA
-        }
+    Object.keys(blockchainRates).forEach(async bcKey => {
+        blockchainCosts = await calculateCostForBlockchain(bcKey, blockchainRates, 0);
+        costs[bcKey] = blockchainCosts[bcKey];
     });
     return costs;
 }
@@ -75,18 +62,31 @@ async function calculateCostForPublicBlockchains(currency, publicBlockchainPool)
     return await calculateCosts(blockchainRates);
 }
 
+async function calculateCostForPrivateBlockchains(currency, privateBlockchainPool) {
+    const blockchainRates = {};
+    privateBlockchainPool.forEach((blockchain) => {
+        blockchainRates[blockchain.nameShort] = 0;
+    });
+    return await calculateCosts(blockchainRates);
+}
 
-module.exports.calculateCostForPolicy = async (policy, blockchainPool) => {
+async function calculateCostForPolicy(policy, blockchainPool){
     const publicBlockchainPool = blockchainPool.filter(blockchain => blockchain.type === 'public');
     const privateBlockchainPool = blockchainPool.filter(blockchain => blockchain.type === 'private');
+    let publicCosts = {};
+    let privateCosts = {};
     if (publicBlockchainPool.length !== 0) {
-        return await calculateCostForPublicBlockchains(policy.currency, publicBlockchainPool);
+        publicCosts = await calculateCostForPublicBlockchains(policy.currency, publicBlockchainPool);
     }
 
     if (privateBlockchainPool.length !== 0) {
-        //TODO: calculate for private bcs
+        privateCosts = await calculateCostForPrivateBlockchains(policy.currency, privateBlockchainPool)
     }
 
-    //TODO: return lowest
-    return blockchainPool;
+    return {...publicCosts, ...privateCosts};
+}
+
+module.exports = {
+    calculateCostForBlockchain,
+    calculateCostForPolicy
 };

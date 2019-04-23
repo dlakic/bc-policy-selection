@@ -23,7 +23,7 @@ module.exports.listPolicies = async (req, res) => {
         }
         let policies = await PolicyRepository.getPoliciesByUsername(username);
         if (policies && policies.length !== 0) {
-            await policySelector.selectPolicy(policies, username);
+            await policySelector.selectPolicy(policies, user);
         }
         policies = util.sortPoliciesByPriority(policies);
         console.log(policies);

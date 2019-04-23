@@ -1,34 +1,36 @@
 const UserRepository = require('../repositories/user-repository');
 const PolicyRepository = require('../repositories/policy-repository');
+const constants = require('../constants');
 const blockchainSelector = require('./blockchain-selector');
 const costCalculator = require('./cost-calculator');
 
-module.exports.selectPolicy = async (policies, username) => {
-    const user = await UserRepository.getUserByName(username);
+const {DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT} = constants.intervals;
 
-    const dailyPolicy = policies.find(policy => policy.interval === 'daily');
-
+async function selectPolicy(policies, user){
+    // Mark all policies as inactive before setting the chosen one as active
     policies.forEach(policy => {
-       policy.isActive = false;
-       PolicyRepository.getPolicyAndUpdate(policy.id, policy);
+        policy.isActive = false;
+        PolicyRepository.getPolicyAndUpdate(policy.id, policy);
     });
+
+    const dailyPolicy = policies.find(policy => policy.interval === DAILY);
 
     if (dailyPolicy) {
         if(dailyPolicy.cost >= user.costDaily) {
-            const validBlockchainsForPolicy = await blockchainSelector.selectBlockchain(dailyPolicy);
+            /*const validBlockchainsForPolicy = await blockchainSelector.selectBlockchain(dailyPolicy);
             const costs = await costCalculator.calculateCostForPolicy(dailyPolicy, validBlockchainsForPolicy);
             console.log(costs);
-            //TODO: return cheapest
+            //TODO:
             if(dailyPolicy.cost >= user.cost) {
 
-            }
+            }*/
             dailyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(dailyPolicy.id, dailyPolicy);
             return dailyPolicy;
         }
     }
 
-    const weeklyPolicy = policies.find(policy => policy.interval === 'weekly');
+    const weeklyPolicy = policies.find(policy => policy.interval === WEEKLY);
 
     if (weeklyPolicy) {
         if(weeklyPolicy.cost >= user.costWeekly) {
@@ -38,7 +40,7 @@ module.exports.selectPolicy = async (policies, username) => {
         }
     }
 
-    const monthlyPolicy = policies.find(policy => policy.interval === 'monthly');
+    const monthlyPolicy = policies.find(policy => policy.interval === MONTHLY);
 
     if (monthlyPolicy) {
         if(monthlyPolicy.cost >= user.costMonthly) {
@@ -48,7 +50,7 @@ module.exports.selectPolicy = async (policies, username) => {
         }
     }
 
-    const yearlyPolicy = policies.find(policy => policy.interval === 'yearly');
+    const yearlyPolicy = policies.find(policy => policy.interval === YEARLY);
 
     if (yearlyPolicy) {
         if(yearlyPolicy.cost >= user.costYearly) {
@@ -58,7 +60,7 @@ module.exports.selectPolicy = async (policies, username) => {
         }
     }
 
-    const defaultPolicy = policies.find(policy => policy.interval === 'default');
+    const defaultPolicy = policies.find(policy => policy.interval === DEFAULT);
 
     if (defaultPolicy) {
         defaultPolicy.isActive = true;
@@ -69,4 +71,13 @@ module.exports.selectPolicy = async (policies, username) => {
     const conflictError = new Error("Policy conflict detected: No applicable policy found");
     conflictError.statusCode = 500;
     throw conflictError
+}
+
+async function selectPolicyForTransaction(policies, username) {
+    const currentlyActivePolicy = await selectPolicy(policies, username);
+}
+
+module.exports = {
+    selectPolicy,
+    selectPolicyForTransaction
 };
