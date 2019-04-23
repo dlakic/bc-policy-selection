@@ -1,11 +1,15 @@
 const constants = require('../constants');
 const ratesAPI = require('../api/bc-rates');
 const bcCosts = require('../api/bc-fees');
+const util = require('../util');
 const transformUtil = require('../util/unit-transformations');
 
 //TODO: return per profile
-module.exports.calculateCostForBlockchain = async (bcKey) => {
-    const blockchainRate = await ratesAPI.fetchBlockchainCost('CHF', bcKey);
+module.exports.calculateCostForBlockchain = async (bcKey, currency, bytes, profile='low') => {
+    if (util.isTransactionFeeFreeBlockchain(bcKey)) {
+        return {[bcKey]: 0};
+    }
+    const blockchainRate = await ratesAPI.fetchBlockchainCost(currency, bcKey);
     if (bcKey === constants.blockchains.BTC.nameShort) {
         const costOne = await bcCosts.fetchBTCFeesInBTCPerByteBCFees();
         const costTwo = await bcCosts.fetchBTCFeesInBTCPerByteBlockCypher();
@@ -15,30 +19,31 @@ module.exports.calculateCostForBlockchain = async (bcKey) => {
         Object.keys(costInBTC).map((profile) => {
             costs[profile] = costInBTC[profile] * blockchainRate[bcKey];
         });
-        return costs;
+        // cost per Byte
+        return {[bcKey]: costs[profile]};
     }
     if (bcKey === constants.blockchains.ETH.nameShort) {
-        //FixME: Kinda broken
         const costOne = await bcCosts.fetchETHFeesPerGasBlockCypher();
         const costTwo = await bcCosts.fetchETHFeesPerGasEtherchain();
         const costInETH = transformUtil.avgCost(costOne, costTwo);
         // convert to money
         const costs = {};
         Object.keys(costInETH).map((profile) => {
-            costs[profile] = costInETH[profile] * blockchainRate[bcKey] * 2100; //todo: convert in byte
+            costs[profile] = costInETH[profile] * blockchainRate[bcKey] * constants.exchanges.GAS_PER_BYTE;
         });
-        return costs;
+        // cost per Byte
+        return {[bcKey]: costs[profile]};
     }
     if (bcKey === constants.blockchains.XLM.nameShort) {
+        // cost per operation
         return {[bcKey]: 0.00001 * blockchainRate[bcKey]};
     }
     if (bcKey === constants.blockchains.EOS.nameShort) {
         const ramCost = await bcCosts.fetchRAMPriceInEOS();
-        return ramCost;
+        // cost per Byte
+        return {[bcKey]: ramCost * blockchainRate[bcKey]}
     }
-    if (bcKey === constants.blockchains.MIOTA.nameShort) {
-        return {[bcKey]: 0};
-    }
+    return {[bcKey]: 0};
 };
 
 async function calculateCosts(blockchainRates) {

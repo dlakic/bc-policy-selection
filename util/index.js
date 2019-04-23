@@ -115,10 +115,18 @@ function getHigherIntervals(threshold) {
     return [];
 }
 
+function isTransactionFeeFreeBlockchain(bcType) {
+    return bcType === constants.blockchains.PSG.nameShort
+        || bcType === constants.blockchains.MLC.nameShort
+        || bcType === constants.blockchains.MIOTA.nameShort
+        || bcType === constants.blockchains.HYP.nameShort;
+}
+
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
     sortPoliciesByPriority,
     getLowerIntervals,
     getHigherIntervals,
+    isTransactionFeeFreeBlockchain,
 };

@@ -33,6 +33,7 @@ module.exports.handleTransaction = async (req, res) => {
 
 module.exports.getBlockchainCost = async (req, res) => {
     const blockchainNameShort = req.params.blockchain;
+    const currency = req.params.currency;
     if (!blockchainNameShort) {
         const error = new Error("No blockchain provided");
         error.statusCode = 400;
@@ -46,7 +47,7 @@ module.exports.getBlockchainCost = async (req, res) => {
             error.statusCode = 400;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        const costs = await costCalculator.calculateCostForBlockchain(blockchainNameShort);
+        const costs = await costCalculator.calculateCostForBlockchain(blockchainNameShort, currency);
         return res.status(200).send(costs);
     } catch (err) {
         return res.status(500).send(err)

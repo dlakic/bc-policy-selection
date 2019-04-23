@@ -96,12 +96,10 @@ module.exports.fetchRAMPriceInEOS = () => {
         request(options).then((response) => {
             // calculation of ram price according to bancor's formula
             const data = response.rows[0];
-            const ramBalance = parseInt(data['quote']['balance'].slice(0,-4),10);
-            const eosBalance = parseInt(data['base']['balance'].slice(0,-4), 10);
-            const price = ramBalance/eosBalance;
-            resolve({
-               price
-            });
+            const ramBalance = parseFloat(data['quote']['balance'].slice(0, -4));
+            const eosBalance = parseFloat(data['base']['balance'].slice(0, -4));
+            const price = ramBalance / eosBalance;
+            resolve(price);
         }).catch((err) => {
             reject(err);
         });
