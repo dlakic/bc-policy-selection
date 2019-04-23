@@ -1,14 +1,34 @@
 const PolicyRepository = require('../repositories/policy-repository');
 const BlockchainRepository = require('../repositories/blockchain-repository');
 const UserRepository = require('../repositories/user-repository');
+const policySelector = require('../business-logic/policy-selector');
 const blockchainSelector = require('../business-logic/blockchain-selector');
+const policyValidator = require('../business-logic/policy-validator');
 const util = require('../util');
 
-
 module.exports.listPolicies = async (req, res) => {
+    const username = req.params.username;
+    if (!username) {
+        const error = new Error("No username provided");
+        error.statusCode = 400;
+        return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+    }
+
     try {
-        const policies = await PolicyRepository.getAllPolicies();
-        return res.status(200).render('policies', {policies});
+        const user = await UserRepository.getUserByName(username);
+        if (!user || user.length === 0) {
+            const error = new Error("User does not exist");
+            error.statusCode = 404;
+            return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+        }
+        let policies = await PolicyRepository.getPoliciesByUsername(username);
+        if (policies && policies.length !== 0) {
+            await policySelector.selectPolicy(policies, user);
+        }
+        policies = util.sortPoliciesByPriority(policies);
+        console.log(policies);
+        return res.status(200).render('policies', {policies, username});
+
     } catch (err) {
         console.error(err);
         return res.status(500).render('error', {error: err});
@@ -20,14 +40,13 @@ module.exports.editPolicy = async (req, res) => {
     try {
         const blockchains = await BlockchainRepository.getAllBlockchains();
         const choosableParams = util.cleanNumericalParams(blockchains);
-        console.log(choosableParams)
+        let policy = {};
         if (req.query.id) {
-            const policy = await PolicyRepository.getPolicyById(req.query.id);
-            return res.status(200).render('policy', {policy, choosableParams, blockchains});
+            policy = await PolicyRepository.getPolicyById(req.query.id);
         } else {
-            return res.status(200).render('policy', {policy: util.buildPolicy(), choosableParams, blockchains});
+            policy = req.query.username ? util.buildPolicy(null, req.query.username) : util.buildPolicy();
         }
-
+        return res.status(200).render('policy', {policy, choosableParams, blockchains});
     } catch (err) {
         console.error(err);
         return res.status(500).render('error', {error: err})
@@ -46,26 +65,28 @@ module.exports.listBlockchains = async (req, res) => {
 };
 
 module.exports.savePolicy = async (req, res) => {
-    if(!req.body.username) {
+    if (!req.body.username) {
         const error = new Error("No username provided");
         error.statusCode = 400;
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
+
     const providedPolicy = util.buildPolicy(req.body);
-    const user = await UserRepository.getUserByName(req.body.username);
+    const user = await UserRepository.getUserByName(providedPolicy.username);
 
     // Check policy interval conflicts
-    if(user) {
-        let userPolicies = await PolicyRepository.getPoliciesByUsername(req.body.username);
-        userPolicies = userPolicies.filter(policy => policy.interval === req.body.interval && !policy._id.equals(req.body._id));
-        if(userPolicies && userPolicies.length > 0) {
-            const error = new Error(`This user already has a policy for interval ${req.body.interval}`);
-            error.statusCode = 400;
-            return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+    if (user) {
+        try {
+            let userPolicies = await PolicyRepository.getPoliciesByUsername(providedPolicy.username);
+            await policyValidator.validatePolicy(userPolicies, providedPolicy, user);
+        } catch (err) {
+            return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
         }
+
     }
 
     try {
+        // test for Policy conflicts
         await blockchainSelector.selectBlockchain(providedPolicy);
     } catch (err) {
         return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
@@ -77,7 +98,7 @@ module.exports.savePolicy = async (req, res) => {
 
             // if user does not exist, create user
             if (!user || user.length === 0) {
-                await UserRepository.createUser(req.body.username);
+                await UserRepository.createUser(providedPolicy.username);
             }
             return res.status(200).render('result', {policy: updatedPolicy});
         } catch (err) {
@@ -90,7 +111,7 @@ module.exports.savePolicy = async (req, res) => {
 
             // if user does not exist, create user
             if (!user || user.length === 0) {
-                await UserRepository.createUser(req.body.username);
+                await UserRepository.createUser(providedPolicy.username);
             }
             return res.status(200).render('result', {policy: createdPolicy});
         } catch (err) {
@@ -105,8 +126,9 @@ module.exports.deletePolicy = async (req, res) => {
 
     if (policyId) {
         try {
+            const policyToBeDeleted = await PolicyRepository.getPolicyById(policyId);
             await PolicyRepository.deletePolicy(policyId);
-            return res.status(200).send({message: 'Policy deleted Successfully'});
+            return res.status(200).send({username: policyToBeDeleted.username, message: 'Policy deleted Successfully'});
         } catch (err) {
             console.error(err);
             return res.status(500).render('error', {error: err});

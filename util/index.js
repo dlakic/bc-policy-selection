@@ -1,7 +1,12 @@
-function buildPolicy(requestBody = null) {
+const constants = require('../constants');
+
+const {DEFAULT, DAILY, WEEKLY, MONTHLY, YEARLY} = constants.intervals;
+
+function buildPolicy(requestBody = null, username) {
     const policy = {};
+    const policyUsername = username ? username : '';
     if (!requestBody) {
-        policy.username = '';
+        policy.username = policyUsername;
         policy.preferredBC = [];
         policy.currency = '';
         policy.cost = 0;
@@ -62,7 +67,66 @@ function cleanNumericalParams(blockchains) {
     }
 }
 
+
+function sortPoliciesByPriority(policies) {
+    const order = [DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT];
+    return policies.sort((a, b) => order.indexOf(a.interval) - order.indexOf(b.interval));
+}
+
+function getLowerIntervals(threshold) {
+
+    if (threshold === DAILY) {
+        return [];
+    }
+
+    if (threshold === WEEKLY) {
+        return [DAILY];
+    }
+
+    if (threshold === MONTHLY) {
+        return [DAILY, WEEKLY];
+    }
+
+    if (threshold === YEARLY) {
+        return [DAILY, WEEKLY, MONTHLY];
+    }
+
+    return [];
+}
+
+function getHigherIntervals(threshold) {
+
+    if (threshold === DAILY) {
+        return [WEEKLY, MONTHLY, YEARLY];
+    }
+
+    if (threshold === WEEKLY) {
+        return [MONTHLY, YEARLY];
+    }
+
+    if (threshold === MONTHLY) {
+        return [YEARLY];
+    }
+
+    if (threshold === YEARLY) {
+        return [];
+    }
+
+    return [];
+}
+
+function isTransactionFeeFreeBlockchain(bcType) {
+    return bcType === constants.blockchains.PSG.nameShort
+        || bcType === constants.blockchains.MLC.nameShort
+        || bcType === constants.blockchains.MIOTA.nameShort
+        || bcType === constants.blockchains.HYP.nameShort;
+}
+
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
+    sortPoliciesByPriority,
+    getLowerIntervals,
+    getHigherIntervals,
+    isTransactionFeeFreeBlockchain,
 };

@@ -1,14 +1,10 @@
 const request = require('request-promise');
 
-function estimateCost() {
-    
-}
-
-module.exports.fetchBlockchainCost = (currency) => {
+module.exports.fetchBlockchainCost = (currency, blockchains) => {
     const options = {
         uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
         qs: {
-            symbol: 'BTC,ETH',
+            symbol: blockchains,
             convert: currency
         },
         headers: {
@@ -18,7 +14,11 @@ module.exports.fetchBlockchainCost = (currency) => {
     };
     return new Promise((resolve, reject) => {
         request(options).then((response) => {
-            resolve({BTC: response.data.BTC.quote[currency].price, ETH: response.data.ETH.quote[currency].price});
+            const cleanedResponse = {};
+            Object.keys(response.data).forEach(bcKey => {
+                cleanedResponse[bcKey] = response.data[bcKey].quote[currency].price;
+            });
+            resolve(cleanedResponse);
         }).catch((err) => {
             reject(err);
         });

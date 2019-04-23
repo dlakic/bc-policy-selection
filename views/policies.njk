@@ -10,13 +10,14 @@
                     <div class="column is-four-fifths">
                     </div>
                     <div class="column is-one-fifth">
-                        <a class="button is-link is-pulled-right" href="/policy">Create new Policy</a>
+                        <a class="button is-link is-pulled-right" href="/policy{{ '?username=' + username if username }}">Create new Policy</a>
                     </div>
                     <div class="column is-full">
                         <table class="table is-striped is-narrow is-fullwidth">
                             <thead>
                             <tr>
                                 <th><abbr title="Number">No.</abbr></th>
+                                <th>Active</th>
                                 <th>Username</th>
                                 <th><abbr title="Preferred Blockchains">BC</abbr></th>
                                 <th><abbr title="Blockchain Type">Type</abbr></th>
@@ -27,8 +28,7 @@
                                 <th><abbr title="Block Time">Time</abbr></th>
                                 <th><abbr title="Block Size">Size</abbr></th>
                                 <th><abbr title="Data Size">D. Size</abbr></th>
-                                <th>Smart Contract</th>
-                                <th><abbr title="Smart Contract Languages">Lang</abbr></th>
+                                <th><abbr title="Touring Complete">Compl.</abbr></th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -37,6 +37,17 @@
                             {% for policy in policies %}
                                 <tr>
                                     <th>{{ loop.index }}</th>
+                                    <td>
+                                        {% if policy.isActive %}
+                                            <span class="tag is-success">
+                                                Active
+                                            </span>
+                                        {% else %}
+                                            <span class="tag is-danger">
+                                                Inactive
+                                            </span>
+                                        {% endif %}
+                                    </td>
                                     <td>{{ policy.username }}</td>
                                     <td>{{ policy.preferredBC }}</td>
                                     <td>{{ policy.bcType }}</td>
@@ -48,12 +59,11 @@
                                     <td>{{ policy.bcBlockSize }}</td>
                                     <td>{{ policy.bcDataSize }}</td>
                                     <td>{{ policy.bcSmartContract }}</td>
-                                    <td>{{ policy.bcSmartContractLanguages }}</td>
                                     <td>
-                                        <a class="button is-link" href="/policy?id={{ policy._id }}">Edit Policy</a>
+                                        <a class="button is-link table-button" href="/policy?id={{ policy._id }}">Edit Policy</a>
                                     </td>
                                     <td>
-                                        <button class="button is-danger delete-button"
+                                        <button class="button is-danger delete-button table-button"
                                                 id="delete-policy-{{ policy._id }}" value="{{ policy._id }}">Delete
                                             Policy
                                         </button>
@@ -72,4 +82,6 @@
         </div>
         </div>
     </section>
+
+    <script src="../js/policy-list.js"></script>
 {% endblock %}

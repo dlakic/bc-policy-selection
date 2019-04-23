@@ -1,6 +1,7 @@
 //TODO: Extract to appropriate njk template
 let firstSubmit = true;
-if (window.location.pathname === '/policy' && window.location.search !== '') {
+console.log(window.location.pathname)
+if (window.location.pathname === '/policy' && window.location.search.indexOf('id=') > -1) {
     const multiSelectElement = document.querySelector('#preferredBC');
     const multiselectValues = getMultiSelectValues(multiSelectElement);
 
@@ -10,26 +11,6 @@ if (window.location.pathname === '/policy' && window.location.search !== '') {
     }
 }
 
-function deletePolicy(id) {
-    superagent
-        .delete('/api/delete-policy/' + id)
-        .set('accept', 'json')
-        .end((err, res) => {
-            if (err) {
-                console.log(err);
-            } else {
-                window.location.replace("/");
-            }
-        });
-}
-
-const deletePolicyElements = document.querySelectorAll('.delete-button');
-deletePolicyElements.forEach(function (element) {
-    element.addEventListener("click", function () {
-        deletePolicy(element.value);
-    }, false);
-});
-
 function savePolicy(data) {
     superagent
         .post('/api/save-policy')
@@ -38,10 +19,12 @@ function savePolicy(data) {
         .end((err, res) => {
             if (err) {
                 console.log(res);
-                document.querySelector('#error').innerHTML = 'ERROR: ' + res.body.message;
-                return document.querySelector('#error').style.display = 'block';
+                const errorDiv = document.querySelector('#error');
+                errorDiv.innerHTML = 'ERROR: ' + res.body.message;
+                window.scrollTo(0, 0);
+                return errorDiv.style.display = 'block';
             } else {
-                window.location.replace("/");
+                window.location.replace("/policies/" + data.username );
             }
         });
 }
@@ -71,7 +54,6 @@ function buildErrorString(errors) {
     return errorString;
 }
 
-// TODO: validation and Errormessages
 function submitPolicy(id) {
     const form = document.querySelector(id);
     const jsonFormData = toJSON(form);
@@ -98,7 +80,6 @@ document.querySelector('#submit-policy-form').addEventListener("click", function
     e.preventDefault();
     submitPolicy('#policy-form');
 }, false);
-
 
 function getMultiSelectValues(element) {
     const value = [];
