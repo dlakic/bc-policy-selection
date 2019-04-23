@@ -16,10 +16,9 @@ async function selectPolicy(policies, user){
     const dailyPolicy = policies.find(policy => policy.interval === DAILY);
 
     if (dailyPolicy) {
-        if(dailyPolicy.cost >= user.costDaily) {
+        if(dailyPolicy.cost >= user.costDaily.cost) {
             /*const validBlockchainsForPolicy = await blockchainSelector.selectBlockchain(dailyPolicy);
             const costs = await costCalculator.calculateCostForPolicy(dailyPolicy, validBlockchainsForPolicy);
-            console.log(costs);
             //TODO:
             if(dailyPolicy.cost >= user.cost) {
 
@@ -33,7 +32,7 @@ async function selectPolicy(policies, user){
     const weeklyPolicy = policies.find(policy => policy.interval === WEEKLY);
 
     if (weeklyPolicy) {
-        if(weeklyPolicy.cost >= user.costWeekly) {
+        if(weeklyPolicy.cost >= user.costWeekly.cost) {
             weeklyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(weeklyPolicy.id, weeklyPolicy);
             return weeklyPolicy;
@@ -43,7 +42,7 @@ async function selectPolicy(policies, user){
     const monthlyPolicy = policies.find(policy => policy.interval === MONTHLY);
 
     if (monthlyPolicy) {
-        if(monthlyPolicy.cost >= user.costMonthly) {
+        if(monthlyPolicy.cost >= user.costMonthly.cost) {
             monthlyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(monthlyPolicy.id, monthlyPolicy);
             return monthlyPolicy;
@@ -53,7 +52,7 @@ async function selectPolicy(policies, user){
     const yearlyPolicy = policies.find(policy => policy.interval === YEARLY);
 
     if (yearlyPolicy) {
-        if(yearlyPolicy.cost >= user.costYearly) {
+        if(yearlyPolicy.cost >= user.costYearly.cost) {
             yearlyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(yearlyPolicy.id, yearlyPolicy);
             return yearlyPolicy;

@@ -7,20 +7,44 @@ const userSchema = new mongoose.Schema({
         unique: true,
     },
     costDaily: {
-        type: Number,
-        default: 0,
+        cost: {
+            type: Number,
+            default: 0,
+        },
+        lastReset: {
+            type: Date,
+            default: Date.now
+        },
     },
     costWeekly: {
-        type: Number,
-        default: 0,
+        cost: {
+            type: Number,
+            default: 0,
+        },
+        lastReset: {
+            type: Date,
+            default: Date.now
+        },
     },
     costMonthly: {
-        type: Number,
-        default: 0,
+        cost: {
+            type: Number,
+            default: 0,
+        },
+        lastReset: {
+            type: Date,
+            default: Date.now
+        },
     },
     costYearly: {
-        type: Number,
-        default: 0,
+        cost: {
+            type: Number,
+            default: 0,
+        },
+        lastReset: {
+            type: Date,
+            default: Date.now
+        },
     },
 });
 

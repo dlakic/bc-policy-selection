@@ -1,6 +1,4 @@
-//TODO: Extract to appropriate njk template
 let firstSubmit = true;
-console.log(window.location.pathname)
 if (window.location.pathname === '/policy' && window.location.search.indexOf('id=') > -1) {
     const multiSelectElement = document.querySelector('#preferredBC');
     const multiselectValues = getMultiSelectValues(multiSelectElement);

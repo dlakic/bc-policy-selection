@@ -26,7 +26,21 @@ function createUser(username) {
     });
 }
 
+function getUserAndUpdate(id, user) {
+    return new Promise((resolve, reject) => {
+        UserModel.findOneAndUpdate({'_id': id}, user, {upsert: true})
+            .then(() => {
+                resolve(policy);
+            })
+            .catch(err => {
+                console.error(err);
+                reject(err);
+            });
+    });
+}
+
 module.exports = {
     getUserByName,
     createUser,
+    getUserAndUpdate,
 };

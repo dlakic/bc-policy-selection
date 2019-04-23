@@ -4,7 +4,6 @@ const bcCosts = require('../api/bc-fees');
 const util = require('../util');
 const transformUtil = require('../util/unit-transformations');
 
-//TODO: return per profile
 async function calculateCostForBlockchain(bcKey, blockchainRates, bytes, profile = 'low') {
     if (util.isTransactionFeeFreeBlockchain(bcKey)) {
         return {[bcKey]: 0};
