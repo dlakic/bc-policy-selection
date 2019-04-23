@@ -4,6 +4,7 @@ const UserRepository = require('../repositories/user-repository');
 const policySelector = require('../business-logic/policy-selector');
 const blockchainSelector = require('../business-logic/blockchain-selector');
 const policyValidator = require('../business-logic/policy-validator');
+const userCostUpdater = require('../business-logic/user-cost-updater');
 const util = require('../util');
 
 module.exports.listPolicies = async (req, res) => {
@@ -21,12 +22,12 @@ module.exports.listPolicies = async (req, res) => {
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
+        userCostUpdater.costUpdater(user);
         let policies = await PolicyRepository.getPoliciesByUsername(username);
         if (policies && policies.length !== 0) {
             await policySelector.selectPolicy(policies, user);
         }
         policies = util.sortPoliciesByPriority(policies);
-        console.log(policies);
         return res.status(200).render('policies', {policies, username});
 
     } catch (err) {

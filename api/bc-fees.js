@@ -49,7 +49,6 @@ module.exports.fetchETHFeesPerGasEtherchain = () => {
     };
     return new Promise((resolve, reject) => {
         request(options).then((response) => {
-            console.log(response);
             resolve({
                 high: transformUtils.weiToEth(parseFloat(response.safeLow)),
                 medium: transformUtils.weiToEth(parseFloat(response.standard)),
@@ -68,7 +67,6 @@ module.exports.fetchETHFeesPerGasBlockCypher = () => {
     };
     return new Promise((resolve, reject) => {
         request(options).then((response) => {
-            console.log(response);
             resolve({
                 high: transformUtils.weiToEth(response.high_gas_price),
                 medium: transformUtils.weiToEth(response.medium_gas_price),
