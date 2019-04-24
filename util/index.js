@@ -117,6 +117,23 @@ function isTransactionFeeFreeBlockchain(bcType) {
         || bcType === constants.blockchains.HYP.nameShort;
 }
 
+function checkValidTemperatures (minTemp, maxTemp) {
+    let error;
+    if(!minTemp || !maxTemp) {
+        error = 'minTemp or MaxTemp missing'
+    }
+
+    if(Number.isNaN(minTemp) || Number.isNaN(maxTemp)) {
+        error = 'minTemp or MaxTemp is not an integer'
+    }
+
+    if(minTemp > maxTemp) {
+        error =  'minTemp has an invalid higher value than MaxTemp'
+    }
+
+    return error;
+}
+
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
@@ -124,4 +141,5 @@ module.exports = {
     getLowerIntervals,
     getHigherIntervals,
     isTransactionFeeFreeBlockchain,
+    checkValidTemperatures,
 };

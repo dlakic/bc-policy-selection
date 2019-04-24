@@ -44,14 +44,6 @@ async function calculateCostForBlockchain(bcKey, blockchainRates, bytes, profile
     return {[bcKey]: 0};
 }
 
-async function calculateCostForBlockchainViaAPI(currency, bcKey, bytes = 1, profile = 'low') {
-    if (util.isTransactionFeeFreeBlockchain(bcKey)) {
-        return {[bcKey]: 0};
-    }
-    const blockchainRates = await ratesAPI.fetchBlockchainCost(currency, bcKey);
-    return calculateCostForBlockchain(bcKey, blockchainRates, bytes, profile)
-}
-
 async function calculateCosts(blockchainRates) {
     let blockchainCosts;
     const costs = {};
@@ -91,6 +83,14 @@ async function calculateCostForPolicy(policy, blockchainPool) {
     }
 
     return {...publicCosts, ...privateCosts};
+}
+
+async function calculateCostForBlockchainViaAPI(currency, bcKey, bytes = 1, profile = 'low') {
+    if (util.isTransactionFeeFreeBlockchain(bcKey)) {
+        return {[bcKey]: 0};
+    }
+    const blockchainRates = await ratesAPI.fetchBlockchainCost(currency, bcKey);
+    return calculateCostForBlockchain(bcKey, blockchainRates, bytes, profile)
 }
 
 module.exports = {

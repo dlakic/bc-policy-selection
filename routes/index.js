@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const multer  = require('multer');
 const policyController = require('../controller/policy-controller');
 const transactionController = require('../controller/transaction-controller');
 const userController = require('../controller/user-controller');
+
+const upload = multer();
 
 /* GET home page. */
 router.get('/', (req, res) => res.status(200).render('index'));
@@ -17,6 +20,6 @@ router.get('*', (req, res) => {
 
 router.post('/api/save-policy', policyController.savePolicy);
 router.delete('/api/delete-policy/:id', policyController.deletePolicy);
-router.post('/api/create-transaction', transactionController.handleTransaction);
+router.post('/api/create-transactions', upload.array('sheets', 5), transactionController.handleTransaction);
 
 module.exports = router;
