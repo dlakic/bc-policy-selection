@@ -14,7 +14,7 @@ module.exports.handleTransaction = async (req, res) => {
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
     const user = await UserRepository.getUserByName(username);
-    if(!user || user.length === 0) {
+    if (!user || user.length === 0) {
         const error = new Error(`No user with username ${username} found`);
         error.statusCode = 404;
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
@@ -54,7 +54,7 @@ module.exports.getBlockchainCost = async (req, res) => {
             error.statusCode = 400;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        const costs = await costCalculator.calculateCostForBlockchain(blockchainNameShort, currency);
+        const costs = await costCalculator.calculateCostForBlockchainViaAPI(currency, blockchainNameShort);
         return res.status(200).send(costs);
     } catch (err) {
         return res.status(500).send(err)
