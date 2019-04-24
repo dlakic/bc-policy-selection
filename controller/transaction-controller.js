@@ -13,6 +13,12 @@ module.exports.handleTransaction = async (req, res) => {
         error.statusCode = 400;
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
+    const user = await UserRepository.getUserByName(username);
+    if(!user || user.length === 0) {
+        const error = new Error(`No user with username ${username} found`);
+        error.statusCode = 404;
+        return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+    }
     userCostUpdater.costUpdater(user);
     try {
         const policies = await PolicyRepository.getPoliciesByUsername(username);
@@ -21,7 +27,6 @@ module.exports.handleTransaction = async (req, res) => {
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        const user = await UserRepository.getUserByName(username);
         const policy = await policySelector.selectPolicy(policies, user);
         /*const cost = await costCalculator.calculateCostForPolicy(policy);
         return res.status(200).send(cost)*/
