@@ -28,12 +28,12 @@ function buildPolicy(requestBody = null, username) {
         policy.currency = requestBody.currency;
         policy.cost = parseFloat(requestBody.cost);
         policy.bcType = requestBody.bcType;
-        policy.bcTuringComplete = requestBody.bcTuringComplete || false;
+        policy.bcTuringComplete = requestBody.bcTuringComplete === 'true';
         policy.interval = requestBody.interval;
         policy.bcTps = parseInt(requestBody.bcTps, 10);
         policy.bcBlockTime = parseInt(requestBody.bcBlockTime, 10);
         policy.bcDataSize = parseInt(requestBody.bcDataSize, 10);
-        policy.split = requestBody.split;
+        policy.split = requestBody.split === 'true';
         policy.costProfile = requestBody.costProfile;
     }
 
@@ -117,6 +117,33 @@ function isTransactionFeeFreeBlockchain(bcType) {
         || bcType === constants.blockchains.HYP.nameShort;
 }
 
+function checkValidTemperatures (minTemp, maxTemp) {
+    let error;
+    if(!minTemp || !maxTemp) {
+        error = 'minTemp or MaxTemp missing'
+    }
+
+    if(Number.isNaN(minTemp) || Number.isNaN(maxTemp)) {
+        error = 'minTemp or MaxTemp is not an integer'
+    }
+
+    if(minTemp > maxTemp) {
+        error =  'minTemp has an invalid higher value than MaxTemp'
+    }
+
+    return error;
+}
+
+function publicBlockchainsForCostRequest() {
+    let publicBlockchains = [];
+    Object.keys(constants.blockchains).forEach((bcKey) => {
+        if(constants.blockchains[bcKey].type === constants.blockchainTypes.PUBLIC) {
+            publicBlockchains.push(constants.blockchains[bcKey].nameShort);
+        }
+    });
+    return publicBlockchains.join();
+}
+
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
@@ -124,4 +151,6 @@ module.exports = {
     getLowerIntervals,
     getHigherIntervals,
     isTransactionFeeFreeBlockchain,
+    checkValidTemperatures,
+    publicBlockchainsForCostRequest,
 };

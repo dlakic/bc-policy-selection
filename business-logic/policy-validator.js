@@ -25,7 +25,8 @@ function validateCostsForInterval(policyToValidate, otherPolicies, interval) {
     }
 }
 
-module.exports.validatePolicy = async (userPolicies, policyToValidate, user) => {
+// TODO: Account for cost vs. Performance
+module.exports.validatePolicy = async (userPolicies, policyToValidate) => {
     const {DEFAULT, DAILY, WEEKLY, MONTHLY, YEARLY} = constants.intervals;
     const otherPolicies = userPolicies.filter(policy => !policy._id.equals(policyToValidate._id));
     util.sortPoliciesByPriority(otherPolicies);

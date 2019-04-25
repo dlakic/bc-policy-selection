@@ -1,13 +1,19 @@
+const xlsx = require('node-xlsx');
 const PolicyRepository = require('../repositories/policy-repository');
 const UserRepository = require('../repositories/user-repository');
 const BlockchainRepository = require('../repositories/blockchain-repository');
+const violationsExtractor = require('../business-logic/violations-extractor');
 const blockchainSelector = require('../business-logic/blockchain-selector');
 const policySelector = require('../business-logic/policy-selector');
 const costCalculator = require('../business-logic/cost-calculator');
 const userCostUpdater = require('../business-logic/user-cost-updater');
+const util = require('../util');
 
 module.exports.handleTransaction = async (req, res) => {
     const username = req.body.username;
+    const minTemp = req.body.minTemp;
+    const maxTemp = req.body.maxTemp;
+    // check if user exists, otherwise return
     if (!username) {
         const error = new Error("No username provided");
         error.statusCode = 400;
@@ -19,7 +25,19 @@ module.exports.handleTransaction = async (req, res) => {
         error.statusCode = 404;
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
+    // update costs
     userCostUpdater.costUpdater(user);
+    // check if Temperature thresholds have been provided correctly
+    const minMaxTempError = util.checkValidTemperatures(minTemp, maxTemp);
+    if (minMaxTempError) {
+        const error = new Error(minMaxTempError);
+        error.statusCode = 400;
+        return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+    }
+
+    // get violation Data
+    const sheets = xlsx.parse(req.file.buffer);
+    const violationsData = violationsExtractor.violationsExtractor(sheets, minTemp, maxTemp);
     try {
         const policies = await PolicyRepository.getPoliciesByUsername(username);
         if (!policies || policies.length === 0) {
@@ -27,7 +45,7 @@ module.exports.handleTransaction = async (req, res) => {
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        const policy = await policySelector.selectPolicy(policies, user);
+        const policy = await policySelector.selectPolicyForTransaction(policies, user, violationsData);
         /*const cost = await costCalculator.calculateCostForPolicy(policy);
         return res.status(200).send(cost)*/
         const selectedBlockchain = await blockchainSelector.selectBlockchain(policy);

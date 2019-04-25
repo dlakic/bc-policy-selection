@@ -16,18 +16,10 @@ module.exports.selectBlockchain = async (policy) => {
     if(policy.bcType !== 'indifferent') {
         // filter out all Blockchains that do not correspond with wanted bcType
         blockchainPool = blockchainPool.filter(blockchain => blockchain.type === policy.bcType);
-
-        if (blockchainPool.length === 1) {
-            return blockchainPool;
-        }
     }
 
     // filter out all Blockchains that do not correspond with the tps threshold
     blockchainPool = blockchainPool.filter(blockchain => blockchain.tps >= policy.bcTps);
-
-    if (blockchainPool.length === 1) {
-        return blockchainPool;
-    }
 
     // filter out all Blockchains that do not correspond with the blocktime threshold
     blockchainPool = blockchainPool.filter(blockchain => blockchain.blockTime <= policy.bcBlockTime);
@@ -35,10 +27,10 @@ module.exports.selectBlockchain = async (policy) => {
     // filter out all Blockchains that do not correspond with the datasize threshold
     blockchainPool = blockchainPool.filter(blockchain => blockchain.maxTrxSize >= policy.bcDataSize);
 
-    if (blockchainPool.length === 1) {
-        return blockchainPool;
+    if(policy.bcTuringComplete === true) {
+        // filter out all Blockchains that are not turingcomplete
+        blockchainPool = blockchainPool.filter(blockchain => blockchain.turingComplete === true);
     }
-
     if (blockchainPool.length === 0) {
         const conflictError = new Error("Policy conflict detected, no blockchain with provided parameters available");
         conflictError.statusCode = 400;
