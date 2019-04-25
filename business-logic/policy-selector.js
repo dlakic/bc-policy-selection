@@ -1,15 +1,10 @@
-const UserRepository = require('../repositories/user-repository');
 const PolicyRepository = require('../repositories/policy-repository');
 const constants = require('../constants');
-const blockchainSelector = require('./blockchain-selector');
-const ratesAPI = require('../api/bc-rates');
-const costCalculator = require('./cost-calculator');
-const util = require('../util');
 
 const {DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT} = constants.intervals;
 
 // TODO: Account for economic and performance
-async function selectPolicy(policies, user){
+async function selectPolicy(policies, user) {
     // Mark all policies as inactive before setting the chosen one as active
     policies.forEach(policy => {
         policy.isActive = false;
@@ -19,7 +14,7 @@ async function selectPolicy(policies, user){
     const dailyPolicy = policies.find(policy => policy.interval === DAILY);
 
     if (dailyPolicy) {
-        if(dailyPolicy.cost >= user.costDaily.cost) {
+        if (dailyPolicy.cost >= user.costDaily.cost) {
             dailyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(dailyPolicy.id, dailyPolicy);
             return dailyPolicy;
@@ -29,7 +24,7 @@ async function selectPolicy(policies, user){
     const weeklyPolicy = policies.find(policy => policy.interval === WEEKLY);
 
     if (weeklyPolicy) {
-        if(weeklyPolicy.cost >= user.costWeekly.cost) {
+        if (weeklyPolicy.cost >= user.costWeekly.cost) {
             weeklyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(weeklyPolicy.id, weeklyPolicy);
             return weeklyPolicy;
@@ -39,7 +34,7 @@ async function selectPolicy(policies, user){
     const monthlyPolicy = policies.find(policy => policy.interval === MONTHLY);
 
     if (monthlyPolicy) {
-        if(monthlyPolicy.cost >= user.costMonthly.cost) {
+        if (monthlyPolicy.cost >= user.costMonthly.cost) {
             monthlyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(monthlyPolicy.id, monthlyPolicy);
             return monthlyPolicy;
@@ -49,7 +44,7 @@ async function selectPolicy(policies, user){
     const yearlyPolicy = policies.find(policy => policy.interval === YEARLY);
 
     if (yearlyPolicy) {
-        if(yearlyPolicy.cost >= user.costYearly.cost) {
+        if (yearlyPolicy.cost >= user.costYearly.cost) {
             yearlyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(yearlyPolicy.id, yearlyPolicy);
             return yearlyPolicy;
@@ -69,35 +64,6 @@ async function selectPolicy(policies, user){
     throw conflictError
 }
 
-async function selectPolicyForTransaction(policies, user, violationData) {
-    const currentlyActivePolicy = await selectPolicy(policies, user);
-    const viableBlockchains = await blockchainSelector.selectBlockchain(currentlyActivePolicy);
-    // TODO: Switch back to API for prod
-    //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
-    //const blockchainRates = await ratesAPI.fetchBlockchainCost(currentlyActivePolicy.currency, publicBlockchainsString);
-    const blockchainRates = await ratesAPI.fetchBlockchainCostNOAPI();
-    const viableBlockchainRates = {};
-    viableBlockchains.forEach((viableBlockchain) => {
-        viableBlockchainRates[viableBlockchain.nameShort] = blockchainRates[viableBlockchain.nameShort];
-    });
-    const costsPerByte = await costCalculator.calculateCosts(viableBlockchainRates);
-    const costs = [];
-    await Promise.all(
-        violationData.violations.map(async (sheetData) => {
-            const costsForSheet = costCalculator.multiplyWithBytes(costsPerByte, sheetData.sizeString);
-            costs.push(costsForSheet);
-        })
-    );
-
-    if(currentlyActivePolicy.costProfile === constants.costProfiles.ECONOMIC) {
-
-    }
-
-    console.log(costs);
-    return currentlyActivePolicy;
-}
-
 module.exports = {
     selectPolicy,
-    selectPolicyForTransaction
 };

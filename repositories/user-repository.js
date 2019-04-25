@@ -30,7 +30,7 @@ function getUserAndUpdate(id, user) {
     return new Promise((resolve, reject) => {
         UserModel.findOneAndUpdate({'_id': id}, user, {upsert: true})
             .then(() => {
-                resolve(policy);
+                resolve(user);
             })
             .catch(err => {
                 console.error(err);

@@ -5,6 +5,7 @@ const BlockchainRepository = require('../repositories/blockchain-repository');
 const violationsExtractor = require('../business-logic/violations-extractor');
 const blockchainSelector = require('../business-logic/blockchain-selector');
 const policySelector = require('../business-logic/policy-selector');
+const transactionMaker = require('../business-logic/transaction-maker');
 const costCalculator = require('../business-logic/cost-calculator');
 const userCostUpdater = require('../business-logic/user-cost-updater');
 const util = require('../util');
@@ -26,7 +27,7 @@ module.exports.handleTransaction = async (req, res) => {
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
     // update costs
-    userCostUpdater.costUpdater(user);
+    userCostUpdater.costThresholdUpdater(user);
     // check if Temperature thresholds have been provided correctly
     const minMaxTempError = util.checkValidTemperatures(minTemp, maxTemp);
     if (minMaxTempError) {
@@ -45,7 +46,7 @@ module.exports.handleTransaction = async (req, res) => {
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        const policy = await policySelector.selectPolicyForTransaction(policies, user, violationsData);
+        const policy = await transactionMaker.makeTransactions(policies, user, violationsData);
         /*const cost = await costCalculator.calculateCostForPolicy(policy);
         return res.status(200).send(cost)*/
         const selectedBlockchain = await blockchainSelector.selectBlockchain(policy);
