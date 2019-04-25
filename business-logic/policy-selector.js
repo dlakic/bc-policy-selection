@@ -2,7 +2,9 @@ const UserRepository = require('../repositories/user-repository');
 const PolicyRepository = require('../repositories/policy-repository');
 const constants = require('../constants');
 const blockchainSelector = require('./blockchain-selector');
+const ratesAPI = require('../api/bc-rates');
 const costCalculator = require('./cost-calculator');
+const util = require('../util');
 
 const {DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT} = constants.intervals;
 
@@ -17,12 +19,6 @@ async function selectPolicy(policies, user){
 
     if (dailyPolicy) {
         if(dailyPolicy.cost >= user.costDaily.cost) {
-            /*const validBlockchainsForPolicy = await blockchainSelector.selectBlockchain(dailyPolicy);
-            const costs = await costCalculator.calculateCostForPolicy(dailyPolicy, validBlockchainsForPolicy);
-            //TODO:
-            if(dailyPolicy.cost >= user.cost) {
-
-            }*/
             dailyPolicy.isActive = true;
             PolicyRepository.getPolicyAndUpdate(dailyPolicy.id, dailyPolicy);
             return dailyPolicy;
@@ -72,8 +68,32 @@ async function selectPolicy(policies, user){
     throw conflictError
 }
 
-async function selectPolicyForTransaction(policies, username) {
-    const currentlyActivePolicy = await selectPolicy(policies, username);
+async function selectPolicyForTransaction(policies, user, violationData) {
+    const currentlyActivePolicy = await selectPolicy(policies, user);
+    const viableBlockchains = await blockchainSelector.selectBlockchain(currentlyActivePolicy);
+    // TODO: Switch back to API for prod
+    //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
+    //const blockchainRates = await ratesAPI.fetchBlockchainCost(currentlyActivePolicy.currency, publicBlockchainsString);
+    const blockchainRates = await ratesAPI.fetchBlockchainCostNOAPI();
+    const viableBlockchainRates = {};
+    viableBlockchains.forEach((viableBlockchain) => {
+        viableBlockchainRates[viableBlockchain.nameShort] = blockchainRates[viableBlockchain.nameShort];
+    });
+    const costs = [];
+    await Promise.all(
+        violationData.violations.map(async (sheetData) => {
+            const costsforSheet = await costCalculator.calculateCosts(viableBlockchainRates, sheetData.sizeString);
+            costs.push(costsforSheet);
+        })
+    );
+
+
+    if(currentlyActivePolicy.costProfile === constants.costProfiles.ECONOMIC) {
+
+    }
+
+    console.log(costs);
+    return currentlyActivePolicy;
 }
 
 module.exports = {

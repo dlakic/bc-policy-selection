@@ -12,46 +12,51 @@ const intervals = {
     YEARLY: 'yearly'
 };
 
+const costProfiles = {
+    ECONOMIC: 'economic',
+    PERFORMANCE: 'performance'
+};
+
 const blockchains = {
     BTC: {
         name: 'Bitcoin',
         nameShort: 'BTC',
-        type: 'public'
+        type: blockchainTypes.PUBLIC
     },
     ETH: {
         name: 'Ethereum',
         nameShort: 'ETH',
-        type: 'public'
+        type: blockchainTypes.PUBLIC
     },
     XLM: {
         name: 'Stellar',
         nameShort: 'XLM',
-        type: 'public'
+        type: blockchainTypes.PUBLIC
     },
     EOS: {
         name: 'EOS',
         nameShort: 'EOS',
-        type: 'public'
+        type: blockchainTypes.PUBLIC
     },
     MIOTA: {
         name: 'IOTA',
         nameShort: 'MIOTA',
-        type: 'public'
+        type: blockchainTypes.PUBLIC
     },
     HYP: {
         name: 'Hyperledger',
         nameShort: 'HYP',
-        type: 'private'
+        type: blockchainTypes.PRIVATE
     },
     MLC: {
         name: 'Multichain',
         nameShort: 'MLC',
-        type: 'private'
+        type: blockchainTypes.PRIVATE
     },
     PSG: {
         name: 'Postgres(No Blockchain)',
         nameShort: 'PSG',
-        type: 'private'
+        type: blockchainTypes.PRIVATE
     },
 };
 
@@ -66,6 +71,7 @@ const exchanges = {
 module.exports = {
     blockchainTypes,
     intervals,
+    costProfiles,
     blockchains,
     exchanges
 };

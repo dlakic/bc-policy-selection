@@ -28,12 +28,12 @@ function buildPolicy(requestBody = null, username) {
         policy.currency = requestBody.currency;
         policy.cost = parseFloat(requestBody.cost);
         policy.bcType = requestBody.bcType;
-        policy.bcTuringComplete = requestBody.bcTuringComplete || false;
+        policy.bcTuringComplete = requestBody.bcTuringComplete === 'true';
         policy.interval = requestBody.interval;
         policy.bcTps = parseInt(requestBody.bcTps, 10);
         policy.bcBlockTime = parseInt(requestBody.bcBlockTime, 10);
         policy.bcDataSize = parseInt(requestBody.bcDataSize, 10);
-        policy.split = requestBody.split;
+        policy.split = requestBody.split === 'true';
         policy.costProfile = requestBody.costProfile;
     }
 
@@ -134,6 +134,16 @@ function checkValidTemperatures (minTemp, maxTemp) {
     return error;
 }
 
+function publicBlockchainsForCostRequest() {
+    let publicBlockchains = [];
+    Object.keys(constants.blockchains).forEach((bcKey) => {
+        if(constants.blockchains[bcKey].type === constants.blockchainTypes.PUBLIC) {
+            publicBlockchains.push(constants.blockchains[bcKey].nameShort);
+        }
+    });
+    return publicBlockchains.join();
+}
+
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
@@ -142,4 +152,5 @@ module.exports = {
     getHigherIntervals,
     isTransactionFeeFreeBlockchain,
     checkValidTemperatures,
+    publicBlockchainsForCostRequest,
 };

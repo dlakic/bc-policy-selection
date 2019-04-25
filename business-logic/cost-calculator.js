@@ -44,45 +44,16 @@ async function calculateCostForBlockchain(bcKey, blockchainRates, bytes, profile
     return {[bcKey]: 0};
 }
 
-async function calculateCosts(blockchainRates) {
+async function calculateCosts(blockchainRates, bytes) {
     let blockchainCosts;
     const costs = {};
-    Object.keys(blockchainRates).forEach(async bcKey => {
-        blockchainCosts = await calculateCostForBlockchain(bcKey, blockchainRates, 0);
-        costs[bcKey] = blockchainCosts[bcKey];
-    });
+    await Promise.all(
+        Object.keys(blockchainRates).map(async bcKey => {
+            blockchainCosts = await calculateCostForBlockchain(bcKey, blockchainRates, bytes);
+            costs[bcKey] = blockchainCosts[bcKey];
+        })
+    );
     return costs;
-}
-
-async function calculateCostForPublicBlockchains(currency, publicBlockchainPool) {
-    const publicBlockchains = publicBlockchainPool.map(blockchain => blockchain.nameShort);
-    const publicBlockchainsString = publicBlockchains.join();
-    const blockchainRates = await ratesAPI.fetchBlockchainCost(currency, publicBlockchainsString);
-    return await calculateCosts(blockchainRates);
-}
-
-async function calculateCostForPrivateBlockchains(currency, privateBlockchainPool) {
-    const blockchainRates = {};
-    privateBlockchainPool.forEach((blockchain) => {
-        blockchainRates[blockchain.nameShort] = 0;
-    });
-    return await calculateCosts(blockchainRates);
-}
-
-async function calculateCostForPolicy(policy, blockchainPool) {
-    const publicBlockchainPool = blockchainPool.filter(blockchain => blockchain.type === 'public');
-    const privateBlockchainPool = blockchainPool.filter(blockchain => blockchain.type === 'private');
-    let publicCosts = {};
-    let privateCosts = {};
-    if (publicBlockchainPool.length !== 0) {
-        publicCosts = await calculateCostForPublicBlockchains(policy.currency, publicBlockchainPool);
-    }
-
-    if (privateBlockchainPool.length !== 0) {
-        privateCosts = await calculateCostForPrivateBlockchains(policy.currency, privateBlockchainPool)
-    }
-
-    return {...publicCosts, ...privateCosts};
 }
 
 async function calculateCostForBlockchainViaAPI(currency, bcKey, bytes = 1, profile = 'low') {
@@ -94,7 +65,6 @@ async function calculateCostForBlockchainViaAPI(currency, bcKey, bytes = 1, prof
 }
 
 module.exports = {
-    calculateCostForBlockchain,
     calculateCostForBlockchainViaAPI,
-    calculateCostForPolicy
+    calculateCosts
 };
