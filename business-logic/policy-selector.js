@@ -8,6 +8,7 @@ const util = require('../util');
 
 const {DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT} = constants.intervals;
 
+// TODO: Account for economic and performance
 async function selectPolicy(policies, user){
     // Mark all policies as inactive before setting the chosen one as active
     policies.forEach(policy => {

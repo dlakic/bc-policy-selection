@@ -35,9 +35,8 @@ module.exports.handleTransaction = async (req, res) => {
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
 
-    // TODO: Maybe for multiple files?
     // get violation Data
-    const sheets = xlsx.parse(req.files[0].buffer);
+    const sheets = xlsx.parse(req.file.buffer);
     const violationsData = violationsExtractor.violationsExtractor(sheets, minTemp, maxTemp);
     try {
         const policies = await PolicyRepository.getPoliciesByUsername(username);
