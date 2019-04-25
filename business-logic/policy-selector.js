@@ -80,14 +80,14 @@ async function selectPolicyForTransaction(policies, user, violationData) {
     viableBlockchains.forEach((viableBlockchain) => {
         viableBlockchainRates[viableBlockchain.nameShort] = blockchainRates[viableBlockchain.nameShort];
     });
+    const costsPerByte = await costCalculator.calculateCosts(viableBlockchainRates);
     const costs = [];
     await Promise.all(
         violationData.violations.map(async (sheetData) => {
-            const costsforSheet = await costCalculator.calculateCosts(viableBlockchainRates, sheetData.sizeString);
-            costs.push(costsforSheet);
+            const costsForSheet = costCalculator.multiplyWithBytes(costsPerByte, sheetData.sizeString);
+            costs.push(costsForSheet);
         })
     );
-
 
     if(currentlyActivePolicy.costProfile === constants.costProfiles.ECONOMIC) {
 

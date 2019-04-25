@@ -4,7 +4,7 @@ function weiToGwei(wei) {
     return wei * WEI_TO_ETH;
 }
 
-function gweiToWei(gwei) {
+function gweiToETH(gwei) {
     return gwei / GWEI_TO_ETH
 }
 
@@ -34,7 +34,7 @@ function avgCost(costOne, costTwo) {
 
 module.exports = {
     weiToGwei,
-    gweiToWei,
+    gweiToETH,
     weiToEth,
     ethToWei,
     satoshisPerByteToBtcPerByte,
