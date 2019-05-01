@@ -39,6 +39,9 @@ function buildPolicy(requestBody = null, username) {
         policy.costProfile = requestBody.costProfile;
         policy.timeFrameStart = requestBody.timeFrameStart;
         policy.timeFrameEnd = requestBody.timeFrameEnd;
+        if(requestBody._id) {
+            policy._id = requestBody._id;
+        }
     }
 
     return policy;
