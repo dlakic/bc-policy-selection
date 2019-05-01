@@ -6,6 +6,18 @@
     {% endif %}
 {% endmacro %}
 
+{% macro getIcon(boolean) %}
+    {% if boolean %}
+        <span class="icon has-text-success">
+            <i class="fas fa-lg fa-check-circle"></i>
+        </span>
+    {% else %}
+        <span class="icon has-text-danger">
+            <i class="fas fa-lg fa-times-circle"></i>
+        </span>
+    {% endif %}
+{% endmacro %}
+
 {% extends "layout.njk" %}
 {% block content %}
     <section class="hero">
@@ -18,7 +30,8 @@
                     <div class="column is-four-fifths">
                     </div>
                     <div class="column is-one-fifth">
-                        <a class="button is-link is-pulled-right" href="/policy{{ '?username=' + username if username }}">Create new Policy</a>
+                        <a class="button is-link is-pulled-right"
+                           href="/policy{{ '?username=' + username if username }}">Create new Policy</a>
                     </div>
                     <div class="column is-full">
                         <table class="table is-striped is-narrow is-fullwidth">
@@ -67,12 +80,13 @@
                                     <td>{{ policy.bcTps }}</td>
                                     <td>{{ policy.bcBlockTime }}</td>
                                     <td>{{ policy.bcDataSize }}</td>
-                                    <td>{{ policy.bcTuringComplete }}</td>
-                                    <td>{{ policy.split }}</td>
+                                    <td>{{ getIcon(policy.bcTuringComplete) }}</td>
+                                    <td>{{ getIcon(policy.split) }}</td>
                                     <td>{{ policy.costProfile }}</td>
                                     <td>{{ getTime(policy.timeFrameStart, policy.timeFrameEnd) }}</td>
                                     <td>
-                                        <a class="button is-link table-button" href="/policy?id={{ policy._id }}">Edit Policy</a>
+                                        <a class="button is-link table-button" href="/policy?id={{ policy._id }}">Edit
+                                            Policy</a>
                                     </td>
                                     <td>
                                         <button class="button is-danger delete-button table-button"
