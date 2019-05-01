@@ -1,9 +1,48 @@
 const PolicyRepository = require('../repositories/policy-repository');
 const constants = require('../constants');
+const moment = require('moment');
 
 const {DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT} = constants.intervals;
+const {ECONOMIC, PERFORMANCE} = constants.costProfiles;
 
-// TODO: Account for economic and performance
+function isPolicyInTimeFrame(policy) {
+    if (policy.timeFrameStart === policy.timeFrameEnd) {
+        return true;
+    }
+    const now = moment();
+    const start = moment(policy.timeFrameStart, 'hh:mm');
+    const end = moment(policy.timeFrameEnd, 'hh:mm');
+    return now.isBetween(start, end, null, '[]');
+}
+
+function retrieveActivePolicyForInterval(policies, user) {
+    let activePolicy = null;
+    const policiesInTimeFrame = policies.filter(policy => isPolicyInTimeFrame(policy));
+    const policiesPerformance = policiesInTimeFrame.filter(policy => policy.costProfile === PERFORMANCE);
+    const policiesEconomic = policiesInTimeFrame.filter(policy => policy.costProfile === ECONOMIC);
+    policiesPerformance.forEach((policy) => {
+        if (policy.cost >= user.costDaily.cost) {
+            policy.isActive = true;
+            PolicyRepository.getPolicyAndUpdate(policy.id, policy);
+            activePolicy = policy;
+        }
+    });
+
+    if(activePolicy) {
+        return activePolicy;
+    }
+
+    policiesEconomic.forEach((policy) => {
+        if (policy.cost >= user.costDaily.cost) {
+            policy.isActive = true;
+            PolicyRepository.getPolicyAndUpdate(policy.id, policy);
+            activePolicy = policy;
+        }
+    });
+
+    return activePolicy;
+}
+
 async function selectPolicy(policies, user) {
     // Mark all policies as inactive before setting the chosen one as active
     policies.forEach(policy => {
@@ -11,47 +50,43 @@ async function selectPolicy(policies, user) {
         PolicyRepository.getPolicyAndUpdate(policy.id, policy);
     });
 
-    const dailyPolicy = policies.find(policy => policy.interval === DAILY);
+    const dailyPolicies = policies.filter(policy => policy.interval === DAILY);
 
-    if (dailyPolicy) {
-        if (dailyPolicy.cost >= user.costDaily.cost) {
-            dailyPolicy.isActive = true;
-            PolicyRepository.getPolicyAndUpdate(dailyPolicy.id, dailyPolicy);
-            return dailyPolicy;
+    if (dailyPolicies && dailyPolicies.length > 0) {
+        let activeDailyPolicy = retrieveActivePolicyForInterval(dailyPolicies, user);
+        if(activeDailyPolicy) {
+            return activeDailyPolicy;
         }
     }
 
-    const weeklyPolicy = policies.find(policy => policy.interval === WEEKLY);
+    const weeklyPolicy = policies.filter(policy => policy.interval === WEEKLY);
 
     if (weeklyPolicy) {
-        if (weeklyPolicy.cost >= user.costWeekly.cost) {
-            weeklyPolicy.isActive = true;
-            PolicyRepository.getPolicyAndUpdate(weeklyPolicy.id, weeklyPolicy);
-            return weeklyPolicy;
+        let activeWeeklyPolicy = retrieveActivePolicyForInterval(weeklyPolicy, user);
+        if(activeWeeklyPolicy) {
+            return activeWeeklyPolicy;
         }
     }
 
-    const monthlyPolicy = policies.find(policy => policy.interval === MONTHLY);
+    const monthlyPolicy = policies.filter(policy => policy.interval === MONTHLY);
 
     if (monthlyPolicy) {
-        if (monthlyPolicy.cost >= user.costMonthly.cost) {
-            monthlyPolicy.isActive = true;
-            PolicyRepository.getPolicyAndUpdate(monthlyPolicy.id, monthlyPolicy);
-            return monthlyPolicy;
+        let activeMonthlyPolicy = retrieveActivePolicyForInterval(monthlyPolicy, user);
+        if(activeMonthlyPolicy) {
+            return activeMonthlyPolicy;
         }
     }
 
-    const yearlyPolicy = policies.find(policy => policy.interval === YEARLY);
+    const yearlyPolicy = policies.filter(policy => policy.interval === YEARLY);
 
     if (yearlyPolicy) {
-        if (yearlyPolicy.cost >= user.costYearly.cost) {
-            yearlyPolicy.isActive = true;
-            PolicyRepository.getPolicyAndUpdate(yearlyPolicy.id, yearlyPolicy);
-            return yearlyPolicy;
+        let activeYearlyPolicy = retrieveActivePolicyForInterval(yearlyPolicy, user);
+        if(activeYearlyPolicy) {
+            return activeYearlyPolicy;
         }
     }
 
-    const defaultPolicy = policies.find(policy => policy.interval === DEFAULT);
+    const defaultPolicy = policies.filter(policy => policy.interval === DEFAULT);
 
     if (defaultPolicy) {
         defaultPolicy.isActive = true;
