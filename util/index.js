@@ -17,6 +17,8 @@ function buildPolicy(requestBody = null, username) {
         policy.bcDataSize = 0;
         policy.split = false;
         policy.costProfile = '';
+        policy.timeFrameStart = '00:00';
+        policy.timeFrameEnd = '00:00';
 
     } else if (requestBody.preferredBC && requestBody.preferredBC.length === 1) {
         policy.username = requestBody.username;
@@ -35,6 +37,8 @@ function buildPolicy(requestBody = null, username) {
         policy.bcDataSize = parseInt(requestBody.bcDataSize, 10);
         policy.split = requestBody.split === 'true';
         policy.costProfile = requestBody.costProfile;
+        policy.timeFrameStart = requestBody.timeFrameStart;
+        policy.timeFrameEnd = requestBody.timeFrameEnd;
     }
 
     return policy;

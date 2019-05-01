@@ -1,3 +1,11 @@
+{% macro getTime(time1, time2) %}
+    {% if time1 == time2 %}
+        24h
+    {% else %}
+        {{ time1 }} - {{ time2 }}
+    {% endif %}
+{% endmacro %}
+
 {% extends "layout.njk" %}
 {% block content %}
     <section class="hero">
@@ -62,7 +70,7 @@
                                     <td>{{ policy.bcTuringComplete }}</td>
                                     <td>{{ policy.split }}</td>
                                     <td>{{ policy.costProfile }}</td>
-                                    <td>{{ policy.timeFrame }}</td>
+                                    <td>{{ getTime(policy.timeFrameStart, policy.timeFrameEnd) }}</td>
                                     <td>
                                         <a class="button is-link table-button" href="/policy?id={{ policy._id }}">Edit Policy</a>
                                     </td>

@@ -41,11 +41,13 @@ const policySchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    timeframeStart: {
-        type: Number,
+    timeFrameStart: {
+        type: String,
+        default: '00:00',
     },
-    timeframeEnd: {
-        type: Number,
+    timeFrameEnd: {
+        type: String,
+        default: '00:00',
     },
     costProfile: {
         type: String,
