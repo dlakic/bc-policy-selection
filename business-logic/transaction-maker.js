@@ -35,7 +35,13 @@ async function makeTransactions(policies, user, violationData) {
     });
 
     if (currentlyActivePolicy.costProfile === constants.costProfiles.PERFORMANCE) {
-        //TODO: use most performant
+        //TODO: use most performant currently it just uses cheapest
+        const minCostBCKey = Object.keys(totalCosts).reduce((a, b) => {
+            return totalCosts[a] < totalCosts[b] ? a : b
+        });
+        console.log(minCostBCKey + totalCosts[minCostBCKey]);
+        // TODO: make actual call
+        userCostUpdater.addToUserCosts(user, totalCosts[minCostBCKey]);
     } else {
         const minCostBCKey = Object.keys(totalCosts).reduce((a, b) => {
             return totalCosts[a] < totalCosts[b] ? a : b
