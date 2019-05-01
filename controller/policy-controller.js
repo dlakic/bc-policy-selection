@@ -66,6 +66,7 @@ module.exports.listBlockchains = async (req, res) => {
 };
 
 module.exports.savePolicy = async (req, res) => {
+    console.log(req.body);
     if (!req.body.username) {
         const error = new Error("No username provided");
         error.statusCode = 400;

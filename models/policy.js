@@ -41,6 +41,12 @@ const policySchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    timeframeStart: {
+        type: Number,
+    },
+    timeframeEnd: {
+        type: Number,
+    },
     costProfile: {
         type: String,
         enum: ['economic', 'performance'],

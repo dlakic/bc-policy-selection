@@ -9,6 +9,35 @@ if (window.location.pathname === '/policy' && window.location.search.indexOf('id
     }
 }
 
+function updateMinDateEnd(startTime) {
+    const startTimeHours = parseInt(startTime.substring(0, 2), 10);
+    const startTimeMinutes = parseInt(startTime.substring(3, 5), 10);
+    const endTimeHours = startTimeHours === 23 ? 0 : startTimeHours + 1;
+    console.log(endTimeHours);
+    return endTimeHours.toString() + ':' + startTimeMinutes.toString();
+}
+
+const startPicker = flatpickr('#timeFrameStart', {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    defaultDate: "00:00",
+    time_24hr: true,
+    onClose: function(selectedDates, dateStr, instance) {
+        endPicker.set('minDate', dateStr);
+    },
+});
+const endPicker = flatpickr('#timeFrameEnd', {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    defaultDate: "00:00",
+    time_24hr: true,
+    onClose: function(selectedDates, dateStr, instance) {
+        startPicker.set('maxDate', dateStr);
+    },
+});
+
 function savePolicy(data) {
     superagent
         .post('/api/save-policy')

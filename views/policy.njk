@@ -10,20 +10,22 @@
                     Select multiple, a single or no blockchain as a preference. This determines which blockchains will
                     be chosen from in this policy. <br/>
                     In case only a single one is selected, the policy will disregard all other parameters and use the
-                    chosen blockchain (Also known as default policy). <br/>
+                    chosen blockchain (Also known as default policy). In case none is chosen, the selection process uses all available blockchains for selection. <br/>
                     <b>Note:</b> Only one default policy per user is allowed.
-                    In case none is chosen, the selection process uses all available blockchains for selection.
                 </div>
                 <div id="error" class="notification is-danger">
                 </div>
                 <div class="columns is-vcentered">
                     <div class="column"></div>
-                    <div class="column">
+                    <div class="column is-two-thirds">
                         <form id="policy-form">
                             <div class="field">
+
                                 <label class="label" for="username">Username</label>
-                                <input class="input" type="text" id="username" name="username"
-                                       value="{{ policy.username }}" {{ "disabled" if policy.username }}>
+                                <div class="control">
+                                    <input class="input" type="text" id="username" name="username"
+                                           value="{{ policy.username }}" {{ "disabled" if policy.username }}>
+                                </div>
                             </div>
                             <div class="field">
                                 <label class="label" for="preferredBC">Choose preferred blockchain
@@ -65,12 +67,12 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="field">
-                                    <label class="label" for="cost">Max. Cost</label>
-                                    <input class="input" type="number" step="0.01" id="cost" name="cost"
-                                           value="{{ policy.cost }}">
-                                </div>
-                                <div class="field">
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <label class="label" for="cost">Max. Cost</label>
+                                        <input class="input" type="number" step="0.01" id="cost" name="cost"
+                                               value="{{ policy.cost }}">
+                                    </div>
                                     <div class="control">
                                         <label class="label" for="currency">Currency</label>
                                         <div class="select">
@@ -84,8 +86,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="field">
+
                                     <div class="control">
                                         <label class="label" for="interval">Cost interval</label>
                                         <div class="select">
@@ -212,6 +213,25 @@
                             </div>
                             <div class="field">
                                 <div class="control">
+                                    <label class="label" for="timeFrame">Valid Time Frame</label>
+                                </div>
+                            </div>
+
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <label for="timeFrameStart">From</label>
+                                    <input class="input" name="timeFrameStart" id="timeFrameStart">
+                                </div>
+
+                                <div class="control">
+                                    <label for="timeFrameEnd">To</label>
+                                    <input class="input" name="timeFrameEnd" id="timeFrameEnd">
+                                </div>
+                            </div>
+                            <p class="info-text">Set start and end time to the same value to make the policy valid
+                                for the whole day </p>
+                            <div class="field">
+                                <div class="control">
                                     <button type="submit" id="submit-policy-form"
                                             class="button is-link is-pulled-right">Submit
                                     </button>
@@ -219,11 +239,10 @@
                             </div>
                         </form>
                     </div>
-                    <div class="column"></div>
                 </div>
             </div>
         </div>
     </section>
-
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="/js/policy.js"></script>
 {% endblock %}
