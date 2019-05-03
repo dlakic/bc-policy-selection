@@ -209,27 +209,26 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <label class="label" for="timeFrame">Valid Time Frame</label>
+                                    </div>
+                                </div>
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <label for="timeFrameStart">From</label>
+                                        <input class="input" name="timeFrameStart" id="timeFrameStart" value="{{ policy.timeFrameStart if policy.timeFrameStart else "00:00" }}">
+                                    </div>
+
+                                    <div class="control">
+                                        <label for="timeFrameEnd">To</label>
+                                        <input class="input" name="timeFrameEnd" id="timeFrameEnd" value="{{ policy.timeFrameEnd if policy.timeFrameEnd else "00:00" }}">
+                                    </div>
+                                </div>
+                                <p class="info-text">Set start and end time to the same value to make the policy valid
+                                    for the whole day </p>
                                 <input type="hidden" name="_id" value="{{ policy._id }}">
                             </div>
-                            <div class="field">
-                                <div class="control">
-                                    <label class="label" for="timeFrame">Valid Time Frame</label>
-                                </div>
-                            </div>
-
-                            <div class="field is-grouped">
-                                <div class="control">
-                                    <label for="timeFrameStart">From</label>
-                                    <input class="input" name="timeFrameStart" id="timeFrameStart" value="{{ policy.timeFrameStart if policy.timeFrameStart else "00:00" }}">
-                                </div>
-
-                                <div class="control">
-                                    <label for="timeFrameEnd">To</label>
-                                    <input class="input" name="timeFrameEnd" id="timeFrameEnd" value="{{ policy.timeFrameEnd if policy.timeFrameEnd else "00:00" }}">
-                                </div>
-                            </div>
-                            <p class="info-text">Set start and end time to the same value to make the policy valid
-                                for the whole day </p>
                             <div class="field">
                                 <div class="control">
                                     <button type="submit" id="submit-policy-form"

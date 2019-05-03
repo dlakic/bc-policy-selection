@@ -40,14 +40,14 @@ async function makeTransactions(policies, user, violationData) {
             return totalCosts[a] < totalCosts[b] ? a : b
         });
         console.log(minCostBCKey + totalCosts[minCostBCKey]);
-        // TODO: make actual call
+        // TODO: Put call to API here
         userCostUpdater.addToUserCosts(user, totalCosts[minCostBCKey]);
     } else {
         const minCostBCKey = Object.keys(totalCosts).reduce((a, b) => {
             return totalCosts[a] < totalCosts[b] ? a : b
         });
         console.log(minCostBCKey + totalCosts[minCostBCKey]);
-        // TODO: make actual call
+        // TODO: Put call to API here
         userCostUpdater.addToUserCosts(user, totalCosts[minCostBCKey]);
     }
     return currentlyActivePolicy;
