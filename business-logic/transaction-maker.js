@@ -7,7 +7,7 @@ const constants = require('../constants');
 
 async function makeTransactions(policies, user, violationData) {
     const currentlyActivePolicy = await policySelector.selectPolicy(policies, user);
-    const viableBlockchains = await blockchainSelector.selectBlockchain(currentlyActivePolicy);
+    const viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
     // TODO: Switch back to API for prod
     //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
     //const blockchainRates = await ratesAPI.fetchBlockchainCost(currentlyActivePolicy.currency, publicBlockchainsString);
@@ -33,24 +33,11 @@ async function makeTransactions(policies, user, violationData) {
             })
         }
     });
+    const chosenBlockchainKey = blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy,totalCosts,viableBlockchains);
+        // TODO: Put call to API here
+    userCostUpdater.addToUserCosts(user, totalCosts[chosenBlockchainKey]);
 
-    if (currentlyActivePolicy.costProfile === constants.costProfiles.PERFORMANCE) {
-        //TODO: use most performant currently it just uses cheapest
-        const minCostBCKey = Object.keys(totalCosts).reduce((a, b) => {
-            return totalCosts[a] < totalCosts[b] ? a : b
-        });
-        console.log(minCostBCKey + totalCosts[minCostBCKey]);
-        // TODO: Put call to API here
-        userCostUpdater.addToUserCosts(user, totalCosts[minCostBCKey]);
-    } else {
-        const minCostBCKey = Object.keys(totalCosts).reduce((a, b) => {
-            return totalCosts[a] < totalCosts[b] ? a : b
-        });
-        console.log(minCostBCKey + totalCosts[minCostBCKey]);
-        // TODO: Put call to API here
-        userCostUpdater.addToUserCosts(user, totalCosts[minCostBCKey]);
-    }
-    return currentlyActivePolicy;
+    return {blockchain: constants.blockchains[chosenBlockchainKey], data: violationData};
 }
 
 module.exports = {

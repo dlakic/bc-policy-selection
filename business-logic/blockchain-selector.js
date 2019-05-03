@@ -1,5 +1,6 @@
 const BlockchainRepository = require('../repositories/blockchain-repository');
-module.exports.selectBlockchain = async (policy) => {
+const constants = require('../constants');
+async function selectBlockchainFromPolicy(policy) {
     let blockchainPool;
 
     if (!policy.preferredBC || policy.preferredBC.length === 0) {
@@ -13,7 +14,7 @@ module.exports.selectBlockchain = async (policy) => {
         return blockchainPool;
     }
 
-    if(policy.bcType !== 'indifferent') {
+    if (policy.bcType !== 'indifferent') {
         // filter out all Blockchains that do not correspond with wanted bcType
         blockchainPool = blockchainPool.filter(blockchain => blockchain.type === policy.bcType);
     }
@@ -27,7 +28,7 @@ module.exports.selectBlockchain = async (policy) => {
     // filter out all Blockchains that do not correspond with the datasize threshold
     blockchainPool = blockchainPool.filter(blockchain => blockchain.maxTrxSize >= policy.bcDataSize);
 
-    if(policy.bcTuringComplete === true) {
+    if (policy.bcTuringComplete === true) {
         // filter out all Blockchains that are not turingcomplete
         blockchainPool = blockchainPool.filter(blockchain => blockchain.turingComplete === true);
     }
@@ -39,4 +40,27 @@ module.exports.selectBlockchain = async (policy) => {
 
     return blockchainPool;
 
+}
+
+async function selectBlockchainForTransaction(policy, bcCosts, viableBlockchains) {
+    let bcKey = '';
+    if (policy.costProfile === constants.costProfiles.PERFORMANCE) {
+        //TODO: use most performant currently it just uses cheapest
+        bcKey =  viableBlockchains.reduce((prev, current) => {
+            return prev.tps > current.tps ? prev.nameShort : current.nameShort
+        });
+        console.log (bcKey + bcCosts[bcKey]);
+    } else {
+        bcKey = Object.keys(bcCosts).reduce((prev, current) => {
+            return bcCosts[prev] < bcCosts[current] ? prev : current
+        });
+        console.log(bcKey + bcCosts[bcKey]);
+    }
+
+    return bcKey;
+}
+
+module.exports = {
+    selectBlockchainFromPolicy,
+    selectBlockchainForTransaction
 };

@@ -88,7 +88,7 @@ module.exports.savePolicy = async (req, res) => {
 
     try {
         // test for Policy conflicts
-        await blockchainSelector.selectBlockchain(providedPolicy);
+        await blockchainSelector.selectBlockchainFromPolicy(providedPolicy);
     } catch (err) {
         return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
     }

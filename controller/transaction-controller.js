@@ -46,11 +46,8 @@ module.exports.handleTransaction = async (req, res) => {
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        const policy = await transactionMaker.makeTransactions(policies, user, violationsData);
-        /*const cost = await costCalculator.calculateCostForPolicy(policy);
-        return res.status(200).send(cost)*/
-        const selectedBlockchain = await blockchainSelector.selectBlockchain(policy);
-        return res.status(200).send(selectedBlockchain);
+        const transaction = await transactionMaker.makeTransactions(policies, user, violationsData);
+        return res.status(200).send(transaction);
     } catch (err) {
         console.error(err);
         return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
