@@ -33,11 +33,10 @@ async function makeTransactions(policies, user, violationData) {
             })
         }
     });
-    const chosenBlockchainKey = blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy,totalCosts,viableBlockchains);
+    const chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy,totalCosts,viableBlockchains);
         // TODO: Put call to API here
     userCostUpdater.addToUserCosts(user, totalCosts[chosenBlockchainKey]);
-
-    return {blockchain: constants.blockchains[chosenBlockchainKey], data: violationData};
+    return {blockchain: constants.blockchains[chosenBlockchainKey].name, data: violationData};
 }
 
 module.exports = {

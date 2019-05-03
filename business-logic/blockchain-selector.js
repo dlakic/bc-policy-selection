@@ -45,14 +45,14 @@ async function selectBlockchainFromPolicy(policy) {
 async function selectBlockchainForTransaction(policy, bcCosts, viableBlockchains) {
     let bcKey = '';
     if (policy.costProfile === constants.costProfiles.PERFORMANCE) {
-        //TODO: use most performant currently it just uses cheapest
-        bcKey =  viableBlockchains.reduce((prev, current) => {
-            return prev.tps > current.tps ? prev.nameShort : current.nameShort
+        const mostPerformantBlockchain = viableBlockchains.reduce((prev, current) => {
+            return prev.tps > current.tps ? prev: current;
         });
+        bcKey = mostPerformantBlockchain.nameShort;
         console.log (bcKey + bcCosts[bcKey]);
     } else {
         bcKey = Object.keys(bcCosts).reduce((prev, current) => {
-            return bcCosts[prev] < bcCosts[current] ? prev : current
+            return bcCosts[prev] < bcCosts[current] ? prev : current;
         });
         console.log(bcKey + bcCosts[bcKey]);
     }
