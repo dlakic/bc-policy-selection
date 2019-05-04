@@ -77,7 +77,7 @@ function sortByTimeFrame(policies) {
         return policies;
     }
 
-    return policies.sort((a, b) => moment(a.timeFrameStart).format('hh:mm') - moment(b.timeFrameStart).format('hh:mm'));
+    return policies.sort((a, b) => moment(a.timeFrameStart, 'hh.mm') - moment(b.timeFrameStart, 'hh.mm'));
 }
 
 function sortPoliciesForInterval(policies) {
