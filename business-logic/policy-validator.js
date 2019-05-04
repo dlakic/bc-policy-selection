@@ -56,7 +56,7 @@ function validateCostsForInterval(policyToValidate, otherPolicies, interval) {
 
 function checkForErrors(policyToValidate, otherPolicies, interval) {
     let errorString = '';
-    const otherPoliciesSameInterval = otherPolicies.filter(policy => policy.interval === DAILY);
+    const otherPoliciesSameInterval = otherPolicies.filter(policy => policy.interval === interval);
     if (policyToValidate.costProfile === PERFORMANCE) {
         errorString = errorString + validateTimeFrameForCostProfile(policyToValidate, otherPoliciesSameInterval, PERFORMANCE);
     }
