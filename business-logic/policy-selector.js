@@ -90,9 +90,9 @@ async function selectPolicy(policies, user) {
     const defaultPolicy = policies.filter(policy => policy.interval === DEFAULT);
 
     if (defaultPolicy) {
-        defaultPolicy.isActive = true;
+        defaultPolicy[0].isActive = true;
         await PolicyRepository.getPolicyAndUpdate(defaultPolicy.id, defaultPolicy);
-        return defaultPolicy;
+        return defaultPolicy[0];
     }
 
     const conflictError = new Error("Policy conflict detected: No applicable policy found");

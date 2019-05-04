@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const policySchema = new mongoose.Schema({
+    isActive: {
+        type: Boolean,
+        default: false,
+    },
     username: {
         type: String,
         required: true,
