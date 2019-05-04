@@ -103,20 +103,21 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="column is-full">
+                    <div class="column is-one-third">
                         <h2 class="title is-5">
                             Costs for user {{ user.username }}:
                         </h2>
-                        <p>Accumulated Daily: {{ user.costDaily.cost }}</p>
-                        <p>Accumulated Weekly: {{ user.costWeekly.cost }}</p>
-                        <p>Accumulated Monthly: {{ user.costMonthly.cost }}</p>
-                        <p>Accumulated Yearly: {{ user.costYearly.cost }}</p>
+                        <canvas id="costChart"></canvas>
+                        <span id='dailyCost' style="display:none">{{ user.costDaily.cost }}</span>
+                        <span id='weeklyCost' style="display:none">{{ user.costWeekly.cost }}</span>
+                        <span id='monthlyCost' style="display:none">{{ user.costMonthly.cost }}</span>
+                        <span id='yearlyCost' style="display:none">{{ user.costYearly.cost }}</span>
                     </div>
                 </div>
             </div>
         </div>
         </div>
     </section>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="../js/policy-list.js"></script>
 {% endblock %}
