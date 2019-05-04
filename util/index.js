@@ -1,6 +1,8 @@
 const constants = require('../constants');
+const moment = require('moment');
 
 const {DEFAULT, DAILY, WEEKLY, MONTHLY, YEARLY} = constants.intervals;
+const {PERFORMANCE, ECONOMIC} = constants.costProfiles;
 
 function buildPolicy(requestBody = null, username) {
     const policy = {};
@@ -69,10 +71,32 @@ function cleanNumericalParams(blockchains) {
     }
 }
 
+function sortByTimeFrame(policies) {
+    // if there is none or only one policy nothing needs to be sorted
+    if (policies.length < 2) {
+        return policies;
+    }
+
+    return policies.sort((a, b) => moment(a.timeFrameStart).format('hh:mm') - moment(b.timeFrameStart).format('hh:mm'));
+}
+
+function sortPoliciesForInterval(policies) {
+    const performancePolicies = policies.filter(policy => policy.costProfile === PERFORMANCE);
+    const economicPolicies = policies.filter(policy => policy.costProfile === ECONOMIC);
+    const sortedPerformancePolicies = sortByTimeFrame(performancePolicies);
+    const sortedEconomicPolicies = sortByTimeFrame(economicPolicies);
+    return [...sortedPerformancePolicies, ...sortedEconomicPolicies]
+}
 
 function sortPoliciesByPriority(policies) {
-    const order = [DAILY, WEEKLY, MONTHLY, YEARLY, DEFAULT];
-    return policies.sort((a, b) => order.indexOf(a.interval) - order.indexOf(b.interval));
+    const sortedDailyPolicies = sortPoliciesForInterval(policies.filter(policy => policy.interval === DAILY));
+    const sortedWeeklyPolicies = sortPoliciesForInterval(policies.filter(policy => policy.interval === WEEKLY));
+    const sortedMonthlyPolicies = sortPoliciesForInterval(policies.filter(policy => policy.interval === MONTHLY));
+    const sortedYearlyPolicies = sortPoliciesForInterval(policies.filter(policy => policy.interval === YEARLY));
+    const defaultPolicy = policies.filter(policy => policy.interval === DEFAULT);
+
+    return [...sortedDailyPolicies, ...sortedWeeklyPolicies, ...sortedMonthlyPolicies, ...sortedYearlyPolicies, ...defaultPolicy];
+
 }
 
 function getLowerIntervals(threshold) {
@@ -145,7 +169,7 @@ function addPrivateRatesToObject(blockchainRates) {
     const allBlockchainRates = {...blockchainRates};
     const allBlockchainKeys = Object.keys(constants.blockchains);
     allBlockchainKeys.forEach((blockchainKey) => {
-        if(!allBlockchainRates.hasOwnProperty(blockchainKey)) {
+        if (!allBlockchainRates.hasOwnProperty(blockchainKey)) {
             allBlockchainRates[blockchainKey] = 0;
         }
     });
