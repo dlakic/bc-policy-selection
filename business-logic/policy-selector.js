@@ -15,46 +15,47 @@ function isPolicyInTimeFrame(policy) {
     return now.isBetween(start, end, null, '[]');
 }
 
-function retrieveActivePolicyForInterval(policies, user) {
+async function retrieveActivePolicyForInterval(policies, costThreshold) {
     let activePolicy = null;
     const policiesInTimeFrame = policies.filter(policy => isPolicyInTimeFrame(policy));
     const policiesPerformance = policiesInTimeFrame.filter(policy => policy.costProfile === PERFORMANCE);
     const policiesEconomic = policiesInTimeFrame.filter(policy => policy.costProfile === ECONOMIC);
-    policiesPerformance.forEach((policy) => {
-        if (policy.cost >= user.costDaily.cost) {
+
+    for (let policy of policiesPerformance) {
+        if (policy.cost >= costThreshold) {
             policy.isActive = true;
-            PolicyRepository.getPolicyAndUpdate(policy.id, policy);
+            await PolicyRepository.getPolicyAndUpdate(policy.id, policy);
             activePolicy = policy;
         }
-    });
+    }
 
-    if(activePolicy) {
+    if (activePolicy) {
         return activePolicy;
     }
 
-    policiesEconomic.forEach((policy) => {
-        if (policy.cost >= user.costDaily.cost) {
+    for (let policy of policiesEconomic) {
+        if (policy.cost >= costThreshold) {
             policy.isActive = true;
-            PolicyRepository.getPolicyAndUpdate(policy.id, policy);
+            await PolicyRepository.getPolicyAndUpdate(policy.id, policy);
             activePolicy = policy;
         }
-    });
+    }
 
     return activePolicy;
 }
 
 async function selectPolicy(policies, user) {
     // Mark all policies as inactive before setting the chosen one as active
-    policies.forEach(policy => {
+    for (let policy of policies) {
         policy.isActive = false;
-        PolicyRepository.getPolicyAndUpdate(policy.id, policy);
-    });
+        await PolicyRepository.getPolicyAndUpdate(policy.id, policy);
+    }
 
     const dailyPolicies = policies.filter(policy => policy.interval === DAILY);
 
     if (dailyPolicies && dailyPolicies.length > 0) {
-        let activeDailyPolicy = retrieveActivePolicyForInterval(dailyPolicies, user);
-        if(activeDailyPolicy) {
+        let activeDailyPolicy = await retrieveActivePolicyForInterval(dailyPolicies, user.costDaily.cost);
+        if (activeDailyPolicy) {
             return activeDailyPolicy;
         }
     }
@@ -62,8 +63,8 @@ async function selectPolicy(policies, user) {
     const weeklyPolicy = policies.filter(policy => policy.interval === WEEKLY);
 
     if (weeklyPolicy) {
-        let activeWeeklyPolicy = retrieveActivePolicyForInterval(weeklyPolicy, user);
-        if(activeWeeklyPolicy) {
+        let activeWeeklyPolicy = await retrieveActivePolicyForInterval(weeklyPolicy, user.costWeekly.cost);
+        if (activeWeeklyPolicy) {
             return activeWeeklyPolicy;
         }
     }
@@ -71,8 +72,8 @@ async function selectPolicy(policies, user) {
     const monthlyPolicy = policies.filter(policy => policy.interval === MONTHLY);
 
     if (monthlyPolicy) {
-        let activeMonthlyPolicy = retrieveActivePolicyForInterval(monthlyPolicy, user);
-        if(activeMonthlyPolicy) {
+        let activeMonthlyPolicy = await retrieveActivePolicyForInterval(monthlyPolicy, user.costMonthly.cost);
+        if (activeMonthlyPolicy) {
             return activeMonthlyPolicy;
         }
     }
@@ -80,8 +81,8 @@ async function selectPolicy(policies, user) {
     const yearlyPolicy = policies.filter(policy => policy.interval === YEARLY);
 
     if (yearlyPolicy) {
-        let activeYearlyPolicy = retrieveActivePolicyForInterval(yearlyPolicy, user);
-        if(activeYearlyPolicy) {
+        let activeYearlyPolicy = await retrieveActivePolicyForInterval(yearlyPolicy, user.costYearly.cost);
+        if (activeYearlyPolicy) {
             return activeYearlyPolicy;
         }
     }
@@ -90,7 +91,7 @@ async function selectPolicy(policies, user) {
 
     if (defaultPolicy) {
         defaultPolicy.isActive = true;
-        PolicyRepository.getPolicyAndUpdate(defaultPolicy.id, defaultPolicy);
+        await PolicyRepository.getPolicyAndUpdate(defaultPolicy.id, defaultPolicy);
         return defaultPolicy;
     }
 
