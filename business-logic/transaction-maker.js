@@ -34,8 +34,8 @@ async function makeTransactions(policies, user, violationData) {
         }
     });
     const chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy,totalCosts,viableBlockchains);
-        // TODO: Put call to API here
     userCostUpdater.addToUserCosts(user, totalCosts[chosenBlockchainKey]);
+    //TODO: Return object for each transaction here
     return {blockchain: constants.blockchains[chosenBlockchainKey].name, data: violationData};
 }
 
