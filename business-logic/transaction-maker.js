@@ -6,23 +6,6 @@ const userCostUpdater = require('./user-cost-updater');
 const constants = require('../constants');
 const util = require('../util');
 
-async function getCostsForBlockchains(viableBlockchains, blockchainRates, violationData) {
-    const viableBlockchainRates = {};
-    viableBlockchains.forEach((viableBlockchain) => {
-        viableBlockchainRates[viableBlockchain.nameShort] = blockchainRates[viableBlockchain.nameShort];
-    });
-    const costsPerByte = await costCalculator.calculateCosts(viableBlockchainRates);
-    const costs = [];
-    await Promise.all(
-        violationData.violations.map(async (sheetData) => {
-            const costsForSheet = costCalculator.multiplyWithBytes(costsPerByte, sheetData.sizeString);
-            costs.push(costsForSheet);
-        })
-    );
-
-    return costs;
-}
-
 async function getAllBlockchainCostsPerByte() {
     // TODO: Switch back to API for prod
     //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
