@@ -68,10 +68,13 @@ const exchanges = {
     GAS_PER_BYTE: 625,
 };
 
+const baseTransactionCost = 0.01;
+
 module.exports = {
     blockchainTypes,
     intervals,
     costProfiles,
     blockchains,
-    exchanges
+    exchanges,
+    baseTransactionCost,
 };

@@ -70,9 +70,9 @@ function multiplyWithBytes(costPerByte, bytes) {
     Object.keys(costPerByte).forEach((costPerByteKey) => {
         // since XLM does costs per operation and not per byte just do not multiply with bytes
         if (costPerByteKey === constants.blockchains.XLM.nameShort) {
-            costs[costPerByteKey] = costPerByte[costPerByteKey];
+            costs[costPerByteKey] = costPerByte[costPerByteKey] + constants.baseTransactionCost;
         } else {
-            costs[costPerByteKey] = costPerByte[costPerByteKey] * bytes;
+            costs[costPerByteKey] = costPerByte[costPerByteKey] * bytes + constants.baseTransactionCost;
         }
     });
     return costs;
