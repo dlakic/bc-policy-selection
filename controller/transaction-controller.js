@@ -27,7 +27,7 @@ module.exports.handleTransaction = async (req, res) => {
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
     // update costs
-    userCostUpdater.costThresholdUpdater(user);
+    await userCostUpdater.costThresholdUpdater(user);
     // check if Temperature thresholds have been provided correctly
     const minMaxTempError = util.checkValidTemperatures(minTemp, maxTemp);
     if (minMaxTempError) {

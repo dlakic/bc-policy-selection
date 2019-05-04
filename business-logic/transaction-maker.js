@@ -4,14 +4,9 @@ const ratesAPI = require('../api/bc-rates');
 const costCalculator = require('./cost-calculator');
 const userCostUpdater = require('./user-cost-updater');
 const constants = require('../constants');
+const util = require('../util');
 
-async function makeTransactions(policies, user, violationData) {
-    const currentlyActivePolicy = await policySelector.selectPolicy(policies, user);
-    const viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
-    // TODO: Switch back to API for prod
-    //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
-    //const blockchainRates = await ratesAPI.fetchBlockchainCost(currentlyActivePolicy.currency, publicBlockchainsString);
-    const blockchainRates = await ratesAPI.fetchBlockchainCostNOAPI();
+async function getCostsForBlockchains(viableBlockchains, blockchainRates, violationData) {
     const viableBlockchainRates = {};
     viableBlockchains.forEach((viableBlockchain) => {
         viableBlockchainRates[viableBlockchain.nameShort] = blockchainRates[viableBlockchain.nameShort];
@@ -25,18 +20,46 @@ async function makeTransactions(policies, user, violationData) {
         })
     );
 
-    const totalCosts = {...costs[0]};
-    costs.forEach((cost, index) => {
-        if (index !== 0) {
-            Object.keys(cost).forEach((bcKey) => {
-                totalCosts[bcKey] = totalCosts[bcKey] + cost[bcKey]
-            })
-        }
+    return costs;
+}
+
+async function getAllBlockchainCostsPerByte() {
+    // TODO: Switch back to API for prod
+    //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
+    //const blockchainRates = await ratesAPI.fetchBlockchainCost(currentlyActivePolicy.currency, publicBlockchainsString);
+    const publicBlockchainRates = await ratesAPI.fetchBlockchainCostNOAPI();
+    const allBlockchainRates = util.addPrivateRatesToObject(publicBlockchainRates);
+    return await costCalculator.calculateCosts(allBlockchainRates);
+}
+
+function getCostsForSheets(costsPerByte, violationData) {
+    const costs = [];
+    violationData.violations.map((sheetData) => {
+        const costsForSheet = costCalculator.multiplyWithBytes(costsPerByte, sheetData.sizeString);
+        costs.push(costsForSheet);
     });
-    const chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy,totalCosts,viableBlockchains);
-    userCostUpdater.addToUserCosts(user, totalCosts[chosenBlockchainKey]);
-    //TODO: Return object for each transaction here
-    return {blockchain: constants.blockchains[chosenBlockchainKey].name, data: violationData};
+    return costs;
+}
+
+async function makeTransactions(policies, user, violationData) {
+    const costsPerByte = await getAllBlockchainCostsPerByte();
+    let sheetCosts = getCostsForSheets(costsPerByte, violationData);
+    let currentlyActivePolicy;
+    let viableBlockchains;
+
+    let transactionInfo = [];
+    for (let [index, cost] of sheetCosts.entries()) {
+        currentlyActivePolicy = await policySelector.selectPolicy(policies, user);
+        viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
+        const chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains);
+        await userCostUpdater.addToUserCosts(user, cost[chosenBlockchainKey]);
+        transactionInfo.push({
+            blockchain: constants.blockchains[chosenBlockchainKey].name,
+            data: violationData.violations[index].dataString,
+            cost: cost[chosenBlockchainKey]
+        })
+    }
+    return transactionInfo;
 }
 
 module.exports = {

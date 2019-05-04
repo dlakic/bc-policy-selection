@@ -68,8 +68,13 @@ async function calculateCostForBlockchainViaAPI(currency, bcKey, bytes = 1, prof
 function multiplyWithBytes(costPerByte, bytes) {
     const costs = {};
     Object.keys(costPerByte).forEach((costPerByteKey) => {
-        costs[costPerByteKey] = costPerByte[costPerByteKey] * bytes;
-    })
+        // since XLM does costs per operation and not per byte just do not multiply with bytes
+        if (costPerByteKey === constants.blockchains.XLM.nameShort) {
+            costs[costPerByteKey] = costPerByte[costPerByteKey];
+        } else {
+            costs[costPerByteKey] = costPerByte[costPerByteKey] * bytes;
+        }
+    });
     return costs;
 }
 

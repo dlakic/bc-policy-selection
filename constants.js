@@ -54,7 +54,7 @@ const blockchains = {
         type: blockchainTypes.PRIVATE
     },
     PSG: {
-        name: 'Postgres(No Blockchain)',
+        name: 'Postgres',
         nameShort: 'PSG',
         type: blockchainTypes.PRIVATE
     },

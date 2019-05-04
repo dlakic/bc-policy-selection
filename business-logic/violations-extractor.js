@@ -12,7 +12,6 @@ module.exports.violationsExtractor = (sheets, minTemp, maxTemp) => {
             const violationData = row.filter(temp => temp > maxTemp || temp < minTemp);
             violationsAmount = violationsAmount + violationData.length;
              violationData.forEach((temp) => {
-                 // TODO: Look if this makes sense
                  violationDataForSheet.size = violationDataForSheet.size + Buffer.byteLength(temp.toString(), 'utf8');
             });
             violationDataForSheet.data.push(...violationData);

@@ -1,7 +1,7 @@
 const moment = require('moment');
 const UserRepository = require('../repositories/user-repository');
 
-function costThresholdUpdater(user) {
+async function costThresholdUpdater(user) {
     const dateLastResetForCostDaily = user.costDaily.lastReset;
     const dateLastResetForCostWeekly = user.costWeekly.lastReset;
     const dateLastResetForCostMonthly = user.costMonthly.lastReset;
@@ -31,18 +31,18 @@ function costThresholdUpdater(user) {
     }
 
     if (isUpdated) {
-        UserRepository.getUserAndUpdate(user._id, user);
+        await UserRepository.getUserAndUpdate(user._id, user);
     }
 
 }
 
-function addToUserCosts(user, costs) {
+async function addToUserCosts(user, costs) {
     user.costDaily.cost = user.costDaily.cost + costs;
     user.costWeekly.cost = user.costWeekly.cost + costs;
     user.costMonthly.cost = user.costMonthly.cost + costs;
     user.costYearly.cost = user.costYearly.cost + costs;
 
-    UserRepository.getUserAndUpdate(user._id, user);
+    await UserRepository.getUserAndUpdate(user._id, user);
 }
 
 module.exports = {

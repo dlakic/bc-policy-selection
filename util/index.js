@@ -39,7 +39,7 @@ function buildPolicy(requestBody = null, username) {
         policy.costProfile = requestBody.costProfile;
         policy.timeFrameStart = requestBody.timeFrameStart;
         policy.timeFrameEnd = requestBody.timeFrameEnd;
-        if(requestBody._id) {
+        if (requestBody._id) {
             policy._id = requestBody._id;
         }
     }
@@ -124,27 +124,39 @@ function isTransactionFeeFreeBlockchain(bcType) {
         || bcType === constants.blockchains.HYP.nameShort;
 }
 
-function checkValidTemperatures (minTemp, maxTemp) {
+function checkValidTemperatures(minTemp, maxTemp) {
     let error;
-    if(!minTemp || !maxTemp) {
+    if (!minTemp || !maxTemp) {
         error = 'minTemp or MaxTemp missing'
     }
 
-    if(Number.isNaN(minTemp) || Number.isNaN(maxTemp)) {
+    if (Number.isNaN(minTemp) || Number.isNaN(maxTemp)) {
         error = 'minTemp or MaxTemp is not an integer'
     }
 
-    if(minTemp > maxTemp) {
-        error =  'minTemp has an invalid higher value than MaxTemp'
+    if (minTemp > maxTemp) {
+        error = 'minTemp has an invalid higher value than MaxTemp'
     }
 
     return error;
 }
 
+function addPrivateRatesToObject(blockchainRates) {
+    const allBlockchainRates = {...blockchainRates};
+    const allBlockchainKeys = Object.keys(constants.blockchains);
+    allBlockchainKeys.forEach((blockchainKey) => {
+        if(!allBlockchainRates.hasOwnProperty(blockchainKey)) {
+            allBlockchainRates[blockchainKey] = 0;
+        }
+    });
+
+    return allBlockchainRates;
+}
+
 function publicBlockchainsForCostRequest() {
     let publicBlockchains = [];
     Object.keys(constants.blockchains).forEach((bcKey) => {
-        if(constants.blockchains[bcKey].type === constants.blockchainTypes.PUBLIC) {
+        if (constants.blockchains[bcKey].type === constants.blockchainTypes.PUBLIC) {
             publicBlockchains.push(constants.blockchains[bcKey].nameShort);
         }
     });
@@ -159,5 +171,6 @@ module.exports = {
     getHigherIntervals,
     isTransactionFeeFreeBlockchain,
     checkValidTemperatures,
+    addPrivateRatesToObject,
     publicBlockchainsForCostRequest,
 };
