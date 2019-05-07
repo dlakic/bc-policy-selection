@@ -54,12 +54,10 @@ async function selectBlockchainForTransaction(policy, bcCosts, viableBlockchains
             return prev.tps > current.tps ? prev : current;
         });
         bcKey = mostPerformantBlockchain.nameShort;
-        console.log(bcKey + viableBcCosts[bcKey]);
     } else {
         bcKey = Object.keys(viableBcCosts).reduce((prev, current) => {
             return viableBcCosts[prev] < viableBcCosts[current] ? prev : current;
         });
-        console.log(bcKey + viableBcCosts[bcKey]);
     }
 
     return bcKey;

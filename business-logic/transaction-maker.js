@@ -1,3 +1,4 @@
+const TransactionRepository = require('../repositories/transaction-repository');
 const policySelector = require('./policy-selector');
 const blockchainSelector = require('./blockchain-selector');
 const ratesAPI = require('../api/bc-rates');
@@ -36,11 +37,15 @@ async function makeTransactions(policies, user, violationData) {
         viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
         const chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains);
         await userCostUpdater.addToUserCosts(user, cost[chosenBlockchainKey]);
-        transactionInfo.push({
+        const transaction = {
+            username: user.username,
             blockchain: constants.blockchains[chosenBlockchainKey].name,
             data: violationData.violations[index].dataString,
-            cost: cost[chosenBlockchainKey]
-        })
+            cost: cost[chosenBlockchainKey],
+            policyId: currentlyActivePolicy._id,
+        };
+        await TransactionRepository.createTransaction(transaction);
+        transactionInfo.push(transaction)
     }
     return transactionInfo;
 }
