@@ -29,7 +29,7 @@ module.exports.listPolicies = async (req, res) => {
             await policySelector.selectPolicy(policies, user);
         }
         policies = util.sortPoliciesByPriority(policies);
-        return res.status(200).render('policies', {policies, username, user});
+        return res.status(200).render('policies', {policies, username});
 
     } catch (err) {
         console.error(err);

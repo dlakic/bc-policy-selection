@@ -1,6 +1,6 @@
 function loadGraphs(resBody) {
-    const ctx = document.getElementById('costChart').getContext('2d');
-    new Chart(ctx, {
+    const costsPerIntervalctx = document.getElementById('costsPerIntervalChart').getContext('2d');
+    new Chart(costsPerIntervalctx, {
         type: 'bar',
         data: {
             datasets: [
@@ -22,7 +22,8 @@ function loadGraphs(resBody) {
                     },
                     // Changes this dataset to become a line
                     type: 'line'
-                }, {
+                },
+                {
                     label: 'Accumulated cost',
                     backgroundColor: 'rgb(32,156,238)',
                     borderColor: 'rgb(32,156,238)',
@@ -38,6 +39,41 @@ function loadGraphs(resBody) {
         },
         options: {}
     });
+
+    const costsPerPolicyctx = document.getElementById('costsPerPolicyChart').getContext('2d');
+    const policyIndexArray = resBody.policyStats.map((stat, index) => index + 1);
+    const costArray = resBody.policyStats.map(stat => stat.cost);
+    const costThresholdsArray = resBody.policyStats.map(stat => stat.costThreshold);
+
+    new Chart(costsPerPolicyctx, {
+        type: 'bar',
+        data: {
+            datasets: [
+                {
+                    label: 'Max. Threshold',
+                    backgroundColor: 'rgb(255, 56, 96, 0)',
+                    borderColor: 'rgb(255, 56, 96)',
+                    data: costThresholdsArray,
+                    steppedLine: 'middle',
+                    scaleOptions: {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    },
+                    // Changes this dataset to become a line
+                    type: 'line'
+                },
+                {
+                    label: 'Cost per Policy',
+                    backgroundColor: 'rgb(32,156,238)',
+                    borderColor: 'rgb(32,156,238)',
+                    data: costArray,
+                },
+            ],
+            labels: policyIndexArray,
+        },
+        options: {}
+    });
 }
 
 function getUserStats(username) {
@@ -47,7 +83,7 @@ function getUserStats(username) {
             if (err) {
                 console.log(res);
             } else {
-               loadGraphs(res.body);
+                loadGraphs(res.body);
             }
         });
 }

@@ -1,5 +1,6 @@
 const UserRepository = require('../repositories/user-repository');
 const PolicyRepository = require('../repositories/policy-repository');
+const TransactionRepository = require('../repositories/transaction-repository');
 const userStats = require('../business-logic/user-stats');
 
 module.exports.checkIfUserDoesNotExist = async (req, res) => {
@@ -41,8 +42,9 @@ module.exports.getUserStats = async (req, res) => {
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        let policies = await PolicyRepository.getPoliciesByUsername(username);
-        const stats = userStats.getUserStats(user, policies);
+        const policies = await PolicyRepository.getPoliciesByUsername(username);
+        const transactions = await TransactionRepository.getTransactionsByUsername(username);
+        const stats = userStats.getUserStats(user, policies, transactions);
         return res.status(200).send(stats);
 
     } catch (err) {

@@ -105,9 +105,15 @@
                     </div>
                     <div class="column is-one-third">
                         <h2 class="title is-5">
-                            Costs for user <span id="username-stats">{{ user.username }}</span>:
+                            Costs for user <span id="username-stats">{{ username }}</span>:
                         </h2>
-                        <canvas id="costChart"></canvas>
+                        <canvas id="costsPerIntervalChart"></canvas>
+                    </div>
+                    <div class="column is-one-third">
+                        <h2 class="title is-5">
+                            Policy Costs:
+                        </h2>
+                        <canvas id="costsPerPolicyChart"></canvas>
                     </div>
                 </div>
             </div>
