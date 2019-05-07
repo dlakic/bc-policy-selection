@@ -53,10 +53,12 @@ function getStatsForBlockchain(blockchain, transactions, policies) {
     const relevantTransactions = transactions.filter(transaction => transaction.blockchain === blockchain.name);
     relevantTransactions.forEach((transaction) => {
         const policyOfTransaction = policies.find(policy => policy._id.equals(transaction.policyId));
-        if (policyOfTransaction.costProfile === ECONOMIC) {
-            blockchainStats.economicTransactions++;
-        } else {
-            blockchainStats.performanceTransactions++;
+        if(policyOfTransaction) {
+            if (policyOfTransaction.costProfile === ECONOMIC) {
+                blockchainStats.economicTransactions++;
+            } else {
+                blockchainStats.performanceTransactions++;
+            }
         }
     });
 

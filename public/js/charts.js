@@ -1,4 +1,5 @@
 function loadGraphs(resBody) {
+    const chartoptions = {animation: false};
     const costsPerIntervalctx = document.getElementById('costsPerIntervalChart').getContext('2d');
     new Chart(costsPerIntervalctx, {
         type: 'bar',
@@ -37,7 +38,7 @@ function loadGraphs(resBody) {
             ],
             labels: ['daily', 'weekly', 'monthly', 'yearly'],
         },
-        options: {}
+        options: chartoptions,
     });
 
     const costsPerPolicyctx = document.getElementById('costsPerPolicyChart').getContext('2d');
@@ -72,7 +73,7 @@ function loadGraphs(resBody) {
             ],
             labels: policyIndexArray,
         },
-        options: {}
+        options: chartoptions
     });
 
     const transactionstPerPolicyctx = document.getElementById('transactionsPerPolicyChart').getContext('2d');
@@ -91,7 +92,7 @@ function loadGraphs(resBody) {
             ],
             labels: policyIndexArray,
         },
-        options: {}
+        options: chartoptions
     });
 
     const transactionstPerBlockchainctx = document.getElementById('transactionsPerBlockchainChart').getContext('2d');
@@ -122,7 +123,8 @@ function loadGraphs(resBody) {
             scales: {
                 xAxes: [{ stacked: true }],
                 yAxes: [{ stacked: true }]
-            }
+            },
+            animation: false,
         }
     });
 }
@@ -140,7 +142,10 @@ function getUserStats(username) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    getUserStats(document.getElementById('username-stats').textContent)
+    getUserStats(document.getElementById('username-stats').textContent);
+    setInterval(function() {
+        getUserStats(document.getElementById('username-stats').textContent);
+    }, 5000);
 });
 
 
