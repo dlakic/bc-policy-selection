@@ -74,6 +74,25 @@ function loadGraphs(resBody) {
         },
         options: {}
     });
+
+    const transactionstPerPolicyctx = document.getElementById('transactionsPerPolicyChart').getContext('2d');
+    const transactionsArray = resBody.policyStats.map(stat => stat.transactions);
+
+    new Chart(transactionstPerPolicyctx, {
+        type: 'bar',
+        data: {
+            datasets: [
+                {
+                    label: 'Transactions per Policy',
+                    backgroundColor: 'rgb(32,156,238)',
+                    borderColor: 'rgb(32,156,238)',
+                    data: transactionsArray,
+                },
+            ],
+            labels: policyIndexArray,
+        },
+        options: {}
+    });
 }
 
 function getUserStats(username) {
