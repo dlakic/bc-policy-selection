@@ -5,9 +5,9 @@ function loadGraphs(resBody) {
         data: {
             datasets: [
                 {
-                    label: 'Max. Thresholds',
-                    backgroundColor: 'rgb(255, 56, 96, 0.3)',
-                    borderColor: 'rgb(255, 56, 96, 0.5)',
+                    label: 'Max. Threshold',
+                    backgroundColor: 'rgb(255, 56, 96, 0)',
+                    borderColor: 'rgb(255, 56, 96)',
                     data: [
                         resBody.maxDailyCostThreshold,
                         resBody.maxWeeklyCostThreshold,
@@ -24,7 +24,7 @@ function loadGraphs(resBody) {
                     // Changes this dataset to become a line
                     type: 'line'
                 }, {
-                    label: 'Accumulated costs',
+                    label: 'Accumulated cost',
                     backgroundColor: 'rgb(32,156,238)',
                     borderColor: 'rgb(32,156,238)',
                     data: [
