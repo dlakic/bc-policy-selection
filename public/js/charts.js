@@ -1,12 +1,11 @@
 function loadGraphs(resBody) {
-    console.log(resBody);
     const ctx = document.getElementById('costChart').getContext('2d');
     new Chart(ctx, {
         type: 'bar',
         data: {
             datasets: [
                 {
-                    label: 'Max. Limits',
+                    label: 'Max. Thresholds',
                     backgroundColor: 'rgb(255, 56, 96, 0.3)',
                     borderColor: 'rgb(255, 56, 96, 0.5)',
                     data: [
@@ -16,7 +15,7 @@ function loadGraphs(resBody) {
                         resBody.maxYearlyCostThreshold,
                         resBody.maxYearlyCostThreshold,
                     ],
-                    steppedLine: 'before',
+                    steppedLine: 'middle',
                     scaleOptions: {
                         ticks: {
                             beginAtZero: true
@@ -36,7 +35,7 @@ function loadGraphs(resBody) {
                     ]
                 },
             ],
-            labels: ['daily', 'weekly', 'monthly', 'monthly'],
+            labels: ['daily', 'weekly', 'monthly', 'yearly'],
         },
         options: {}
     });
