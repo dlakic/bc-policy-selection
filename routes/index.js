@@ -14,6 +14,7 @@ router.get('/blockchains', policyController.listBlockchains);
 router.get('/policy', policyController.editPolicy);
 router.get('/user-not-exist-check/:username', userController.checkIfUserDoesNotExist);
 router.get('/blockchain-cost/:blockchain/:currency', transactionController.getBlockchainCost);
+router.get('/user-stats/:username', userController.getUserStats);
 router.get('*', (req, res) => {
     res.redirect('/');
 });

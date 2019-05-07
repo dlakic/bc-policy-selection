@@ -58,9 +58,9 @@
                             </thead>
                             <tbody>
                             {% for policy in policies %}
-                                <tr>
+                                <tr class="policy-info">
                                     <th>{{ loop.index }}</th>
-                                    <td>
+                                    <td class="policy-active">
                                         {% if policy.isActive %}
                                             <span class="tag is-success">
                                                 Active
@@ -71,24 +71,24 @@
                                             </span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ policy.username }}</td>
-                                    <td>{{ policy.preferredBC }}</td>
-                                    <td>{{ policy.bcType }}</td>
-                                    <td>{{ policy.cost }}</td>
-                                    <td>{{ policy.interval }}</td>
-                                    <td>{{ policy.currency }}</td>
-                                    <td>{{ policy.bcTps }}</td>
-                                    <td>{{ policy.bcBlockTime }}</td>
-                                    <td>{{ policy.bcDataSize }}</td>
-                                    <td>{{ getIcon(policy.bcTuringComplete) }}</td>
-                                    <td>{{ getIcon(policy.split) }}</td>
-                                    <td>{{ policy.costProfile }}</td>
-                                    <td>{{ getTime(policy.timeFrameStart, policy.timeFrameEnd) }}</td>
-                                    <td>
+                                    <td class="policy-username">{{ policy.username }}</td>
+                                    <td class="policy-preferred-bc">{{ policy.preferredBC }}</td>
+                                    <td class="policy-bc-type">{{ policy.bcType }}</td>
+                                    <td class="policy-cost">{{ policy.cost }}</td>
+                                    <td class="policy-interval">{{ policy.interval }}</td>
+                                    <td class="policy-currency">{{ policy.currency }}</td>
+                                    <td class="policy-bc-tps">{{ policy.bcTps }}</td>
+                                    <td class="policy-block-time">{{ policy.bcBlockTime }}</td>
+                                    <td class="policy-bc-data-size">{{ policy.bcDataSize }}</td>
+                                    <td class="policy-bc-touring-complete">{{ getIcon(policy.bcTuringComplete) }}</td>
+                                    <td class="policy-split">{{ getIcon(policy.split) }}</td>
+                                    <td class="policy-cost-profile">{{ policy.costProfile }}</td>
+                                    <td class="policy-time-frame">{{ getTime(policy.timeFrameStart, policy.timeFrameEnd) }}</td>
+                                    <td class="policy-edit">
                                         <a class="button is-link table-button" href="/policy?id={{ policy._id }}">Edit
                                             Policy</a>
                                     </td>
-                                    <td>
+                                    <td class="policy-delete">
                                         <button class="button is-danger delete-button table-button"
                                                 id="delete-policy-{{ policy._id }}" value="{{ policy._id }}">Delete
                                             Policy
@@ -105,7 +105,7 @@
                     </div>
                     <div class="column is-one-third">
                         <h2 class="title is-5">
-                            Costs for user {{ user.username }}:
+                            Costs for user <span id="username-stats">{{ user.username }}</span>:
                         </h2>
                         <canvas id="costChart"></canvas>
                         <span id='dailyCost' style="display:none">{{ user.costDaily.cost }}</span>
@@ -120,4 +120,5 @@
     </section>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="../js/policy-list.js"></script>
+    <script src="../js/charts.js"></script>
 {% endblock %}

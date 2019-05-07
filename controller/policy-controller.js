@@ -22,6 +22,7 @@ module.exports.listPolicies = async (req, res) => {
             error.statusCode = 404;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
+        // update cost thresholds if needed
         await userCostUpdater.costThresholdUpdater(user);
         let policies = await PolicyRepository.getPoliciesByUsername(username);
         if (policies && policies.length !== 0) {
@@ -53,7 +54,6 @@ module.exports.editPolicy = async (req, res) => {
         return res.status(500).render('error', {error: err})
     }
 };
-
 
 module.exports.listBlockchains = async (req, res) => {
     try {
