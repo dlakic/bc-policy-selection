@@ -1,5 +1,6 @@
 const constants = require('../constants');
 const {DAILY, WEEKLY, MONTHLY, YEARLY} = constants.intervals;
+const {ECONOMIC, PERFORMANCE} = constants.costProfiles
 const util = require('../util');
 
 function getHighestCostThresholdForInterval(policies, interval) {
@@ -22,7 +23,7 @@ function getStatsForPolicy(policy, transactions) {
     const relevantTransactions = transactions.filter(transaction => transaction.policyId.equals(policy._id));
     relevantTransactions.forEach((transaction) => {
         policyStats.cost += transaction.cost;
-        policyStats.transactions++
+        policyStats.transactions++;
     });
 
     return policyStats
@@ -42,7 +43,41 @@ function buildPolicyStats(policies, transactions) {
 
 }
 
-function getUserStats(user, policies, transactions) {
+function getStatsForBlockchain(blockchain, transactions, policies) {
+    const blockchainStats = {
+        nameShort: blockchain.nameShort,
+        economicTransactions: 0,
+        performanceTransactions: 0
+    };
+
+    const relevantTransactions = transactions.filter(transaction => transaction.blockchain === blockchain.name);
+    relevantTransactions.forEach((transaction) => {
+        const policyOfTransaction = policies.find(policy => policy._id.equals(transaction.policyId));
+        if (policyOfTransaction.costProfile === ECONOMIC) {
+            blockchainStats.economicTransactions++;
+        } else {
+            blockchainStats.performanceTransactions++;
+        }
+    });
+
+    return blockchainStats
+}
+
+
+function buildBlockchainStats(blockchains, transactions, policies) {
+    const blockchainStats = [];
+    if (!blockchains || blockchains.length === 0) {
+        return blockchainStats;
+    }
+
+    blockchains.forEach((blockchain, index) => {
+        blockchainStats[index] = getStatsForBlockchain(blockchain, transactions, policies);
+    });
+
+    return blockchainStats;
+}
+
+function getUserStats(user, policies, blockchains, transactions) {
     const stats = {
         costDaily: user.costDaily.cost,
         costWeekly: user.costWeekly.cost,
@@ -53,17 +88,20 @@ function getUserStats(user, policies, transactions) {
         maxMonthlyCostThreshold: 0,
         maxYearlyCostThreshold: 0,
         policyStats: [],
+        blockchainStats: []
     };
 
     if (!policies || policies.length === 0) {
         return stats;
     }
-    const sortedPolicies =util.sortPoliciesByPriority(policies);
+    const sortedPolicies = util.sortPoliciesByPriority(policies);
     stats.maxDailyCostThreshold = getHighestCostThresholdForInterval(sortedPolicies, DAILY);
     stats.maxWeeklyCostThreshold = getHighestCostThresholdForInterval(sortedPolicies, WEEKLY);
     stats.maxMonthlyCostThreshold = getHighestCostThresholdForInterval(sortedPolicies, MONTHLY);
     stats.maxYearlyCostThreshold = getHighestCostThresholdForInterval(sortedPolicies, YEARLY);
     stats.policyStats = buildPolicyStats(sortedPolicies, transactions);
+    stats.blockchainStats = buildBlockchainStats(blockchains, transactions, sortedPolicies);
+
 
     return stats;
 }

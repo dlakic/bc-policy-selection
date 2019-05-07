@@ -1,6 +1,7 @@
 const UserRepository = require('../repositories/user-repository');
 const PolicyRepository = require('../repositories/policy-repository');
 const TransactionRepository = require('../repositories/transaction-repository');
+const BlockchainRepository = require('../repositories/blockchain-repository');
 const userStats = require('../business-logic/user-stats');
 
 module.exports.checkIfUserDoesNotExist = async (req, res) => {
@@ -44,7 +45,8 @@ module.exports.getUserStats = async (req, res) => {
         }
         const policies = await PolicyRepository.getPoliciesByUsername(username);
         const transactions = await TransactionRepository.getTransactionsByUsername(username);
-        const stats = userStats.getUserStats(user, policies, transactions);
+        const blockchains = await BlockchainRepository.getAllBlockchains();
+        const stats = userStats.getUserStats(user, policies, blockchains, transactions);
         return res.status(200).send(stats);
 
     } catch (err) {

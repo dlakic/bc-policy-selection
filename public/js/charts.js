@@ -50,7 +50,7 @@ function loadGraphs(resBody) {
         data: {
             datasets: [
                 {
-                    label: 'Max. Threshold',
+                    label: 'Cost Threshold',
                     backgroundColor: 'rgb(255, 56, 96, 0)',
                     borderColor: 'rgb(255, 56, 96)',
                     data: costThresholdsArray,
@@ -92,6 +92,38 @@ function loadGraphs(resBody) {
             labels: policyIndexArray,
         },
         options: {}
+    });
+
+    const transactionstPerBlockchainctx = document.getElementById('transactionsPerBlockchainChart').getContext('2d');
+    const blockchainArray = resBody.blockchainStats.map(stat => stat.nameShort);
+    const economicArray = resBody.blockchainStats.map(stat => stat.economicTransactions);
+    const performanceArray = resBody.blockchainStats.map(stat => stat.performanceTransactions);
+
+    new Chart(transactionstPerBlockchainctx, {
+        type: 'bar',
+        data: {
+            datasets: [
+                {
+                    label: 'Performance',
+                    backgroundColor: 'rgb(255, 56, 96)',
+                    borderColor: 'rgb(255, 56, 96)',
+                    data: performanceArray,
+                },
+                {
+                    label: 'Economic',
+                    backgroundColor: 'rgb(32,156,238)',
+                    borderColor: 'rgb(32,156,238)',
+                    data: economicArray,
+                },
+            ],
+            labels: blockchainArray,
+        },
+        options: {
+            scales: {
+                xAxes: [{ stacked: true }],
+                yAxes: [{ stacked: true }]
+            }
+        }
     });
 }
 
