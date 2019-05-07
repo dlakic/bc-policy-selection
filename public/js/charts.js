@@ -13,7 +13,6 @@ function loadGraphs(resBody) {
                         resBody.maxWeeklyCostThreshold,
                         resBody.maxMonthlyCostThreshold,
                         resBody.maxYearlyCostThreshold,
-                        resBody.maxYearlyCostThreshold,
                     ],
                     steppedLine: 'middle',
                     scaleOptions: {
@@ -28,10 +27,10 @@ function loadGraphs(resBody) {
                     backgroundColor: 'rgb(32,156,238)',
                     borderColor: 'rgb(32,156,238)',
                     data: [
-                        parseFloat(document.getElementById('dailyCost').textContent),
-                        parseFloat(document.getElementById('weeklyCost').textContent),
-                        parseFloat(document.getElementById('monthlyCost').textContent),
-                        parseFloat(document.getElementById('yearlyCost').textContent),
+                        resBody.costDaily,
+                        resBody.costWeekly,
+                        resBody.costMonthly,
+                        resBody.costYearly,
                     ]
                 },
             ],

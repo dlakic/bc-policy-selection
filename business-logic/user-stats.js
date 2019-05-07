@@ -13,6 +13,10 @@ function getHighestCostThresholdForInterval(policies, interval) {
 
 function getUserStats(user, policies) {
     const stats = {
+        costDaily: user.costDaily.cost,
+        costWeekly: user.costWeekly.cost,
+        costMonthly: user.costMonthly.cost,
+        costYearly: user.costYearly.cost,
         maxDailyCostThreshold: 0,
         maxWeeklyCostThreshold: 0,
         maxMonthlyCostThreshold: 0,
