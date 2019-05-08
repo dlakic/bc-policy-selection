@@ -23,10 +23,14 @@
     <section class="hero">
         <div class="hero-body">
             <div class="container">
-                <h2 class="title is-5">
-                    Policy Management
-                </h2>
-                <div class="columns is-vcentered is-multiline">
+                <div class="policy-management columns is-vcentered is-multiline">
+                    <div class="column is-full">
+                        <h2 class="title is-4">
+                            Policy Management
+                        </h2>
+                    </div>
+                    <div id="error" class="notification is-danger">
+                    </div>
                     <div class="column is-four-fifths">
                     </div>
                     <div class="column is-one-fifth">
@@ -103,9 +107,16 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="user-stats columns is-vcentered is-multiline">
+                    <div class="column is-full">
+                        <h2 class="title is-4">
+                            Stats for user <span id="username-stats">{{ username }}</span>
+                        </h2>
+                    </div>
                     <div class="column is-one-third">
                         <h2 class="title is-5">
-                            Costs for user <span id="username-stats">{{ username }}</span>:
+                            Costs:
                         </h2>
                         <canvas id="costsPerIntervalChart"></canvas>
                     </div>
@@ -129,7 +140,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
