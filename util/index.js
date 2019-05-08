@@ -26,6 +26,9 @@ function buildPolicy(requestBody = null, username) {
         policy.username = requestBody.username;
         policy.preferredBC = requestBody.preferredBC;
         policy.interval = 'default';
+        if (requestBody._id) {
+            policy._id = requestBody._id;
+        }
     } else {
         policy.username = requestBody.username;
         policy.preferredBC = requestBody.preferredBC || [];
