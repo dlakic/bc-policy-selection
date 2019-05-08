@@ -49,7 +49,13 @@ module.exports.editPolicy = async (req, res) => {
         } else {
             policy = req.query.username ? util.buildPolicy(null, req.query.username) : util.buildPolicy();
         }
-        return res.status(200).render('policy', {policy, choosableParams, blockchains});
+        //In case the user does not have a default policy, force him to create one
+        const defaultPolicy = await PolicyRepository.getPoliciesByUsernameAndInterval(policy.username, constants.intervals.DEFAULT);
+        if (!defaultPolicy || defaultPolicy.length === 0 || policy.interval === constants.intervals.DEFAULT) {
+            return res.status(200).render('default-policy', {policy, blockchains});
+        } else {
+            return res.status(200).render('policy', {policy, choosableParams, blockchains});
+        }
     } catch (err) {
         console.error(err);
         return res.status(500).render('error', {error: err})
@@ -100,7 +106,7 @@ module.exports.savePolicy = async (req, res) => {
 
             // if user does not exist, create user
             if (!user || user.length === 0) {
-                await UserRepository.createUser(providedPolicy.username);
+                await UserRepository.createUser(providedPolicy.username, providedPolicy.currency);
             }
             return res.status(200).render('result', {policy: updatedPolicy});
         } catch (err) {
@@ -113,7 +119,7 @@ module.exports.savePolicy = async (req, res) => {
 
             // if user does not exist, create user
             if (!user || user.length === 0) {
-                await UserRepository.createUser(providedPolicy.username);
+                await UserRepository.createUser(providedPolicy.username, providedPolicy.currency);
             }
             return res.status(200).render('result', {policy: createdPolicy});
         } catch (err) {

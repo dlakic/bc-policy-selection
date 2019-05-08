@@ -1,35 +1,3 @@
-let firstSubmit = true;
-if (window.location.pathname === '/policy' && window.location.search.indexOf('id=') > -1) {
-    const multiSelectElement = document.querySelector('#preferredBC');
-    const multiselectValues = getMultiSelectValues(multiSelectElement);
-
-    if (multiselectValues.length !== 1) {
-        document.querySelector('#more-info').style.display = 'block';
-        firstSubmit = false;
-    }
-}
-
-const startPicker = flatpickr('#timeFrameStart', {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    defaultDate: document.querySelector('#timeFrameStart').value,
-    time_24hr: true,
-    onClose: function(selectedDates, dateStr, instance) {
-        endPicker.set('minDate', dateStr);
-    },
-});
-const endPicker = flatpickr('#timeFrameEnd', {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    defaultDate: document.querySelector('#timeFrameEnd').value,
-    time_24hr: true,
-    onClose: function(selectedDates, dateStr, instance) {
-        startPicker.set('maxDate', dateStr);
-    },
-});
-
 function savePolicy(data) {
     superagent
         .post('/api/save-policy')
@@ -43,7 +11,7 @@ function savePolicy(data) {
                 window.scrollTo(0, 0);
                 return errorDiv.style.display = 'block';
             } else {
-                window.location.replace("/policies/" + data.username );
+                window.location.replace("/policies/" + data.username);
             }
         });
 }
@@ -58,7 +26,7 @@ function validateForm(data) {
         errors.push('Please Provide a max. cost');
     }
 
-    if (!data.interval && data.preferredBC.length !== 1 && !firstSubmit) {
+    if (!data.interval && data.preferredBC.length !== 1) {
         errors.push('Please Provide a cost interval');
     }
 
@@ -76,6 +44,10 @@ function buildErrorString(errors) {
 function submitPolicy(id) {
     const form = document.querySelector(id);
     const jsonFormData = toJSON(form);
+    if (typeof jsonFormData.preferredBC === "string") {
+        // Back-end expects array of strings
+        jsonFormData.preferredBC = [jsonFormData.preferredBC];
+    }
     const errors = validateForm(jsonFormData);
     if (errors.length > 0) {
         document.querySelector('#error').innerHTML = 'ERROR: ' + '<ul>' + buildErrorString(errors) + '</ul>';
@@ -83,15 +55,7 @@ function submitPolicy(id) {
     } else {
         document.querySelector('#error').style.display = 'none';
     }
-    if (jsonFormData.preferredBC && jsonFormData.preferredBC.length !== 1) {
-        document.querySelector('#more-info').style.display = 'block';
-        if (!firstSubmit) {
-            savePolicy(jsonFormData);
-        }
-        firstSubmit = false;
-    } else {
-        savePolicy(jsonFormData);
-    }
+    savePolicy(jsonFormData);
 }
 
 
@@ -123,8 +87,8 @@ function toJSON(form) {
         let value;
         if (element.multiple) {
             value = getMultiSelectValues(element);
-        } else if(element.type === 'radio') {
-            if(element.checked) {
+        } else if (element.type === 'radio') {
+            if (element.checked) {
                 value = element.value;
             }
         } else {

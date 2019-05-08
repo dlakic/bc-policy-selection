@@ -13,9 +13,9 @@ function getUserByName(username) {
     });
 }
 
-function createUser(username) {
+function createUser(username, currency) {
     return new Promise((resolve, reject) => {
-        UserModel.create({'username': username})
+        UserModel.create({'username': username, 'currency': currency})
             .then(savedPolicy => {
                 resolve(savedPolicy)
             })

@@ -46,6 +46,11 @@ const userSchema = new mongoose.Schema({
             default: Date.now
         },
     },
+    currency: {
+        type: String,
+        enum: ['CHF', 'EUR', 'USD'],
+        default: 'CHF',
+    },
 });
 
 const User = mongoose.model('User', userSchema);

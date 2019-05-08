@@ -26,6 +26,7 @@ function buildPolicy(requestBody = null, username) {
         policy.username = requestBody.username;
         policy.preferredBC = requestBody.preferredBC;
         policy.interval = 'default';
+        policy.currency = requestBody.currency;
         if (requestBody._id) {
             policy._id = requestBody._id;
         }

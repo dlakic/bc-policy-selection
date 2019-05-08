@@ -1,0 +1,70 @@
+{% extends "policy-layout.njk" %}
+{% block policyFormContent %}
+    <div id="preferred-bc-info" class="notification is-info">
+        Select A blockchain you want to use for your default policy.
+        A default policy acts as a fallback in case all other policies have reached their cost threshold
+        or there are no others available <br/>
+        <b>Note:</b> You cannot delete your default policy, but you can always edit it and choose
+        a different blockchain as your default policy.
+        <br/>
+        <br/>
+        Also select your preferred currency. Once chosen, it <b>cannot</b> be changed!
+    </div>
+    <div id="error" class="notification is-danger">
+    </div>
+    <div class="columns is-vcentered">
+        <div class="column"></div>
+        <div class="column is-two-thirds">
+            <form id="policy-form">
+                <div class="field">
+                    <label class="label" for="username">Username</label>
+                    <div class="control">
+                        <input class="input" type="text" id="username" name="username"
+                               value="{{ policy.username }}" {{ "disabled" if policy.username }}>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="preferredBC">Choose blockchain for default policy</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="preferredBC" class="select" name="preferredBC">
+                                {% for blockchain in blockchains %}
+                                    <option value={{ blockchain.nameShort }} {{ "selected" if policy.preferredBC.includes(blockchain.nameShort) }}>
+                                        {{ blockchain.name }}
+                                    </option>
+                                {% else %}
+                                    <option>
+                                        NoData
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <label class="label" for="currency">Currency</label>
+                        <div class="select">
+                            <select id="currency" name="currency">
+                                <option value="CHF" {{ "selected" if policy.currency == "CHF" }}>CHF
+                                </option>
+                                <option value="EUR" {{ "selected" if policy.currency == "EUR" }}>EUR
+                                </option>
+                                <option value="USD" {{ "selected" if policy.currency == "USD" }}>USD
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="_id" value="{{ policy._id }}">
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" id="submit-policy-form"
+                                class="button is-link is-pulled-right">Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
