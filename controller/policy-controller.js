@@ -6,6 +6,7 @@ const blockchainSelector = require('../business-logic/blockchain-selector');
 const policyValidator = require('../business-logic/policy-validator');
 const userCostUpdater = require('../business-logic/user-cost-updater');
 const util = require('../util');
+const constants = require('../constants');
 
 module.exports.listPolicies = async (req, res) => {
     const username = req.params.username;
@@ -20,7 +21,7 @@ module.exports.listPolicies = async (req, res) => {
         if (!user || user.length === 0) {
             const error = new Error("User does not exist");
             error.statusCode = 404;
-            return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+            return res.status(error.statusCode).render('error', {error: error})
         }
         // update cost thresholds if needed
         await userCostUpdater.costThresholdUpdater(user);
@@ -128,6 +129,11 @@ module.exports.deletePolicy = async (req, res) => {
     if (policyId) {
         try {
             const policyToBeDeleted = await PolicyRepository.getPolicyById(policyId);
+            if (policyToBeDeleted.interval === constants.intervals.DEFAULT) {
+                const error = new Error('Default policies cannot be deleted');
+                error.statusCode = 400;
+                return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+            }
             await PolicyRepository.deletePolicy(policyId);
             return res.status(200).send({username: policyToBeDeleted.username, message: 'Policy deleted Successfully'});
         } catch (err) {
