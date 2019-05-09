@@ -20,9 +20,11 @@
         </div>
     </div>
 </section>
+{% block content %}
+{% endblock %}
 <script src="https://polyfill.io/v3/polyfill.min.js?features=Array.from%2CPromise%2CSymbol%2CObject.setPrototypeOf%2CObject.getOwnPropertySymbols"></script>
 <script src="https://cdn.jsdelivr.net/npm/superagent"></script>
-{% block content %}
+{% block additionalJS %}
 {% endblock %}
 </body>
 </html>

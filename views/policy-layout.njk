@@ -11,6 +11,10 @@
             </div>
         </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock %}
+
+{% block additionalJS %}
     <script src="/js/policy.js"></script>
+    {% block additionalPolicyJS %}
+    {% endblock %}
 {% endblock %}
