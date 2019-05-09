@@ -41,20 +41,25 @@ module.exports.listPolicies = async (req, res) => {
 
 module.exports.editPolicy = async (req, res) => {
     try {
+        const username = req.query.username;
         const blockchains = await BlockchainRepository.getAllBlockchains();
+        const user = await UserRepository.getUserByName(username);
+        let currency = user ? user.currency : '';
         const choosableParams = util.cleanNumericalParams(blockchains);
         let policy = {};
         if (req.query.id) {
             policy = await PolicyRepository.getPolicyById(req.query.id);
+            currency = user ? user.currency : policy.currency;
         } else {
-            policy = req.query.username ? util.buildPolicy(null, req.query.username) : util.buildPolicy();
+            policy = username ? util.buildPolicy(null, username) : util.buildPolicy();
         }
+
         //In case the user does not have a default policy, force him to create one
         const defaultPolicy = await PolicyRepository.getPoliciesByUsernameAndInterval(policy.username, constants.intervals.DEFAULT);
         if (!defaultPolicy || defaultPolicy.length === 0 || policy.interval === constants.intervals.DEFAULT) {
-            return res.status(200).render('default-policy', {policy, blockchains});
+            return res.status(200).render('default-policy', {policy, blockchains, currency});
         } else {
-            return res.status(200).render('policy', {policy, choosableParams, blockchains});
+            return res.status(200).render('policy', {policy, choosableParams, blockchains, currency});
         }
     } catch (err) {
         console.error(err);

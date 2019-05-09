@@ -7,7 +7,7 @@ function fetchForUser(username) {
                 document.querySelector('#username-error').innerHTML = 'ERROR: ' + res.body.message;
                 return document.querySelector('#username-error').style.display = 'block';
             } else {
-                window.location.replace('/policies/' + username);
+                window.location.assign('/policies/' + username);
             }
         });
 }
@@ -24,7 +24,7 @@ function submitUsername(id) {
 
 document.querySelector('#submit-username-form').addEventListener("click", function (e) {
     e.preventDefault();
-    submitUsername('#username');
+    submitUsername('#search-username');
 }, false);
 
 function forwardToPolicyCreation(username) {
@@ -36,7 +36,7 @@ function forwardToPolicyCreation(username) {
                 document.querySelector('#username-error').innerHTML = 'ERROR: ' + res.body.message;
                 return document.querySelector('#username-error').style.display = 'block';
             } else {
-                window.location.replace('/policy?username=' + username);
+                window.location.assign('/policy?username=' + username);
             }
         });
 }
@@ -53,5 +53,5 @@ function submitNewUsername(id) {
 
 document.querySelector('#submit-new-username-form').addEventListener("click", function (e) {
     e.preventDefault();
-    submitNewUsername('#username');
+    submitNewUsername('#search-username');
 }, false);

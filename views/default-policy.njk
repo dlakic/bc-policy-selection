@@ -45,12 +45,12 @@
                     <div class="control">
                         <label class="label" for="currency">Currency</label>
                         <div class="select">
-                            <select id="currency" name="currency">
-                                <option value="CHF" {{ "selected" if policy.currency == "CHF" }}>CHF
+                            <select id="currency" name="currency" {{ "disabled" if currency }}>
+                                <option value="CHF" {{ "selected" if currency == "CHF" }}>CHF
                                 </option>
-                                <option value="EUR" {{ "selected" if policy.currency == "EUR" }}>EUR
+                                <option value="EUR" {{ "selected" if currency == "EUR" }}>EUR
                                 </option>
-                                <option value="USD" {{ "selected" if policy.currency == "USD" }}>USD
+                                <option value="USD" {{ "selected" if currency == "USD" }}>USD
                                 </option>
                             </select>
                         </div>
