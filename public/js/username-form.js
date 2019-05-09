@@ -1,16 +1,11 @@
 function fetchForUser(username) {
     superagent
         .get('/policies/' + username)
-        .end((err, res) => {
-            if (err) {
-                console.log(res);
-                document.querySelector('#username-error').innerHTML = 'ERROR: ' + res.body.message;
-                return document.querySelector('#username-error').style.display = 'block';
-            } else {
-                window.location.assign('/policies/' + username);
-            }
+        .end(function () {
+            window.location.assign('/policies/' + username);
         });
 }
+
 function submitUsername(id) {
     const username = document.querySelector(id).value;
     if (!username) {
@@ -40,6 +35,7 @@ function forwardToPolicyCreation(username) {
             }
         });
 }
+
 function submitNewUsername(id) {
     const username = document.querySelector(id).value;
     if (!username) {

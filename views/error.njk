@@ -1,4 +1,12 @@
 {% extends "layout.njk" %}
 {% block content %}
-{{ error }}
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <div id="server-error" class="notification is-danger">
+                    {{ error }}
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
