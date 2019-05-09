@@ -1,91 +1,5 @@
-{% macro getTime(time1, time2) %}
-    {% if time1 == time2 %}
-        24h
-    {% else %}
-        {{ time1 }} - {{ time2 }}
-    {% endif %}
-{% endmacro %}
-
-{% macro getIcon(boolean) %}
-    {% if boolean %}
-        <span class="icon has-text-success">
-            <i class="fas fa-lg fa-check-circle"></i>
-        </span>
-    {% else %}
-        <span class="icon has-text-danger">
-            <i class="fas fa-lg fa-times-circle"></i>
-        </span>
-    {% endif %}
-{% endmacro %}
-
-{% macro getTag(variable, style) %}
-    {% if variable != '' %}
-        <span class="tag {{ style }}">
-            {{ variable }}
-        </span>
-    {% else %}
-        {{ variable }}
-    {% endif %}
-{% endmacro %}
-
-{% macro getTagInterval(interval) %}
-    {% if interval == "daily" %}
-        {% set style = "is-primary" %}
-    {% elif interval == "weekly" %}
-        {% set style = "is-warning" %}
-    {% elif interval == "monthly" %}
-        {% set style = "is-black" %}
-    {% elif interval == "yearly" %}
-        {% set style = "is-light" %}
-    {% else %}
-        {% set style = "is-info" %}
-    {% endif %}
-    {{ getTag(interval, style) }}
-{% endmacro %}
-
-{% macro getTagPolicyStatus(status) %}
-    {% if status %}
-        {{ getTag("Active", "is-success is-rounded") }}
-    {% else %}
-        {{ getTag("Inactive", "is-danger is-rounded") }}
-    {% endif %}
-{% endmacro %}
-
-{% macro getTagBcType(bcType) %}
-    {% if bcType == 'public' %}
-        <span class="tag is-neutral">
-            <i class="fas fa-lg fa-lock-open inline-icon"></i>
-            {{ bcType }}
-        </span>
-        {% elif bcType == 'private' %}
-        <span class="tag is-neutral">
-            <i class="fas fa-lg fa-lock inline-icon"></i>
-            {{ bcType }}
-        </span>
-        {% elif bcType == 'indifferent' %}
-        <span class="tag is-neutral">
-            {{ bcType }}
-        </span>
-    {% else %}
-        {{ bcType }}
-    {% endif %}
-{% endmacro %}
-
-{% macro getTagCostProfile(costProfile) %}
-    {% if costProfile == 'performance' %}
-        <span class="tag is-neutral">
-            <i class="fas fa-lg fa-tachometer-alt inline-icon"></i>
-            {{ costProfile }}
-        </span>
-    {% else %}
-        <span class="tag is-neutral">
-            <i class="fas fa-lg fa-euro-sign inline-icon"></i>
-            {{ costProfile }}
-        </span>
-    {% endif %}
-{% endmacro %}
-
-{% extends "layout.njk" %}
+{% extends "_shared/layout.njk" %}
+{% import "_shared/macros.njk" as macros %}
 {% block content %}
     <section class="hero">
         <div class="hero-body">
@@ -131,21 +45,21 @@
                             {% for policy in policies %}
                                 <tr class="policy-info">
                                     <th>{{ loop.index }}</th>
-                                    <td class="policy-active">{{ getTagPolicyStatus(policy.isActive) }}</td>
+                                    <td class="policy-active">{{ macros.getTagPolicyStatus(policy.isActive) }}</td>
                                     <td class="policy-username">{{ policy.username }}</td>
                                     <td class="policy-preferred-bc">{{ policy.preferredBC }}</td>
-                                    <td class="policy-bc-type">{{ getTagBcType(policy.bcType) }}</td>
+                                    <td class="policy-bc-type">{{ macros.getTagBcType(policy.bcType) }}</td>
                                     <td class="policy-cost">{{ policy.cost }}</td>
-                                    <td class="policy-interval">{{ getTagInterval(policy.interval) }}</td>
+                                    <td class="policy-interval">{{ macros.getTagInterval(policy.interval) }}</td>
                                     <td class="policy-currency">{{ policy.currency }}</td>
                                     <td class="policy-bc-tps">{{ policy.bcTps }}</td>
                                     <td class="policy-block-time">{{ policy.bcBlockTime }}</td>
                                     <td class="policy-bc-data-size">{{ policy.bcDataSize }}</td>
-                                    <td class="policy-bc-touring-complete">{{ getIcon(policy.bcTuringComplete) }}</td>
-                                    <td class="policy-split">{{ getIcon(policy.split) }}</td>
-                                    <td class="policy-cost-profile">{{ getTagCostProfile(policy.costProfile) }}
+                                    <td class="policy-bc-touring-complete">{{ macros.getIcon(policy.bcTuringComplete) }}</td>
+                                    <td class="policy-split">{{ macros.getIcon(policy.split) }}</td>
+                                    <td class="policy-cost-profile">{{ macros.getTagCostProfile(policy.costProfile) }}
                                     </td>
-                                    <td class="policy-time-frame">{{ getTime(policy.timeFrameStart, policy.timeFrameEnd) }}</td>
+                                    <td class="policy-time-frame">{{ macros.getTime(policy.timeFrameStart, policy.timeFrameEnd) }}</td>
                                     <td class="policy-edit">
                                         <a class="button is-link table-button" href="/policy?id={{ policy._id }}">Edit
                                             Policy</a>
