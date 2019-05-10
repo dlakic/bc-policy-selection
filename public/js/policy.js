@@ -3,7 +3,7 @@ function savePolicy(data) {
         .post('/api/save-policy')
         .set('accept', 'json')
         .send(data)
-        .end((err, res) => {
+        .end(function (err, res){
             if (err) {
                 console.log(res);
                 const errorDiv = document.querySelector('#error');

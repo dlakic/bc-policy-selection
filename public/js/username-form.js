@@ -25,7 +25,7 @@ document.querySelector('#submit-username-form').addEventListener("click", functi
 function forwardToPolicyCreation(username) {
     superagent
         .get('/user-not-exist-check/' + username)
-        .end((err, res) => {
+        .end(function (err, res) {
             if (err) {
                 console.log(res);
                 document.querySelector('#username-error').innerHTML = 'ERROR: ' + res.body.message;

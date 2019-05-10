@@ -57,7 +57,7 @@
                                     <td class="policy-bc-data-size">{{ policy.bcDataSize }}</td>
                                     <td class="policy-bc-touring-complete">{{ macros.getIcon(policy.bcTuringComplete) }}</td>
                                     <td class="policy-split">{{ macros.getIcon(policy.split) }}</td>
-                                    <td class="policy-cost-profile">{{ macros.getTagCostProfile(policy.costProfile) }}
+                                    <td class="policy-cost-profile" title="{{ policy.costProfile }}">{{ macros.getTagCostProfile(policy.costProfile) }}
                                     </td>
                                     <td class="policy-time-frame">{{ macros.getTime(policy.timeFrameStart, policy.timeFrameEnd) }}</td>
                                     <td class="policy-edit">

@@ -42,9 +42,15 @@ function loadGraphs(resBody) {
     });
 
     const costsPerPolicyctx = document.getElementById('costsPerPolicyChart').getContext('2d');
-    const policyIndexArray = resBody.policyStats.map((stat, index) => index + 1);
-    const costArray = resBody.policyStats.map(stat => stat.cost);
-    const costThresholdsArray = resBody.policyStats.map(stat => stat.costThreshold);
+    const policyIndexArray = resBody.policyStats.map(function (stat, index) {
+        return index + 1
+    });
+    const costArray = resBody.policyStats.map(function (stat) {
+        return stat.cost
+    });
+    const costThresholdsArray = resBody.policyStats.map(function (stat) {
+        return stat.costThreshold
+    });
 
     new Chart(costsPerPolicyctx, {
         type: 'bar',
@@ -77,7 +83,9 @@ function loadGraphs(resBody) {
     });
 
     const transactionstPerPolicyctx = document.getElementById('transactionsPerPolicyChart').getContext('2d');
-    const transactionsArray = resBody.policyStats.map(stat => stat.transactions);
+    const transactionsArray = resBody.policyStats.map(function (stat) {
+        return stat.transactions
+    });
 
     new Chart(transactionstPerPolicyctx, {
         type: 'bar',
@@ -96,9 +104,15 @@ function loadGraphs(resBody) {
     });
 
     const transactionstPerBlockchainctx = document.getElementById('transactionsPerBlockchainChart').getContext('2d');
-    const blockchainArray = resBody.blockchainStats.map(stat => stat.nameShort);
-    const economicArray = resBody.blockchainStats.map(stat => stat.economicTransactions);
-    const performanceArray = resBody.blockchainStats.map(stat => stat.performanceTransactions);
+    const blockchainArray = resBody.blockchainStats.map(function (stat) {
+        return stat.nameShort
+    });
+    const economicArray = resBody.blockchainStats.map(function (stat) {
+        return stat.economicTransactions
+    });
+    const performanceArray = resBody.blockchainStats.map(function (stat) {
+        return stat.performanceTransactions
+    });
 
     new Chart(transactionstPerBlockchainctx, {
         type: 'bar',
@@ -121,8 +135,8 @@ function loadGraphs(resBody) {
         },
         options: {
             scales: {
-                xAxes: [{ stacked: true }],
-                yAxes: [{ stacked: true }]
+                xAxes: [{stacked: true}],
+                yAxes: [{stacked: true}]
             },
             animation: false,
         }
@@ -132,7 +146,7 @@ function loadGraphs(resBody) {
 function getUserStats(username) {
     superagent
         .get('/user-stats/' + username)
-        .end((err, res) => {
+        .end(function (err, res) {
             if (err) {
                 console.log(res);
             } else {
@@ -143,7 +157,7 @@ function getUserStats(username) {
 
 document.addEventListener('DOMContentLoaded', function () {
     getUserStats(document.getElementById('username-stats').textContent);
-    setInterval(function() {
+    setInterval(function () {
         getUserStats(document.getElementById('username-stats').textContent);
     }, 5000);
 });
