@@ -1,0 +1,22 @@
+version: '3.4'
+services:
+  mongo:
+    build:
+      context: .
+      dockerfile: ./docker/mongo/Dockerfile
+    container_name: bc-policy-selection-mongo
+    ports:
+      - "27017:27017"
+
+  express:
+    build: docker/express
+    container_name: bc-policy-selection
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    entrypoint:
+      - sh
+      - -c
+      - |
+        cd /app; npm install; npm run devstart
