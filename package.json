@@ -1,6 +1,6 @@
 {
-  "name": "masterthesis",
-  "version": "0.0.0",
+  "name": "bc-policy-selection",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
