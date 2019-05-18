@@ -15,6 +15,9 @@ const transactionSchema = new mongoose.Schema({
     cost: {
         type: Number,
     },
+    costProfile: {
+        type: String,
+    },
     policyId: {
         type: mongoose.Schema.Types.ObjectId,
     }
