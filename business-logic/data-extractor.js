@@ -23,3 +23,10 @@ module.exports.violationsExtractor = (sheets, minTemp, maxTemp) => {
 
     return {violationsAmount, violations}
 };
+
+module.exports.prepareHash= (hash) => {
+    return {
+        sizeString:  Buffer.byteLength(hash, 'utf8'),
+        dataString: hash,
+    };
+};

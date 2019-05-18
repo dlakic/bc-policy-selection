@@ -16,31 +16,40 @@ async function getAllBlockchainCostsPerByte() {
     return await costCalculator.calculateCosts(allBlockchainRates);
 }
 
-function getCostsForSheets(costsPerByte, violationData) {
+function getCostsForData(costsPerByte, data) {
     const costs = [];
-    violationData.violations.map((sheetData) => {
-        const costsForSheet = costCalculator.multiplyWithBytes(costsPerByte, sheetData.sizeString);
-        costs.push(costsForSheet);
-    });
+
+    if (data.violations) {
+        data.violations.map((sheetData) => {
+            const costsForSheet = costCalculator.multiplyWithBytes(costsPerByte, sheetData.sizeString);
+            costs.push(costsForSheet);
+        });
+        return costs;
+    }
+
+    const costsForTrxHash = costCalculator.multiplyWithBytes(costsPerByte, data.sizeString);
+    costs.push(costsForTrxHash);
     return costs;
+
 }
 
 async function makeTransactions(policies, user, violationData) {
     const costsPerByte = await getAllBlockchainCostsPerByte();
-    let sheetCosts = getCostsForSheets(costsPerByte, violationData);
+    let sheetCosts = getCostsForData(costsPerByte, violationData);
     let currentlyActivePolicy;
     let viableBlockchains;
-
+    console.log(sheetCosts)
     let transactionInfo = [];
     for (let [index, cost] of sheetCosts.entries()) {
         currentlyActivePolicy = await policySelector.selectPolicy(policies, user);
         viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
         const chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains);
         await userCostUpdater.addToUserCosts(user, cost[chosenBlockchainKey]);
+        const data = violationData.violations ? violationData.violations[index].dataString : violationData.dataString;
         const transaction = {
             username: user.username,
             blockchain: constants.blockchains[chosenBlockchainKey].name,
-            data: violationData.violations[index].dataString,
+            data,
             cost: cost[chosenBlockchainKey],
             policyId: currentlyActivePolicy._id,
         };

@@ -2,9 +2,7 @@ const xlsx = require('node-xlsx');
 const PolicyRepository = require('../repositories/policy-repository');
 const UserRepository = require('../repositories/user-repository');
 const BlockchainRepository = require('../repositories/blockchain-repository');
-const violationsExtractor = require('../business-logic/violations-extractor');
-const blockchainSelector = require('../business-logic/blockchain-selector');
-const policySelector = require('../business-logic/policy-selector');
+const dataExtractor = require('../business-logic/data-extractor');
 const transactionMaker = require('../business-logic/transaction-maker');
 const costCalculator = require('../business-logic/cost-calculator');
 const userCostUpdater = require('../business-logic/user-cost-updater');
@@ -28,30 +26,64 @@ module.exports.handleTransaction = async (req, res) => {
     }
     // update costs
     await userCostUpdater.costThresholdUpdater(user);
-    // check if Temperature thresholds have been provided correctly
-    const minMaxTempError = util.checkValidTemperatures(minTemp, maxTemp);
-    if (minMaxTempError) {
-        const error = new Error(minMaxTempError);
+
+    if (req.file && req.body.data) {
+        const error = new Error('Only on of xlsx file or data can be provided');
         error.statusCode = 400;
         return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
     }
 
-    // get violation Data
-    const sheets = xlsx.parse(req.file.buffer);
-    const violationsData = violationsExtractor.violationsExtractor(sheets, minTemp, maxTemp);
-    try {
-        const policies = await PolicyRepository.getPoliciesByUsername(username);
-        if (!policies || policies.length === 0) {
-            const error = new Error("No Policies Found with the provided username");
-            error.statusCode = 404;
+    if (req.file) {
+        // check if Temperature thresholds have been provided correctly
+        const minMaxTempError = util.checkValidTemperatures(minTemp, maxTemp);
+        if (minMaxTempError) {
+            const error = new Error(minMaxTempError);
+            error.statusCode = 400;
             return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
         }
-        const transaction = await transactionMaker.makeTransactions(policies, user, violationsData);
-        return res.status(200).send(transaction);
-    } catch (err) {
-        console.error(err);
-        return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
+
+        // get violation Data
+        const sheets = xlsx.parse(req.file.buffer);
+        const violationsData = dataExtractor.violationsExtractor(sheets, minTemp, maxTemp);
+        try {
+            const policies = await PolicyRepository.getPoliciesByUsername(username);
+            if (!policies || policies.length === 0) {
+                const error = new Error("No Policies Found with the provided username");
+                error.statusCode = 404;
+                return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+            }
+            const transaction = await transactionMaker.makeTransactions(policies, user, violationsData);
+            return res.status(200).send(transaction);
+        } catch (err) {
+            console.error(err);
+            return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
+        }
     }
+
+    if (req.body.data) {
+        const trxHash = req.body.data;
+        const data = dataExtractor.prepareHash(trxHash);
+
+        try {
+            const policies = await PolicyRepository.getPoliciesByUsername(username);
+            if (!policies || policies.length === 0) {
+                const error = new Error("No Policies Found with the provided username");
+                error.statusCode = 404;
+                return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+            }
+            const transaction = await transactionMaker.makeTransactions(policies, user, data);
+            return res.status(200).send(transaction);
+        } catch (err) {
+            console.error(err);
+            return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
+        }
+
+    }
+    const error = new Error(`No file or data provided`);
+    error.statusCode = 400;
+    return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
+
+
 };
 
 module.exports.getBlockchainCost = async (req, res) => {
