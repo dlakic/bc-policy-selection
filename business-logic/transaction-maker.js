@@ -37,13 +37,33 @@ async function makeTransactions(policies, user, violationData) {
     const costsPerByte = await getAllBlockchainCostsPerByte();
     let sheetCosts = getCostsForData(costsPerByte, violationData);
     let currentlyActivePolicy;
+    let previouslyActivePolicy;
     let viableBlockchains;
-    console.log(sheetCosts)
-    let transactionInfo = [];
+    let alreadyUsedBlockchainIndex = 0;
+    const transactionInfo = [];
+    let alreadyUsedBlockchains = [];
     for (let [index, cost] of sheetCosts.entries()) {
         currentlyActivePolicy = await policySelector.selectPolicy(policies, user);
         viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
-        const chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains);
+        let chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains, alreadyUsedBlockchains, alreadyUsedBlockchainIndex);
+        if (currentlyActivePolicy['split']) {
+            if (previouslyActivePolicy && !previouslyActivePolicy._id.equals(currentlyActivePolicy._id)) {
+                alreadyUsedBlockchains = [];
+                alreadyUsedBlockchainIndex = 0;
+            }
+            chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains, alreadyUsedBlockchains, alreadyUsedBlockchainIndex);
+            if (alreadyUsedBlockchainIndex >= alreadyUsedBlockchains.length - 1) {
+                alreadyUsedBlockchainIndex = 0;
+            } else if (alreadyUsedBlockchains.length === viableBlockchains.length) {
+                alreadyUsedBlockchainIndex = alreadyUsedBlockchainIndex + 1;
+            }
+            if (!alreadyUsedBlockchains.includes(chosenBlockchainKey)) {
+                alreadyUsedBlockchains.push(chosenBlockchainKey);
+            }
+        } else {
+            chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains, alreadyUsedBlockchains, alreadyUsedBlockchainIndex);
+        }
+
         await userCostUpdater.addToUserCosts(user, cost[chosenBlockchainKey]);
         const data = violationData.violations ? violationData.violations[index].dataString : violationData.dataString;
         const transaction = {
@@ -52,9 +72,11 @@ async function makeTransactions(policies, user, violationData) {
             data,
             cost: cost[chosenBlockchainKey],
             policyId: currentlyActivePolicy._id,
+            costProfile: currentlyActivePolicy.costProfile
         };
         await TransactionRepository.createTransaction(transaction);
-        transactionInfo.push(transaction)
+        transactionInfo.push(transaction);
+        previouslyActivePolicy = currentlyActivePolicy;
     }
     return transactionInfo;
 }

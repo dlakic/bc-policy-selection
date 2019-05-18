@@ -43,14 +43,23 @@ async function selectBlockchainFromPolicy(policy) {
 
 }
 
-async function selectBlockchainForTransaction(policy, bcCosts, viableBlockchains) {
+async function selectBlockchainForTransaction(policy, bcCosts, viableBlockchains, alreadyUsedBlockchains, index) {
     let bcKey = '';
     const viableBcCosts = {};
-    viableBlockchains.forEach((viableBlockchain) => {
+    let blockchainSelectionPool = viableBlockchains;
+
+    if (policy['split']) {
+        blockchainSelectionPool = viableBlockchains.filter(blockchain => !alreadyUsedBlockchains.includes(blockchain.nameShort));
+        if (blockchainSelectionPool.length === 0) {
+            return alreadyUsedBlockchains[index];
+        }
+    }
+
+    blockchainSelectionPool.forEach((viableBlockchain) => {
         viableBcCosts[viableBlockchain.nameShort] = bcCosts[viableBlockchain.nameShort];
     });
     if (policy.costProfile === constants.costProfiles.PERFORMANCE) {
-        const mostPerformantBlockchain = viableBlockchains.reduce((prev, current) => {
+        const mostPerformantBlockchain = blockchainSelectionPool.reduce((prev, current) => {
             return prev.tps > current.tps ? prev : current;
         });
         bcKey = mostPerformantBlockchain.nameShort;
