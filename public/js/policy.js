@@ -17,17 +17,22 @@ function savePolicy(data) {
 }
 
 function validateForm(data) {
+    console.log(data);
     const errors = [];
     if (!data.username) {
-        errors.push('Please Provide a username');
+        errors.push('Please provide a username');
+    }
+
+    if (!data.bcType) {
+        errors.push('Please provide a blockchain type');
     }
 
     if (!data.cost && data.preferredBC.length !== 1) {
-        errors.push('Please Provide a max. cost');
+        errors.push('Please provide a max. cost');
     }
 
     if (!data.interval && data.preferredBC.length !== 1) {
-        errors.push('Please Provide a cost interval');
+        errors.push('Please provide a cost interval');
     }
 
     return errors;
