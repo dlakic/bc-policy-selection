@@ -72,7 +72,8 @@ async function makeTransactions(policies, user, violationData) {
             data,
             cost: cost[chosenBlockchainKey],
             policyId: currentlyActivePolicy._id,
-            costProfile: currentlyActivePolicy.costProfile
+            costProfile: currentlyActivePolicy.costProfile,
+            interval: currentlyActivePolicy.interval
         };
         await TransactionRepository.createTransaction(transaction);
         transactionInfo.push(transaction);

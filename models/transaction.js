@@ -18,6 +18,9 @@ const transactionSchema = new mongoose.Schema({
     costProfile: {
         type: String,
     },
+    interval: {
+        type: String,
+    },
     policyId: {
         type: mongoose.Schema.Types.ObjectId,
     }
