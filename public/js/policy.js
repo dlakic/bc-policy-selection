@@ -23,7 +23,7 @@ function validateForm(data) {
         errors.push('Please provide a username');
     }
 
-    if (!data.bcType) {
+    if (!data.bcType && data.preferredBC.length !== 1) {
         errors.push('Please provide a blockchain type');
     }
 
