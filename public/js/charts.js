@@ -7,8 +7,8 @@ function loadGraphs(resBody) {
             datasets: [
                 {
                     label: 'Max. Threshold',
-                    backgroundColor: 'rgb(255, 56, 96, 0)',
-                    borderColor: 'rgb(255, 56, 96)',
+                    backgroundColor: 'rgba(255, 56, 96, 0)',
+                    borderColor: 'rgba(255, 56, 96, 1)',
                     data: [
                         resBody.maxDailyCostThreshold,
                         resBody.maxWeeklyCostThreshold,
@@ -58,8 +58,8 @@ function loadGraphs(resBody) {
             datasets: [
                 {
                     label: 'Cost Threshold',
-                    backgroundColor: 'rgb(255, 56, 96, 0)',
-                    borderColor: 'rgb(255, 56, 96)',
+                    backgroundColor: 'rgba(255, 56, 96, 0)',
+                    borderColor: 'rgba(255, 56, 96, 1)',
                     data: costThresholdsArray,
                     steppedLine: 'middle',
                     scaleOptions: {
