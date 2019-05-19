@@ -1,6 +1,6 @@
 const constants = require('../constants');
 const {DAILY, WEEKLY, MONTHLY, YEARLY} = constants.intervals;
-const {ECONOMIC, PERFORMANCE} = constants.costProfiles
+const {ECONOMIC, PERFORMANCE} = constants.costProfiles;
 const util = require('../util');
 
 function getHighestCostThresholdForInterval(policies, interval) {
@@ -43,7 +43,7 @@ function buildPolicyStats(policies, transactions) {
 
 }
 
-function getStatsForBlockchain(blockchain, transactions, policies) {
+function getStatsForBlockchain(blockchain, transactions) {
     const blockchainStats = {
         nameShort: blockchain.nameShort,
         economicTransactions: 0,
@@ -52,31 +52,88 @@ function getStatsForBlockchain(blockchain, transactions, policies) {
 
     const relevantTransactions = transactions.filter(transaction => transaction.blockchain === blockchain.name);
     relevantTransactions.forEach((transaction) => {
-            if (transaction.costProfile === ECONOMIC) {
-                blockchainStats.economicTransactions++;
-            }
+        if (transaction.costProfile === ECONOMIC) {
+            blockchainStats.economicTransactions++;
+        }
 
-            if (transaction.costProfile === PERFORMANCE) {
-                blockchainStats.performanceTransactions++;
-            }
+        if (transaction.costProfile === PERFORMANCE) {
+            blockchainStats.performanceTransactions++;
+        }
     });
 
     return blockchainStats
 }
 
 
-function buildBlockchainStats(blockchains, transactions, policies) {
+function buildBlockchainStats(blockchains, transactions) {
     const blockchainStats = [];
     if (!blockchains || blockchains.length === 0) {
         return blockchainStats;
     }
 
     blockchains.forEach((blockchain, index) => {
-        blockchainStats[index] = getStatsForBlockchain(blockchain, transactions, policies);
+        blockchainStats[index] = getStatsForBlockchain(blockchain, transactions);
     });
 
     return blockchainStats;
 }
+
+function getStatsForInterval(interval, transactions) {
+    const intervalStats = {
+        interval: interval,
+        BTC: 0,
+        ETH: 0,
+        XLM: 0,
+        EOS: 0,
+        MIOTA: 0,
+        HYP: 0,
+        MLC: 0,
+        PSG: 0,
+    };
+    const relevantTransactions = transactions.filter(transaction => transaction.interval === interval);
+    relevantTransactions.forEach((transaction) => {
+        if (transaction.blockchain === constants.blockchains.BTC.name) {
+            intervalStats.BTC++;
+        }
+        if (transaction.blockchain === constants.blockchains.ETH.name) {
+            intervalStats.ETH++;
+        }
+        if (transaction.blockchain === constants.blockchains.XLM.name) {
+            intervalStats.XLM++;
+        }
+        if (transaction.blockchain === constants.blockchains.EOS.name) {
+            intervalStats.EOS++;
+        }
+        if (transaction.blockchain === constants.blockchains.MIOTA.name) {
+            intervalStats.MIOTA++;
+        }
+        if (transaction.blockchain === constants.blockchains.HYP.name) {
+            intervalStats.HYP++;
+        }
+        if (transaction.blockchain === constants.blockchains.MLC.name) {
+            intervalStats.MLC++;
+        }
+        if (transaction.blockchain === constants.blockchains.PSG.name) {
+            intervalStats.PSG++;
+        }
+    });
+
+    return intervalStats;
+}
+
+function buildIntervalStats(transactions) {
+    const intervalStats = [];
+    if (!transactions || transactions.length === 0) {
+        return intervalStats;
+    }
+
+    Object.keys(constants.intervals).forEach((interval, index) => {
+        intervalStats[index] = getStatsForInterval(constants.intervals[interval], transactions);
+    });
+
+    return intervalStats;
+}
+
 
 function getUserStats(user, policies, blockchains, transactions) {
     const stats = {
@@ -89,7 +146,8 @@ function getUserStats(user, policies, blockchains, transactions) {
         maxMonthlyCostThreshold: 0,
         maxYearlyCostThreshold: 0,
         policyStats: [],
-        blockchainStats: []
+        blockchainStats: [],
+        intervalStats: []
     };
 
     if (!policies || policies.length === 0) {
@@ -101,8 +159,8 @@ function getUserStats(user, policies, blockchains, transactions) {
     stats.maxMonthlyCostThreshold = getHighestCostThresholdForInterval(sortedPolicies, MONTHLY);
     stats.maxYearlyCostThreshold = getHighestCostThresholdForInterval(sortedPolicies, YEARLY);
     stats.policyStats = buildPolicyStats(sortedPolicies, transactions);
-    stats.blockchainStats = buildBlockchainStats(blockchains, transactions, sortedPolicies);
-
+    stats.blockchainStats = buildBlockchainStats(blockchains, transactions);
+    stats.intervalStats = buildIntervalStats(transactions);
 
     return stats;
 }

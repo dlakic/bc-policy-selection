@@ -141,6 +141,99 @@ function loadGraphs(resBody) {
             animation: false,
         }
     });
+
+    const blockchainsPerIntervalctx = document.getElementById('blockchainsPerIntervalChart').getContext('2d');
+    const intervalArray = resBody.intervalStats.map(function (stat) {
+        return stat.interval
+    });
+    const btcArray = resBody.intervalStats.map(function (stat) {
+        return stat.BTC
+    });
+    const ethArray = resBody.intervalStats.map(function (stat) {
+        return stat.ETH
+    });
+    const xlmArray = resBody.intervalStats.map(function (stat) {
+        return stat.XLM
+    });
+    const eosArray = resBody.intervalStats.map(function (stat) {
+        return stat.EOS
+    });
+    const miotaArray = resBody.intervalStats.map(function (stat) {
+        return stat.MIOTA
+    });
+    const hypArray = resBody.intervalStats.map(function (stat) {
+        return stat.HYP
+    });
+    const mlcArray = resBody.intervalStats.map(function (stat) {
+        return stat.MLC
+    });
+    const psgArray = resBody.intervalStats.map(function (stat) {
+        return stat.PSG
+    });
+
+    new Chart(blockchainsPerIntervalctx, {
+        type: 'bar',
+        data: {
+            datasets: [
+                {
+                    label: 'BTC',
+                    backgroundColor: 'rgb(255, 56, 96)',
+                    borderColor: 'rgb(255, 56, 96)',
+                    data: btcArray,
+                },
+                {
+                    label: 'ETH',
+                    backgroundColor: 'rgb(32,156,238)',
+                    borderColor: 'rgb(32,156,238)',
+                    data: ethArray,
+                },
+                {
+                    label: 'XLM',
+                    backgroundColor: 'rgb(255, 200, 0)',
+                    borderColor: 'rgb(255, 200, 0)',
+                    data: xlmArray,
+                },
+                {
+                    label: 'EOS',
+                    backgroundColor: 'rgb(255,58,235)',
+                    borderColor: 'rgb(255,58,235)',
+                    data: eosArray,
+                },
+                {
+                    label: 'MIOTA',
+                    backgroundColor: 'rgb(148, 24, 24)',
+                    borderColor: 'rgb(148, 24, 24)',
+                    data: miotaArray,
+                },
+                {
+                    label: 'HYP',
+                    backgroundColor: 'rgb(0,55,255)',
+                    borderColor: 'rgb(0,55,255)',
+                    data: hypArray,
+                },
+                {
+                    label: 'MLC',
+                    backgroundColor: 'rgb(24, 148, 148)',
+                    borderColor: 'rgb(24, 148, 148)',
+                    data: mlcArray,
+                },
+                {
+                    label: 'PSG',
+                    backgroundColor: 'rgb(58,255,78)',
+                    borderColor: 'rgb(58,255,78)',
+                    data: psgArray,
+                },
+            ],
+            labels: intervalArray,
+        },
+        options: {
+            scales: {
+                xAxes: [{stacked: true}],
+                yAxes: [{stacked: true}]
+            },
+            animation: false,
+        }
+    });
 }
 
 function getUserStats(username) {
