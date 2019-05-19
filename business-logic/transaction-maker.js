@@ -65,10 +65,12 @@ async function makeTransactions(policies, user, violationData) {
         }
 
         await userCostUpdater.addToUserCosts(user, cost[chosenBlockchainKey]);
-        const data = violationData.violations ? violationData.violations[index].dataString : violationData.dataString;
+        const data = violationData.violations ? violationData.violations[index].dataString : '';
+        const dataHash = violationData.violations ? violationData.violations[index].dataHash : violationData.dataHash;
         const transaction = {
             username: user.username,
             blockchain: constants.blockchains[chosenBlockchainKey].name,
+            dataHash,
             data,
             cost: cost[chosenBlockchainKey],
             policyId: currentlyActivePolicy._id,

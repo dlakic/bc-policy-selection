@@ -60,8 +60,8 @@ module.exports.handleTransaction = async (req, res) => {
         }
     }
 
-    if (req.body.data) {
-        const trxHash = req.body.data;
+    if (req.body.dataHash) {
+        const trxHash = req.body.dataHash;
         const data = dataExtractor.prepareHash(trxHash);
 
         try {
@@ -79,7 +79,7 @@ module.exports.handleTransaction = async (req, res) => {
         }
 
     }
-    const error = new Error(`No file or data provided`);
+    const error = new Error(`No file or data hash provided`);
     error.statusCode = 400;
     return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
 

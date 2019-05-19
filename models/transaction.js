@@ -12,6 +12,9 @@ const transactionSchema = new mongoose.Schema({
     data: {
         type: String,
     },
+    dataHash: {
+        type: String,
+    },
     cost: {
         type: Number,
     },

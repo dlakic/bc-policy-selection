@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 module.exports.violationsExtractor = (sheets, minTemp, maxTemp) => {
     let violationsAmount = 0;
     const violations = [];
@@ -7,18 +9,20 @@ module.exports.violationsExtractor = (sheets, minTemp, maxTemp) => {
             data: [],
             sizeString: 0,
             dataString: '',
+            dataHash: '',
         };
         sheet.data.forEach((row) => {
             const violationData = row.filter(temp => temp > maxTemp || temp < minTemp);
             violationsAmount = violationsAmount + violationData.length;
-             violationData.forEach((temp) => {
-                 violationDataForSheet.size = violationDataForSheet.size + Buffer.byteLength(temp.toString(), 'utf8');
+            violationData.forEach((temp) => {
+                violationDataForSheet.size = violationDataForSheet.size + Buffer.byteLength(temp.toString(), 'utf8');
             });
             violationDataForSheet.data.push(...violationData);
         });
         if (violationDataForSheet.data && violationDataForSheet.data.length !== 0) {
             violationDataForSheet.dataString = violationDataForSheet.data.join();
             violationDataForSheet.sizeString = Buffer.byteLength(violationDataForSheet.dataString, 'utf8');
+            violationDataForSheet.dataHash = crypto.createHash('sha256').update(violationDataForSheet.dataString).digest('hex');
             violations.push(violationDataForSheet)
         }
     });
@@ -26,9 +30,9 @@ module.exports.violationsExtractor = (sheets, minTemp, maxTemp) => {
     return {violationsAmount, violations}
 };
 
-module.exports.prepareHash= (hash) => {
+module.exports.prepareHash = (hash) => {
     return {
-        sizeString:  Buffer.byteLength(hash, 'utf8'),
-        dataString: hash,
+        sizeString: Buffer.byteLength(hash, 'utf8'),
+        dataHash: hash,
     };
 };
