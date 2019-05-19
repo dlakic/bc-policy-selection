@@ -53,7 +53,7 @@ module.exports.handleTransaction = async (req, res) => {
                 return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
             }
             const transaction = await transactionMaker.makeTransactions(policies, user, violationsData);
-            return res.status(200).send(transaction);
+            return res.status(201).send(transaction);
         } catch (err) {
             console.error(err);
             return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})
@@ -72,7 +72,7 @@ module.exports.handleTransaction = async (req, res) => {
                 return res.status(error.statusCode).send({statusCode: error.statusCode, message: error.message})
             }
             const transaction = await transactionMaker.makeTransactions(policies, user, data);
-            return res.status(200).send(transaction);
+            return res.status(201).send(transaction);
         } catch (err) {
             console.error(err);
             return res.status(err.statusCode).send({statusCode: err.statusCode, message: err.message})

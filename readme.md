@@ -28,7 +28,7 @@ Before this application can be used, the following parameters have to be set as 
 `mongodb://mongo:27017/policy-framework`)
 
 For local or docker usage, simply use the `.env.example` file, copy it and rename it to `.env`. 
-Then set the corresponding values.As long as the application is started in dev mode, the application is going to search 
+Then set the corresponding values. As long as the application is started in dev mode, the application is going to search 
 for values set in this file. For production usage the env variables have to be in the environment.  
 
 ```
@@ -38,7 +38,7 @@ for values set in this file. For production usage the env variables have to be i
 
 ### Testing
 
-* `npm test`: Runs test-cases which create some policies and execute some calls to the API 
+* `npm test`: Runs test-cases which create some transactions via the API. Needs predefined user and policy
 
 ### Run server
 
@@ -48,7 +48,7 @@ for values set in this file. For production usage the env variables have to be i
 ## Usage
 
 The application consists of two different components. Entering http://localhost:3000 into your browser leads to a 
-web application which allows the creation of user policies. As soon as policies have been defined  data can be passed to 
+web application which allows the creation of user policies. As soon as policies have been defined, data can be passed to 
 the `/api/create-transactions` endpoint via a HTTP POST-request. The resulting response consists of an array of objects 
 which include the data to be sent to the blockchain, including the corresponding blockchain the data should be sent to 
 according to the defined policies. 
