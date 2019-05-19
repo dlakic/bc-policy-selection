@@ -16,9 +16,11 @@ module.exports.violationsExtractor = (sheets, minTemp, maxTemp) => {
             });
             violationDataForSheet.data.push(...violationData);
         });
-        violationDataForSheet.dataString = violationDataForSheet.data.join();
-        violationDataForSheet.sizeString = Buffer.byteLength(violationDataForSheet.dataString, 'utf8');
-        violations.push(violationDataForSheet)
+        if (violationDataForSheet.data && violationDataForSheet.data.length !== 0) {
+            violationDataForSheet.dataString = violationDataForSheet.data.join();
+            violationDataForSheet.sizeString = Buffer.byteLength(violationDataForSheet.dataString, 'utf8');
+            violations.push(violationDataForSheet)
+        }
     });
 
     return {violationsAmount, violations}
