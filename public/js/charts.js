@@ -5,7 +5,17 @@ let transactionBlockchainChart;
 let blockchainIntervalChart;
 
 function loadGraphs(resBody) {
-    const chartoptions = {animation: false};
+    const chartoptions = {
+        animation: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    };
+
     const costsPerIntervalctx = document.getElementById('costsPerIntervalChart').getContext('2d');
 
     // if the chart has already been created, update values
@@ -297,6 +307,20 @@ function loadGraphs(resBody) {
     }
 }
 
+function updateActivePolicy(policyId) {
+    if (policyId) {
+        // Set all as inactive
+        document.querySelectorAll('.policy-active > span').forEach(function (element) {
+            element.textContent = 'Inactive';
+            return element.setAttribute('class', 'tag is-danger is-rounded');
+        });
+
+        // Set active one to active
+        document.querySelector('#active-' + policyId + ' > span').setAttribute('class', 'tag is-success is-rounded');
+        document.querySelector('#active-' + policyId + ' > span').textContent = 'Active';
+    }
+}
+
 function getUserStats(username) {
     superagent
         .get('/user-stats/' + username)
@@ -305,6 +329,7 @@ function getUserStats(username) {
                 console.log(res);
             } else {
                 loadGraphs(res.body);
+                updateActivePolicy(res.body.activePolicyId)
             }
         });
 }

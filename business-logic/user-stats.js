@@ -141,13 +141,14 @@ function getUserStats(user, policies, blockchains, transactions) {
         costWeekly: user.costWeekly.cost,
         costMonthly: user.costMonthly.cost,
         costYearly: user.costYearly.cost,
+        activePolicyId: '',
         maxDailyCostThreshold: 0,
         maxWeeklyCostThreshold: 0,
         maxMonthlyCostThreshold: 0,
         maxYearlyCostThreshold: 0,
         policyStats: [],
         blockchainStats: [],
-        intervalStats: []
+        intervalStats: [],
     };
 
     if (!policies || policies.length === 0) {
@@ -161,6 +162,8 @@ function getUserStats(user, policies, blockchains, transactions) {
     stats.policyStats = buildPolicyStats(sortedPolicies, transactions);
     stats.blockchainStats = buildBlockchainStats(blockchains, transactions);
     stats.intervalStats = buildIntervalStats(transactions);
+    const activePolicy = sortedPolicies.find((policy) => policy.isActive);
+    stats.activePolicyId = activePolicy ? activePolicy._id : '';
 
     return stats;
 }

@@ -45,7 +45,7 @@
                             {% for policy in policies %}
                                 <tr class="policy-info">
                                     <th>{{ loop.index }}</th>
-                                    <td class="policy-active">{{ macros.getTagPolicyStatus(policy.isActive) }}</td>
+                                    <td class="policy-active" id="active-{{ policy._id }}">{{ macros.getTagPolicyStatus(policy.isActive) }}</td>
                                     <td class="policy-username">{{ policy.username }}</td>
                                     <td class="policy-preferred-bc">{{ policy.preferredBC }}</td>
                                     <td class="policy-bc-type">{{ macros.getTagBcType(policy.bcType) }}</td>
