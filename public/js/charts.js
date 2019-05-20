@@ -1,45 +1,69 @@
+let costsIntervalChart;
+let costsPolicyChart;
+let transactionPolicyChart;
+let transactionBlockchainChart;
+let blockchainIntervalChart;
+
 function loadGraphs(resBody) {
     const chartoptions = {animation: false};
     const costsPerIntervalctx = document.getElementById('costsPerIntervalChart').getContext('2d');
-    new Chart(costsPerIntervalctx, {
-        type: 'bar',
-        data: {
-            datasets: [
-                {
-                    label: 'Max. Threshold',
-                    backgroundColor: 'rgba(255, 56, 96, 0)',
-                    borderColor: 'rgba(255, 56, 96, 1)',
-                    data: [
-                        resBody.maxDailyCostThreshold,
-                        resBody.maxWeeklyCostThreshold,
-                        resBody.maxMonthlyCostThreshold,
-                        resBody.maxYearlyCostThreshold,
-                    ],
-                    steppedLine: 'middle',
-                    scaleOptions: {
-                        ticks: {
-                            beginAtZero: true
-                        }
+
+    // if the chart has already been created, update values
+    if (costsIntervalChart) {
+        costsIntervalChart.data.datasets[0].data = [
+            resBody.maxDailyCostThreshold,
+            resBody.maxWeeklyCostThreshold,
+            resBody.maxMonthlyCostThreshold,
+            resBody.maxYearlyCostThreshold,
+        ];
+        costsIntervalChart.data.datasets[1].data = [
+            resBody.costDaily,
+            resBody.costWeekly,
+            resBody.costMonthly,
+            resBody.costYearly,
+        ];
+        costsIntervalChart.update();
+    } else {
+        costsIntervalChart = new Chart(costsPerIntervalctx, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'Max. Threshold',
+                        backgroundColor: 'rgba(255, 56, 96, 0)',
+                        borderColor: 'rgba(255, 56, 96, 1)',
+                        data: [
+                            resBody.maxDailyCostThreshold,
+                            resBody.maxWeeklyCostThreshold,
+                            resBody.maxMonthlyCostThreshold,
+                            resBody.maxYearlyCostThreshold,
+                        ],
+                        steppedLine: 'middle',
+                        scaleOptions: {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        },
+                        // Changes this dataset to become a line
+                        type: 'line'
                     },
-                    // Changes this dataset to become a line
-                    type: 'line'
-                },
-                {
-                    label: 'Accumulated cost',
-                    backgroundColor: 'rgb(32,156,238)',
-                    borderColor: 'rgb(32,156,238)',
-                    data: [
-                        resBody.costDaily,
-                        resBody.costWeekly,
-                        resBody.costMonthly,
-                        resBody.costYearly,
-                    ]
-                },
-            ],
-            labels: ['daily', 'weekly', 'monthly', 'yearly'],
-        },
-        options: chartoptions,
-    });
+                    {
+                        label: 'Accumulated cost',
+                        backgroundColor: 'rgb(32,156,238)',
+                        borderColor: 'rgb(32,156,238)',
+                        data: [
+                            resBody.costDaily,
+                            resBody.costWeekly,
+                            resBody.costMonthly,
+                            resBody.costYearly,
+                        ]
+                    },
+                ],
+                labels: ['daily', 'weekly', 'monthly', 'yearly'],
+            },
+            options: chartoptions,
+        });
+    }
 
     const costsPerPolicyctx = document.getElementById('costsPerPolicyChart').getContext('2d');
     const policyIndexArray = resBody.policyStats.map(function (stat, index) {
@@ -52,56 +76,71 @@ function loadGraphs(resBody) {
         return stat.costThreshold
     });
 
-    new Chart(costsPerPolicyctx, {
-        type: 'bar',
-        data: {
-            datasets: [
-                {
-                    label: 'Cost Threshold',
-                    backgroundColor: 'rgba(255, 56, 96, 0)',
-                    borderColor: 'rgba(255, 56, 96, 1)',
-                    data: costThresholdsArray,
-                    steppedLine: 'middle',
-                    scaleOptions: {
-                        ticks: {
-                            beginAtZero: true
-                        }
+    // if the chart has already been created, update values
+    if (costsPolicyChart) {
+        costsPolicyChart.data.datasets[0].data = costThresholdsArray;
+        costsPolicyChart.data.datasets[1].data = costArray;
+        costsPolicyChart.data.labels = policyIndexArray;
+        costsPolicyChart.update();
+    } else {
+        costsPolicyChart = new Chart(costsPerPolicyctx, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'Cost Threshold',
+                        backgroundColor: 'rgba(255, 56, 96, 0)',
+                        borderColor: 'rgba(255, 56, 96, 1)',
+                        data: costThresholdsArray,
+                        steppedLine: 'middle',
+                        scaleOptions: {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        },
+                        // Changes this dataset to become a line
+                        type: 'line'
                     },
-                    // Changes this dataset to become a line
-                    type: 'line'
-                },
-                {
-                    label: 'Cost per Policy',
-                    backgroundColor: 'rgb(32,156,238)',
-                    borderColor: 'rgb(32,156,238)',
-                    data: costArray,
-                },
-            ],
-            labels: policyIndexArray,
-        },
-        options: chartoptions
-    });
+                    {
+                        label: 'Cost per Policy',
+                        backgroundColor: 'rgb(32,156,238)',
+                        borderColor: 'rgb(32,156,238)',
+                        data: costArray,
+                    },
+                ],
+                labels: policyIndexArray,
+            },
+            options: chartoptions
+        });
+    }
 
     const transactionstPerPolicyctx = document.getElementById('transactionsPerPolicyChart').getContext('2d');
     const transactionsArray = resBody.policyStats.map(function (stat) {
         return stat.transactions
     });
 
-    new Chart(transactionstPerPolicyctx, {
-        type: 'bar',
-        data: {
-            datasets: [
-                {
-                    label: 'Transactions per Policy',
-                    backgroundColor: 'rgb(32,156,238)',
-                    borderColor: 'rgb(32,156,238)',
-                    data: transactionsArray,
-                },
-            ],
-            labels: policyIndexArray,
-        },
-        options: chartoptions
-    });
+    // if the chart has already been created, update values
+    if (transactionPolicyChart) {
+        transactionPolicyChart.data.datasets[0].data = transactionsArray;
+        transactionPolicyChart.data.labels = policyIndexArray;
+        transactionPolicyChart.update();
+    } else {
+        transactionPolicyChart = new Chart(transactionstPerPolicyctx, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'Transactions per Policy',
+                        backgroundColor: 'rgb(32,156,238)',
+                        borderColor: 'rgb(32,156,238)',
+                        data: transactionsArray,
+                    },
+                ],
+                labels: policyIndexArray,
+            },
+            options: chartoptions
+        });
+    }
 
     const transactionstPerBlockchainctx = document.getElementById('transactionsPerBlockchainChart').getContext('2d');
     const blockchainArray = resBody.blockchainStats.map(function (stat) {
@@ -114,33 +153,41 @@ function loadGraphs(resBody) {
         return stat.performanceTransactions
     });
 
-    new Chart(transactionstPerBlockchainctx, {
-        type: 'bar',
-        data: {
-            datasets: [
-                {
-                    label: 'Performance',
-                    backgroundColor: 'rgb(255, 56, 96)',
-                    borderColor: 'rgb(255, 56, 96)',
-                    data: performanceArray,
-                },
-                {
-                    label: 'Economic',
-                    backgroundColor: 'rgb(32,156,238)',
-                    borderColor: 'rgb(32,156,238)',
-                    data: economicArray,
-                },
-            ],
-            labels: blockchainArray,
-        },
-        options: {
-            scales: {
-                xAxes: [{stacked: true}],
-                yAxes: [{stacked: true}]
+    // if the chart has already been created, update values
+    if (transactionBlockchainChart) {
+        transactionBlockchainChart.data.datasets[0].data = performanceArray;
+        transactionBlockchainChart.data.datasets[1].data = economicArray;
+        transactionBlockchainChart.data.labels = blockchainArray;
+        transactionBlockchainChart.update();
+    } else {
+        transactionBlockchainChart = new Chart(transactionstPerBlockchainctx, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'Performance',
+                        backgroundColor: 'rgb(255, 56, 96)',
+                        borderColor: 'rgb(255, 56, 96)',
+                        data: performanceArray,
+                    },
+                    {
+                        label: 'Economic',
+                        backgroundColor: 'rgb(32,156,238)',
+                        borderColor: 'rgb(32,156,238)',
+                        data: economicArray,
+                    },
+                ],
+                labels: blockchainArray,
             },
-            animation: false,
-        }
-    });
+            options: {
+                scales: {
+                    xAxes: [{stacked: true}],
+                    yAxes: [{stacked: true}]
+                },
+                animation: false,
+            }
+        });
+    }
 
     const blockchainsPerIntervalctx = document.getElementById('blockchainsPerIntervalChart').getContext('2d');
     const intervalArray = resBody.intervalStats.map(function (stat) {
@@ -171,69 +218,83 @@ function loadGraphs(resBody) {
         return stat.PSG
     });
 
-    new Chart(blockchainsPerIntervalctx, {
-        type: 'bar',
-        data: {
-            datasets: [
-                {
-                    label: 'BTC',
-                    backgroundColor: 'rgb(255, 56, 96)',
-                    borderColor: 'rgb(255, 56, 96)',
-                    data: btcArray,
-                },
-                {
-                    label: 'ETH',
-                    backgroundColor: 'rgb(32,156,238)',
-                    borderColor: 'rgb(32,156,238)',
-                    data: ethArray,
-                },
-                {
-                    label: 'XLM',
-                    backgroundColor: 'rgb(255, 200, 0)',
-                    borderColor: 'rgb(255, 200, 0)',
-                    data: xlmArray,
-                },
-                {
-                    label: 'EOS',
-                    backgroundColor: 'rgb(255,58,235)',
-                    borderColor: 'rgb(255,58,235)',
-                    data: eosArray,
-                },
-                {
-                    label: 'MIOTA',
-                    backgroundColor: 'rgb(148, 24, 24)',
-                    borderColor: 'rgb(148, 24, 24)',
-                    data: miotaArray,
-                },
-                {
-                    label: 'HYP',
-                    backgroundColor: 'rgb(0,55,255)',
-                    borderColor: 'rgb(0,55,255)',
-                    data: hypArray,
-                },
-                {
-                    label: 'MLC',
-                    backgroundColor: 'rgb(24, 148, 148)',
-                    borderColor: 'rgb(24, 148, 148)',
-                    data: mlcArray,
-                },
-                {
-                    label: 'PSG',
-                    backgroundColor: 'rgb(58,255,78)',
-                    borderColor: 'rgb(58,255,78)',
-                    data: psgArray,
-                },
-            ],
-            labels: intervalArray,
-        },
-        options: {
-            scales: {
-                xAxes: [{stacked: true}],
-                yAxes: [{stacked: true}]
+    // if the chart has already been created, update values
+    if (blockchainIntervalChart) {
+        blockchainIntervalChart.data.datasets[0].data = btcArray;
+        blockchainIntervalChart.data.datasets[1].data = ethArray;
+        blockchainIntervalChart.data.datasets[2].data = xlmArray;
+        blockchainIntervalChart.data.datasets[3].data = eosArray;
+        blockchainIntervalChart.data.datasets[4].data = miotaArray;
+        blockchainIntervalChart.data.datasets[5].data = hypArray;
+        blockchainIntervalChart.data.datasets[6].data = mlcArray;
+        blockchainIntervalChart.data.datasets[7].data = psgArray;
+        blockchainIntervalChart.data.labels = intervalArray;
+        blockchainIntervalChart.update();
+    } else {
+        blockchainIntervalChart = new Chart(blockchainsPerIntervalctx, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'BTC',
+                        backgroundColor: 'rgb(255, 56, 96)',
+                        borderColor: 'rgb(255, 56, 96)',
+                        data: btcArray,
+                    },
+                    {
+                        label: 'ETH',
+                        backgroundColor: 'rgb(32,156,238)',
+                        borderColor: 'rgb(32,156,238)',
+                        data: ethArray,
+                    },
+                    {
+                        label: 'XLM',
+                        backgroundColor: 'rgb(255, 200, 0)',
+                        borderColor: 'rgb(255, 200, 0)',
+                        data: xlmArray,
+                    },
+                    {
+                        label: 'EOS',
+                        backgroundColor: 'rgb(255,58,235)',
+                        borderColor: 'rgb(255,58,235)',
+                        data: eosArray,
+                    },
+                    {
+                        label: 'MIOTA',
+                        backgroundColor: 'rgb(148, 24, 24)',
+                        borderColor: 'rgb(148, 24, 24)',
+                        data: miotaArray,
+                    },
+                    {
+                        label: 'HYP',
+                        backgroundColor: 'rgb(0,55,255)',
+                        borderColor: 'rgb(0,55,255)',
+                        data: hypArray,
+                    },
+                    {
+                        label: 'MLC',
+                        backgroundColor: 'rgb(24, 148, 148)',
+                        borderColor: 'rgb(24, 148, 148)',
+                        data: mlcArray,
+                    },
+                    {
+                        label: 'PSG',
+                        backgroundColor: 'rgb(58,255,78)',
+                        borderColor: 'rgb(58,255,78)',
+                        data: psgArray,
+                    },
+                ],
+                labels: intervalArray,
             },
-            animation: false,
-        }
-    });
+            options: {
+                scales: {
+                    xAxes: [{stacked: true}],
+                    yAxes: [{stacked: true}]
+                },
+                animation: false,
+            }
+        });
+    }
 }
 
 function getUserStats(username) {
@@ -252,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
     getUserStats(document.getElementById('username-stats').textContent);
     setInterval(function () {
         getUserStats(document.getElementById('username-stats').textContent);
-    }, 5000);
+    }, 1000);
 });
 
 
