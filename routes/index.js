@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const multer  = require('multer');
+const multer = require('multer');
 const policyController = require('../controller/policy-controller');
 const transactionController = require('../controller/transaction-controller');
 const userController = require('../controller/user-controller');
@@ -15,6 +15,10 @@ router.get('/policy', policyController.editPolicy);
 router.get('/api/user-not-exist-check/:username', userController.checkIfUserDoesNotExist);
 router.get('/api/blockchain-cost/:blockchain/:currency', transactionController.getBlockchainCost);
 router.get('/api/user-stats/:username', userController.getUserStats);
+router.get('/api/policies/:username', (req, res, next) => {
+    req.isJsonRequest = true;
+    next();
+}, policyController.listPolicies);
 router.get('*', (req, res) => {
     res.redirect('/');
 });

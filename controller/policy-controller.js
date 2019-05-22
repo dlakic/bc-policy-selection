@@ -8,6 +8,11 @@ const userCostUpdater = require('../business-logic/user-cost-updater');
 const util = require('../util');
 const constants = require('../constants');
 
+module.exports.listPoliciesJSON = async (req, res) => {
+    req.query.format = 'json';
+    await listPolicies(req,res);
+};
+
 module.exports.listPolicies = async (req, res) => {
     const username = req.params.username;
     if (!username) {
@@ -31,7 +36,7 @@ module.exports.listPolicies = async (req, res) => {
         }
         policies = util.sortPoliciesByPriority(policies);
 
-        if (req.query.format === 'json') {
+        if (req.query.format === 'json' || req.isJsonRequest) {
             return res.status(200).send(policies);
         }
 
