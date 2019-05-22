@@ -323,7 +323,7 @@ function updateActivePolicy(policyId) {
 
 function getUserStats(username) {
     superagent
-        .get('/api/user-stats/' + username)
+        .get('/api/stats/' + username)
         .end(function (err, res) {
             if (err) {
                 console.log(res);

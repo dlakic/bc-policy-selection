@@ -14,7 +14,7 @@ router.get('/blockchains', policyController.listBlockchains);
 router.get('/policy', policyController.editPolicy);
 router.get('/api/user-not-exist-check/:username', userController.checkIfUserDoesNotExist);
 router.get('/api/blockchain-cost/:blockchain/:currency', transactionController.getBlockchainCost);
-router.get('/api/user-stats/:username', userController.getUserStats);
+router.get('/api/stats/:username', userController.getUserStats);
 router.get('/api/policies/:username', (req, res, next) => {
     req.isJsonRequest = true;
     next();
@@ -23,8 +23,8 @@ router.get('*', (req, res) => {
     res.redirect('/');
 });
 
-router.post('/api/save-policy', policyController.savePolicy);
-router.delete('/api/delete-policy/:id', policyController.deletePolicy);
-router.post('/api/create-transactions', upload.single('xlsxFile'), transactionController.handleTransaction);
+router.post('/api/policies', policyController.savePolicy);
+router.delete('/api/policy/:id', policyController.deletePolicy);
+router.post('/api/transactions', upload.single('xlsxFile'), transactionController.handleTransaction);
 
 module.exports = router;

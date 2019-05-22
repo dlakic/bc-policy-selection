@@ -1,6 +1,6 @@
 function savePolicy(data) {
     superagent
-        .post('/api/save-policy')
+        .post('/api/policies')
         .set('accept', 'json')
         .send(data)
         .end(function (err, res){

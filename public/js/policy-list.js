@@ -4,7 +4,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 function deletePolicy(id) {
     superagent
-        .delete('/api/delete-policy/' + id)
+        .delete('/api/policy/' + id)
         .set('accept', 'json')
         .end(function (err, res) {
             if (err) {

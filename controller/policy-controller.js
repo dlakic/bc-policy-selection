@@ -123,10 +123,10 @@ module.exports.savePolicy = async (req, res) => {
             if (!user || user.length === 0) {
                 await UserRepository.createUser(providedPolicy.username, providedPolicy.currency);
             }
-            return res.status(200).render('result', {policy: updatedPolicy});
+            return res.status(201).send({policy: updatedPolicy});
         } catch (err) {
-            console.error(err);
-            return res.status(500).render('error', {error: err});
+            const statusCode = err.statusCode || 500;
+            return res.status(statusCode).send({statusCode, message: err.message})
         }
     } else {
         try {
@@ -136,10 +136,11 @@ module.exports.savePolicy = async (req, res) => {
             if (!user || user.length === 0) {
                 await UserRepository.createUser(providedPolicy.username, providedPolicy.currency);
             }
-            return res.status(200).render('result', {policy: createdPolicy});
+            return res.status(201).send({policy: createdPolicy});
         } catch (err) {
             console.error(err);
-            return res.status(500).render('error', {error: err});
+            const statusCode = err.statusCode || 500;
+            return res.status(statusCode).send({statusCode, message: err.message})
         }
     }
 };
