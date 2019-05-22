@@ -4,7 +4,7 @@ const app = require('../app');
 const username = 'Test';
 const minTemp = 15;
 const maxTemp = 23;
-const iterations = 100
+const iterations = 100;
 
 describe('Transaction', () => {
     for (let i = 1; i <= iterations; i++){

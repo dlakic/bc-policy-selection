@@ -7,12 +7,13 @@ const userCostUpdater = require('./user-cost-updater');
 const constants = require('../constants');
 const util = require('../util');
 
-async function getAllBlockchainCostsPerByte() {
+async function getAllBlockchainCostsPerByte(currency) {
     // TODO: Switch back to API for prod
     //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
-    //const blockchainRates = await ratesAPI.fetchBlockchainCost(currentlyActivePolicy.currency, publicBlockchainsString);
+    //const publicBlockchainRates = await ratesAPI.fetchBlockchainCost(currency, publicBlockchainsString);
     const publicBlockchainRates = await ratesAPI.fetchBlockchainCostNOAPI();
     const allBlockchainRates = util.addPrivateRatesToObject(publicBlockchainRates);
+    console.log(allBlockchainRates);
     return await costCalculator.calculateCosts(allBlockchainRates);
 }
 
@@ -34,7 +35,7 @@ function getCostsForData(costsPerByte, data) {
 }
 
 async function makeTransactions(policies, user, violationData) {
-    const costsPerByte = await getAllBlockchainCostsPerByte();
+    const costsPerByte = await getAllBlockchainCostsPerByte(user.currency);
     let sheetCosts = getCostsForData(costsPerByte, violationData);
     let currentlyActivePolicy;
     let previouslyActivePolicy;
