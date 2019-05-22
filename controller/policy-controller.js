@@ -30,6 +30,11 @@ module.exports.listPolicies = async (req, res) => {
             await policySelector.selectPolicy(policies, user);
         }
         policies = util.sortPoliciesByPriority(policies);
+
+        if (req.query.format === 'json') {
+            return res.status(200).send(policies);
+        }
+
         return res.status(200).render('policies', {policies, username});
 
     } catch (err) {
