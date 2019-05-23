@@ -4,13 +4,13 @@ const app = require('../app');
 const username = 'Test';
 const minTemp = 15;
 const maxTemp = 23;
-const iterations = 100;
+const iterations = 10;
 
 describe('Transaction', () => {
     for (let i = 1; i <= iterations; i++){
         it('should make transactions', (done) =>{
             supertest(app)
-                .post('/api/create-transactions')
+                .post('/api/transactions')
                 .field('username', username)
                 .field('minTemp', minTemp)
                 .field('maxTemp', maxTemp)
