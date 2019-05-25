@@ -1,6 +1,10 @@
 const BlockchainRepository = require('../repositories/blockchain-repository');
 const constants = require('../constants');
 
+function getBlockchainInfoByKey(key, blockchainInfo) {
+    return blockchainInfo.find(blockchain => blockchain.nameShort === key)
+}
+
 async function selectBlockchainFromPolicy(policy) {
     let blockchainPool;
 
@@ -60,12 +64,12 @@ async function selectBlockchainForTransaction(policy, bcCosts, viableBlockchains
     });
     if (policy.costProfile === constants.costProfiles.PERFORMANCE) {
         const mostPerformantBlockchain = blockchainSelectionPool.reduce((prev, current) => {
-            return prev.tps > current.tps ? prev : current;
+            return prev.tps > current.tps ? prev : (prev.tps === current.tps) ? ((viableBcCosts[prev.nameShort] < viableBcCosts[current.nameShort]) ? prev : current) : current;
         });
         bcKey = mostPerformantBlockchain.nameShort;
     } else {
         bcKey = Object.keys(viableBcCosts).reduce((prev, current) => {
-            return viableBcCosts[prev] < viableBcCosts[current] ? prev : current;
+            return viableBcCosts[prev] < viableBcCosts[current] ? prev : (viableBcCosts[prev] === viableBcCosts[current]) ? ((getBlockchainInfoByKey(prev, blockchainSelectionPool).tps > getBlockchainInfoByKey(current, blockchainSelectionPool).tps) ? prev : current) : current;
         });
     }
 
