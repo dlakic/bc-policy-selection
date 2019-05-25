@@ -11,7 +11,7 @@ async function getAllBlockchainCostsPerByte(currency) {
     // TODO: Switch back to API for prod
     //const publicBlockchainsString = util.publicBlockchainsForCostRequest();
     //const publicBlockchainRates = await ratesAPI.fetchBlockchainCost(currency, publicBlockchainsString);
-    const publicBlockchainRates = await ratesAPI.fetchBlockchainCostNOAPI();
+    const publicBlockchainRates = await ratesAPI.fetchBlockchainCostNOAPI(currency);
     const allBlockchainRates = util.addPrivateRatesToObject(publicBlockchainRates);
     return await costCalculator.calculateCosts(allBlockchainRates);
 }
