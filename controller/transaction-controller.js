@@ -60,9 +60,9 @@ module.exports.handleTransaction = async (req, res) => {
         }
     }
 
-    if (req.body.dataHash) {
-        const trxHash = req.body.dataHash;
-        const data = dataExtractor.prepareHash(trxHash);
+    if (req.body.data) {
+        const dataString = req.body.data;
+        const data = dataExtractor.prepareStringData(dataString);
 
         try {
             const policies = await PolicyRepository.getPoliciesByUsername(username);

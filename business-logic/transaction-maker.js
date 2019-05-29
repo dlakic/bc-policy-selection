@@ -33,9 +33,9 @@ function getCostsForData(costsPerByte, data) {
 
 }
 
-async function makeTransactions(policies, user, violationData) {
+async function makeTransactions(policies, user, transactionData) {
     const costsPerByte = await getAllBlockchainCostsPerByte(user.currency);
-    let sheetCosts = getCostsForData(costsPerByte, violationData);
+    let sheetCosts = getCostsForData(costsPerByte, transactionData);
     let currentlyActivePolicy;
     let previouslyActivePolicy;
     let viableBlockchains;
@@ -65,8 +65,8 @@ async function makeTransactions(policies, user, violationData) {
         }
 
         await userCostUpdater.addToUserCosts(user, cost[chosenBlockchainKey]);
-        const data = violationData.violations ? violationData.violations[index].dataString : '';
-        const dataHash = violationData.violations ? violationData.violations[index].dataHash : violationData.dataHash;
+        const data = transactionData.violations ? transactionData.violations[index].dataString : transactionData.dataString;
+        const dataHash = transactionData.violations ? transactionData.violations[index].dataHash : transactionData.dataHash;
         const transaction = {
             username: user.username,
             blockchain: constants.blockchains[chosenBlockchainKey].name,

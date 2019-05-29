@@ -30,9 +30,10 @@ module.exports.violationsExtractor = (sheets, minTemp, maxTemp) => {
     return {violationsAmount, violations}
 };
 
-module.exports.prepareHash = (hash) => {
+module.exports.prepareStringData = (string) => {
     return {
-        sizeString: Buffer.byteLength(hash, 'utf8'),
-        dataHash: hash,
+        sizeString: Buffer.byteLength(string, 'utf8'),
+        dataString: string,
+        dataHash: crypto.createHash('sha256').update(string).digest('hex'),
     };
 };
