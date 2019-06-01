@@ -7,6 +7,7 @@ let blockchainIntervalChart;
 function loadGraphs(resBody) {
     const chartoptions = {
         animation: false,
+        responsive: false,
         scales: {
             yAxes: [{
                 ticks: {
@@ -58,7 +59,7 @@ function loadGraphs(resBody) {
                         type: 'line'
                     },
                     {
-                        label: 'Accumulated cost',
+                        label: 'Accumulated Cost',
                         backgroundColor: 'rgb(32,156,238)',
                         borderColor: 'rgb(32,156,238)',
                         data: [
@@ -304,6 +305,76 @@ function loadGraphs(resBody) {
                 animation: false,
             }
         });
+
+        const svgContext = C2S(564,282);
+
+        // new chart on 'mock' context fails:
+        new Chart(svgContext, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'BTC',
+                        backgroundColor: 'rgb(255, 56, 96)',
+                        borderColor: 'rgb(255, 56, 96)',
+                        data: btcArray,
+                    },
+                    {
+                        label: 'ETH',
+                        backgroundColor: 'rgb(32,156,238)',
+                        borderColor: 'rgb(32,156,238)',
+                        data: ethArray,
+                    },
+                    {
+                        label: 'XLM',
+                        backgroundColor: 'rgb(255, 200, 0)',
+                        borderColor: 'rgb(255, 200, 0)',
+                        data: xlmArray,
+                    },
+                    {
+                        label: 'EOS',
+                        backgroundColor: 'rgb(255,58,235)',
+                        borderColor: 'rgb(255,58,235)',
+                        data: eosArray,
+                    },
+                    {
+                        label: 'MIOTA',
+                        backgroundColor: 'rgb(148, 24, 24)',
+                        borderColor: 'rgb(148, 24, 24)',
+                        data: miotaArray,
+                    },
+                    {
+                        label: 'HYP',
+                        backgroundColor: 'rgb(0,55,255)',
+                        borderColor: 'rgb(0,55,255)',
+                        data: hypArray,
+                    },
+                    {
+                        label: 'MLC',
+                        backgroundColor: 'rgb(24, 148, 148)',
+                        borderColor: 'rgb(24, 148, 148)',
+                        data: mlcArray,
+                    },
+                    {
+                        label: 'PSG',
+                        backgroundColor: 'rgb(58,255,78)',
+                        borderColor: 'rgb(58,255,78)',
+                        data: psgArray,
+                    },
+                ],
+                labels: intervalArray,
+            },
+            options: {
+                scales: {
+                    xAxes: [{stacked: true}],
+                    yAxes: [{stacked: true}]
+                },
+                animation: false,
+                responsive: false,
+            }
+        });
+
+        console.log(svgContext.getSerializedSvg(true));
     }
 }
 
@@ -336,9 +407,9 @@ function getUserStats(username) {
 
 document.addEventListener('DOMContentLoaded', function () {
     getUserStats(document.getElementById('username-stats').textContent);
-    setInterval(function () {
+   /* setInterval(function () {
         getUserStats(document.getElementById('username-stats').textContent);
-    }, 1000);
+    }, 1000);*/
 });
 
 
