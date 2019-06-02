@@ -1,4 +1,4 @@
-# Policy-Based Blockchain selection Framework
+# Policy-based Blockchain selection Framework
 
 This is a node.js based web application that allows to define policies for automated blockchain selection.
 

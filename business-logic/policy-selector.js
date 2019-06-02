@@ -12,6 +12,10 @@ function isPolicyInTimeFrame(policy) {
     const now = moment();
     const start = moment(policy.timeFrameStart, 'hh:mm');
     const end = moment(policy.timeFrameEnd, 'hh:mm');
+    // start time could be after the end time (e.g. 17:01 - 07:59) and moment takes the current date as basis
+    if (start.isAfter(end)) {
+        end.add(1, 'days');
+    }
     return now.isBetween(start, end, null, '[]');
 }
 
