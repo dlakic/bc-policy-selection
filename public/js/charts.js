@@ -35,7 +35,7 @@ function loadGraphs(resBody) {
         ];
         costsIntervalChart.update();
     } else {
-        costsIntervalChart = new Chart(costsPerIntervalctx, {
+        const costsIntervalChartData = {
             type: 'bar',
             data: {
                 datasets: [
@@ -73,7 +73,13 @@ function loadGraphs(resBody) {
                 labels: ['daily', 'weekly', 'monthly', 'yearly'],
             },
             options: chartoptions,
-        });
+        };
+        costsIntervalChart = new Chart(costsPerIntervalctx, costsIntervalChartData);
+
+        // svg render
+        const svgContext = C2S(564,282);
+        new Chart(svgContext, costsIntervalChartData);
+        document.getElementById('costsPerIntervalChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
 
     const costsPerPolicyctx = document.getElementById('costsPerPolicyChart').getContext('2d');
@@ -94,7 +100,7 @@ function loadGraphs(resBody) {
         costsPolicyChart.data.labels = policyIndexArray;
         costsPolicyChart.update();
     } else {
-        costsPolicyChart = new Chart(costsPerPolicyctx, {
+        const costsPolicyChartData = {
             type: 'bar',
             data: {
                 datasets: [
@@ -122,7 +128,13 @@ function loadGraphs(resBody) {
                 labels: policyIndexArray,
             },
             options: chartoptions
-        });
+        };
+        costsPolicyChart = new Chart(costsPerPolicyctx, costsPolicyChartData);
+
+        // svg render
+        const svgContext = C2S(564, 282);
+        new Chart(svgContext, costsPolicyChartData);
+        document.getElementById('costsPerPolicyChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
 
     const transactionstPerPolicyctx = document.getElementById('transactionsPerPolicyChart').getContext('2d');
@@ -136,7 +148,7 @@ function loadGraphs(resBody) {
         transactionPolicyChart.data.labels = policyIndexArray;
         transactionPolicyChart.update();
     } else {
-        transactionPolicyChart = new Chart(transactionstPerPolicyctx, {
+        const transactionPolicyChartData = {
             type: 'bar',
             data: {
                 datasets: [
@@ -150,7 +162,13 @@ function loadGraphs(resBody) {
                 labels: policyIndexArray,
             },
             options: chartoptions
-        });
+        };
+        transactionPolicyChart = new Chart(transactionstPerPolicyctx, transactionPolicyChartData);
+
+        // svg render
+        const svgContext = C2S(564, 282);
+        new Chart(svgContext, transactionPolicyChartData);
+        document.getElementById('transactionsPerPolicyChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
 
     const transactionstPerBlockchainctx = document.getElementById('transactionsPerBlockchainChart').getContext('2d');
@@ -171,7 +189,7 @@ function loadGraphs(resBody) {
         transactionBlockchainChart.data.labels = blockchainArray;
         transactionBlockchainChart.update();
     } else {
-        transactionBlockchainChart = new Chart(transactionstPerBlockchainctx, {
+        const transactionBlockchainData = {
             type: 'bar',
             data: {
                 datasets: [
@@ -196,8 +214,15 @@ function loadGraphs(resBody) {
                     yAxes: [{stacked: true}]
                 },
                 animation: false,
+                responsive: false,
             }
-        });
+        };
+        transactionBlockchainChart = new Chart(transactionstPerBlockchainctx, transactionBlockchainData);
+
+        // svg render
+        const svgContext = C2S(564, 282);
+        new Chart(svgContext, transactionBlockchainData);
+        document.getElementById('transactionsPerBlockchainChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
 
     const blockchainsPerIntervalctx = document.getElementById('blockchainsPerIntervalChart').getContext('2d');
@@ -242,74 +267,7 @@ function loadGraphs(resBody) {
         blockchainIntervalChart.data.labels = intervalArray;
         blockchainIntervalChart.update();
     } else {
-        blockchainIntervalChart = new Chart(blockchainsPerIntervalctx, {
-            type: 'bar',
-            data: {
-                datasets: [
-                    {
-                        label: 'BTC',
-                        backgroundColor: 'rgb(255, 56, 96)',
-                        borderColor: 'rgb(255, 56, 96)',
-                        data: btcArray,
-                    },
-                    {
-                        label: 'ETH',
-                        backgroundColor: 'rgb(32,156,238)',
-                        borderColor: 'rgb(32,156,238)',
-                        data: ethArray,
-                    },
-                    {
-                        label: 'XLM',
-                        backgroundColor: 'rgb(255, 200, 0)',
-                        borderColor: 'rgb(255, 200, 0)',
-                        data: xlmArray,
-                    },
-                    {
-                        label: 'EOS',
-                        backgroundColor: 'rgb(255,58,235)',
-                        borderColor: 'rgb(255,58,235)',
-                        data: eosArray,
-                    },
-                    {
-                        label: 'MIOTA',
-                        backgroundColor: 'rgb(148, 24, 24)',
-                        borderColor: 'rgb(148, 24, 24)',
-                        data: miotaArray,
-                    },
-                    {
-                        label: 'HYP',
-                        backgroundColor: 'rgb(0,55,255)',
-                        borderColor: 'rgb(0,55,255)',
-                        data: hypArray,
-                    },
-                    {
-                        label: 'MLC',
-                        backgroundColor: 'rgb(24, 148, 148)',
-                        borderColor: 'rgb(24, 148, 148)',
-                        data: mlcArray,
-                    },
-                    {
-                        label: 'PSG',
-                        backgroundColor: 'rgb(58,255,78)',
-                        borderColor: 'rgb(58,255,78)',
-                        data: psgArray,
-                    },
-                ],
-                labels: intervalArray,
-            },
-            options: {
-                scales: {
-                    xAxes: [{stacked: true}],
-                    yAxes: [{stacked: true}]
-                },
-                animation: false,
-            }
-        });
-
-        const svgContext = C2S(564,282);
-
-        // new chart on 'mock' context fails:
-        new Chart(svgContext, {
+        const blockchainIntervalChartData = {
             type: 'bar',
             data: {
                 datasets: [
@@ -372,9 +330,13 @@ function loadGraphs(resBody) {
                 animation: false,
                 responsive: false,
             }
-        });
+        };
+        blockchainIntervalChart = new Chart(blockchainsPerIntervalctx, blockchainIntervalChartData);
 
-        console.log(svgContext.getSerializedSvg(true));
+        // svg render
+        const svgContext = C2S(564, 282);
+        new Chart(svgContext, blockchainIntervalChartData);
+        document.getElementById('blockchainsPerIntervalChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
 }
 
@@ -407,9 +369,9 @@ function getUserStats(username) {
 
 document.addEventListener('DOMContentLoaded', function () {
     getUserStats(document.getElementById('username-stats').textContent);
-   /* setInterval(function () {
-        getUserStats(document.getElementById('username-stats').textContent);
-    }, 1000);*/
+    /* setInterval(function () {
+         getUserStats(document.getElementById('username-stats').textContent);
+     }, 1000);*/
 });
 
 

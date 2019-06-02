@@ -118,6 +118,43 @@
                     </div>
                 </div>
             </div>
+            <div class="user-stats-svg columns is-vcentered is-multiline">
+                <div class="column is-full">
+                    <h2 class="title is-4">
+                        Stats for user <span id="username-stats">{{ username }}</span>
+                    </h2>
+                </div>
+                <div class="column is-one-third">
+                    <h2 class="title is-5">
+                        Costs:
+                    </h2>
+                    <div id="costsPerIntervalChartSvg"></div>
+                </div>
+                <div class="column is-one-third">
+                    <h2 class="title is-5">
+                        Policy Costs:
+                    </h2>
+                    <div id="costsPerPolicyChartSvg"></div>
+                </div>
+                <div class="column is-one-third">
+                    <h2 class="title is-5">
+                        Policy Transactions:
+                    </h2>
+                    <div id="transactionsPerPolicyChartSvg"></div>
+                </div>
+                <div class="column is-one-half">
+                    <h2 class="title is-5">
+                        Blockchain Transactions:
+                    </h2>
+                    <div id="transactionsPerBlockchainChartSvg"></div>
+                </div>
+                <div class="column is-one-half">
+                    <h2 class="title is-5">
+                        Blockchain per Interval:
+                    </h2>
+                    <div id="blockchainsPerIntervalChartSvg"></div>
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}
