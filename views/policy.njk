@@ -124,7 +124,17 @@
                         <div class="select">
                             <select id="bcBlockTime" name="bcBlockTime">
                                 {% for blockTime in choosableParams.blockTime %}
-                                    <option value="{{ blockTime }}" {{ "selected" if policy.bcBlockTime == blockTime }}>
+                                    <option value="{{ blockTime }}"
+                                            {% if policy.bcBlockTime %}
+                                                {% if policy.bcBlockTime == blockTime %}
+                                                    {{ "selected" }}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if choosableParams.maxBlockTime == blockTime %}
+                                                    {{ "selected" }}
+                                                {% endif %}
+                                            {% endif %}
+                                    >
                                         {{ blockTime }}
                                     </option>
                                 {% else %}
@@ -207,12 +217,14 @@
                 <div class="field is-grouped">
                     <div class="control">
                         <label for="timeFrameStart">From</label>
-                        <input class="input" name="timeFrameStart" id="timeFrameStart" value="{{ policy.timeFrameStart if policy.timeFrameStart else "00:00" }}">
+                        <input class="input" name="timeFrameStart" id="timeFrameStart"
+                               value="{{ policy.timeFrameStart if policy.timeFrameStart else "00:00" }}">
                     </div>
 
                     <div class="control">
                         <label for="timeFrameEnd">To</label>
-                        <input class="input" name="timeFrameEnd" id="timeFrameEnd" value="{{ policy.timeFrameEnd if policy.timeFrameEnd else "00:00" }}">
+                        <input class="input" name="timeFrameEnd" id="timeFrameEnd"
+                               value="{{ policy.timeFrameEnd if policy.timeFrameEnd else "00:00" }}">
                     </div>
                 </div>
                 <p class="info-text">Set start and end time to the same value to make the policy valid

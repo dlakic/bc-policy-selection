@@ -72,6 +72,7 @@ function cleanNumericalParams(blockchains) {
         tps: [...new Set(tps)],
         blockTime: [...new Set(blockTime)],
         maxTrxSize: [...new Set(maxTrxSize)],
+        maxBlockTime: blockTime[blockTime.length - 1]
     }
 }
 
