@@ -77,7 +77,7 @@ function loadGraphs(resBody) {
         costsIntervalChart = new Chart(costsPerIntervalctx, costsIntervalChartData);
 
         // svg render
-        const svgContext = C2S(564,282);
+        const svgContext = C2S(368,184);
         new Chart(svgContext, costsIntervalChartData);
         document.getElementById('costsPerIntervalChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
@@ -132,7 +132,7 @@ function loadGraphs(resBody) {
         costsPolicyChart = new Chart(costsPerPolicyctx, costsPolicyChartData);
 
         // svg render
-        const svgContext = C2S(564, 282);
+        const svgContext = C2S(368, 184);
         new Chart(svgContext, costsPolicyChartData);
         document.getElementById('costsPerPolicyChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
@@ -166,7 +166,7 @@ function loadGraphs(resBody) {
         transactionPolicyChart = new Chart(transactionstPerPolicyctx, transactionPolicyChartData);
 
         // svg render
-        const svgContext = C2S(564, 282);
+        const svgContext = C2S(368, 184);
         new Chart(svgContext, transactionPolicyChartData);
         document.getElementById('transactionsPerPolicyChartSvg').innerHTML = svgContext.getSerializedSvg(true);
     }
