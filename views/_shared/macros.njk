@@ -86,3 +86,12 @@
         {{ costProfile }}
     {% endif %}
 {% endmacro %}
+
+{% macro getPreferredBCTags(bcArray) %}
+    {% for bc in bcArray %}
+        <span class="span-bc span-{{ bc }}">
+            {{ bc }}
+        </span>
+    {% else %}
+    {% endfor %}
+{% endmacro %}

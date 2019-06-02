@@ -1,5 +1,5 @@
 body {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   overflow: auto; }
 
 #more-info {
@@ -18,7 +18,7 @@ body {
   font-size: 0.75em; }
 
 .table-button {
-  font-size: 0.75em; }
+  font-size: 0.9em; }
 
 #username {
   width: 40%; }
@@ -42,7 +42,46 @@ table thead td, table thead th {
 table td, table th {
   text-align: center !important; }
 
+#table-div {
+  overflow-x: auto; }
+
 .is-neutral {
   border: 1px solid; }
+
+.span-bc {
+  height: 1.5em;
+  align-items: center;
+  border-radius: 4px;
+  color: white;
+  display: inline-flex;
+  justify-content: center;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  min-width: 51px;
+  margin-top: 2px; }
+
+.span-BTC {
+  background-color: #ff3860; }
+
+.span-ETH {
+  background-color: #209cee; }
+
+.span-XLM {
+  background-color: #ffc800; }
+
+.span-EOS {
+  background-color: #ff3aeb; }
+
+.span-MIOTA {
+  background-color: #941818; }
+
+.span-HYP {
+  background-color: #0037ff; }
+
+.span-MLC {
+  background-color: #189494; }
+
+.span-PSG {
+  background-color: #3aff4e; }
 
 /*# sourceMappingURL=style.css.map */

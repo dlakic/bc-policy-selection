@@ -18,7 +18,7 @@
                         <a class="button is-link is-pulled-right"
                            href="/policy{{ '?username=' + username if username }}">Create new Policy</a>
                     </div>
-                    <div class="column is-full">
+                    <div class="column is-full" id="table-div">
                         <table class="table is-striped is-narrow is-fullwidth">
                             <thead>
                             <tr>
@@ -32,7 +32,7 @@
                                 <th><abbr title="Cost Threshold Currency">Currency</abbr></th>
                                 <th><abbr title="Transactions Per Second">TPS</abbr></th>
                                 <th><abbr title="Block Time">Time</abbr></th>
-                                <th><abbr title="Transaction Size">Bytes</abbr></th>
+                                <th><abbr title="Transaction Size">Size</abbr></th>
                                 <th><abbr title="Turing Complete">Compl.</abbr></th>
                                 <th><abbr title="Allow Split Transactions">Split</abbr></th>
                                 <th><abbr title="Cost Profile">Profile</abbr></th>
@@ -47,7 +47,7 @@
                                     <th>{{ loop.index }}</th>
                                     <td class="policy-active" id="active-{{ policy._id }}">{{ macros.getTagPolicyStatus(policy.isActive) }}</td>
                                     <td class="policy-username">{{ policy.username }}</td>
-                                    <td class="policy-preferred-bc">{{ policy.preferredBC }}</td>
+                                    <td class="policy-preferred-bc">{{ macros.getPreferredBCTags(policy.preferredBC) }}</td>
                                     <td class="policy-bc-type">{{ macros.getTagBcType(policy.bcType) }}</td>
                                     <td class="policy-cost">{{ policy.cost }}</td>
                                     <td class="policy-interval">{{ macros.getTagInterval(policy.interval) }}</td>
@@ -66,7 +66,7 @@
                                     </td>
                                     <td class="policy-delete">
                                         <button class="button is-danger delete-button table-button"
-                                                id="delete-policy-{{ policy._id }}" value="{{ policy._id }}">Delete
+                                                id="delete-policy-{{ policy._id }}" value="{{ policy._id }}" {{ 'disabled' if policy.interval == 'default' }}>Delete
                                             Policy
                                         </button>
                                     </td>
@@ -83,7 +83,7 @@
                 <div class="user-stats columns is-vcentered is-multiline">
                     <div class="column is-full">
                         <h2 class="title is-4">
-                            Stats for user <span id="username-stats">{{ username }}</span>
+                            Stats for <span id="username-stats">{{ username }}</span>
                         </h2>
                     </div>
                     <div class="column is-one-third">
