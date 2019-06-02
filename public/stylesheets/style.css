@@ -40,7 +40,8 @@ table thead td, table thead th {
   text-align: center !important; }
 
 table td, table th {
-  text-align: center !important; }
+  text-align: center !important;
+  vertical-align: middle !important; }
 
 #table-div {
   overflow-x: auto; }
