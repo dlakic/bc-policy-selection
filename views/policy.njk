@@ -1,10 +1,9 @@
 {% extends "_shared/policy-layout.njk" %}
 {% block policyFormContent %}
     <div id="preferred-bc-info" class="notification is-info">
-        Select multiple or no blockchain as a preference. This determines which blockchains will
+        Select a single, multiple or no blockchain as a preference. This determines which blockchains will
         be chosen from in this policy. <br/>
         In case none is chosen, the selection process uses all available blockchains for selection. <br/>
-        <b>Note:</b> If there is a blockchain preference at least 2 have to be selected
     </div>
     <div id="error" class="notification is-danger">
     </div>
@@ -79,7 +78,7 @@
                     </div>
 
                     <div class="control">
-                        <label class="label" for="interval">Cost interval</label>
+                        <label class="label" for="interval">Cost Interval</label>
                         <div class="select">
                             <select id="interval" name="interval">
                                 <option value=''>
@@ -102,7 +101,7 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label" for="bcTps">Min. Transactions per second</label>
+                    <label class="label" for="bcTps">Min. Transactions Per Second</label>
                     <div class="control">
                         <div class="select">
                             <select id="bcTps" name="bcTps">
@@ -156,7 +155,7 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Turing completeness</label>
+                    <label class="label">Turing Completeness</label>
                     <div class="control">
                         <label class="radio">
                             <input type="radio" name="bcTuringComplete"
