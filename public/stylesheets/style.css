@@ -85,4 +85,16 @@ table td, table th {
 .span-PSG {
   background-color: #3aff4e; }
 
+.interval-weekly {
+  background-color: #d19600 !important;
+  color: white !important; }
+
+.interval-monthly {
+  background-color: #5b00d1 !important;
+  color: white !important; }
+
+.interval-yearly {
+  background-color: #d10076 !important;
+  color: white !important; }
+
 /*# sourceMappingURL=style.css.map */

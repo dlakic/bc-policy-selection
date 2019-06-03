@@ -32,11 +32,11 @@
     {% if interval == "daily" %}
         {% set style = "is-primary" %}
         {% elif interval == "weekly" %}
-        {% set style = "is-warning" %}
+        {% set style = "interval-weekly" %}
         {% elif interval == "monthly" %}
-        {% set style = "is-black" %}
+        {% set style = "interval-monthly" %}
         {% elif interval == "yearly" %}
-        {% set style = "is-light" %}
+        {% set style = "interval-yearly" %}
     {% else %}
         {% set style = "is-info" %}
     {% endif %}
