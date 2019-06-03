@@ -21,12 +21,18 @@ function buildPolicy(requestBody = null, username) {
         policy.costProfile = '';
         policy.timeFrameStart = '00:00';
         policy.timeFrameEnd = '00:00';
-
-    } else if (requestBody.preferredBC && requestBody.preferredBC.length === 1) {
+    } else if (requestBody.interval === DEFAULT) {
         policy.username = requestBody.username;
-        policy.preferredBC = requestBody.preferredBC;
-        policy.interval = 'default';
+        policy.preferredBC = requestBody.preferredBC || [];
+        policy.bcType = requestBody.bcType;
+        policy.interval = DEFAULT;
+        policy.bcTuringComplete = requestBody.bcTuringComplete === 'true';
         policy.currency = requestBody.currency;
+        policy.bcTps = parseInt(requestBody.bcTps, 10);
+        policy.bcBlockTime = parseInt(requestBody.bcBlockTime, 10);
+        policy.bcDataSize = parseInt(requestBody.bcDataSize, 10);
+        policy.split = requestBody.split === 'true';
+        policy.costProfile = requestBody.costProfile;
         if (requestBody._id) {
             policy._id = requestBody._id;
         }

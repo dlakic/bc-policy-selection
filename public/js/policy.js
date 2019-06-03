@@ -23,15 +23,15 @@ function validateForm(data) {
         errors.push('Please provide a username');
     }
 
-    if (!data.bcType && data.preferredBC.length !== 1) {
+    if (!data.bcType) {
         errors.push('Please provide a blockchain type');
     }
 
-    if (!data.cost && data.preferredBC.length !== 1) {
+    if (!data.cost && data.interval !== 'default') {
         errors.push('Please provide a max. cost');
     }
 
-    if (!data.interval && data.preferredBC.length !== 1) {
+    if (!data.interval && data.interval !== 'default') {
         errors.push('Please provide a cost interval');
     }
 

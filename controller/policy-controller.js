@@ -67,7 +67,7 @@ module.exports.editPolicy = async (req, res) => {
         //In case the user does not have a default policy, force him to create one
         const defaultPolicy = await PolicyRepository.getPoliciesByUsernameAndInterval(policy.username, constants.intervals.DEFAULT);
         if (!defaultPolicy || defaultPolicy.length === 0 || policy.interval === constants.intervals.DEFAULT) {
-            return res.status(200).render('default-policy', {policy, blockchains, currency});
+            return res.status(200).render('default-policy', {policy, choosableParams, blockchains, currency});
         } else {
             return res.status(200).render('policy', {policy, choosableParams, blockchains, currency});
         }
