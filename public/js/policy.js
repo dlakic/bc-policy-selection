@@ -2,7 +2,7 @@ new Selectr('#preferredBC', {
     multiple: true,
     customClass: "preferredBC-style",
     width: '69%',
-    placeholder: 'Select your preferred blockchain implementations'
+    placeholder: 'Choose your preferred blockchain implementations'
 });
 
 function savePolicy(data) {
