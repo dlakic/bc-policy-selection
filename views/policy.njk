@@ -22,8 +22,8 @@
                     <label class="label" for="preferredBC">Choose preferred blockchain
                         implementations</label>
                     <div class="control">
-                        <div class="select is-multiple">
-                            <select id="preferredBC" class="select" name="preferredBC" multiple="multiple">
+                        <div>
+                            <select id="preferredBC" name="preferredBC" multiple="multiple">
                                 {% for blockchain in blockchains %}
                                     <option value={{ blockchain.nameShort }} {{ "selected" if policy.preferredBC.includes(blockchain.nameShort) }}>
                                         {{ blockchain.name }}

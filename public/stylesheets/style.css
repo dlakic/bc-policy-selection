@@ -97,4 +97,17 @@ table td, table th {
   background-color: #d10076 !important;
   color: white !important; }
 
+.preferredBC-style {
+  width: 69%;
+  border-color: #dbdbdb; }
+
+.preferredBC-style .selectr-selected {
+  border-color: #dbdbdb; }
+
+.preferredBC-style .selectr-selected::before {
+  border-color: #3273dc transparent transparent; }
+
+.preferredBC-style .selectr-tag {
+  background: #209cee; }
+
 /*# sourceMappingURL=style.css.map */

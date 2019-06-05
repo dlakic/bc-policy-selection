@@ -1,9 +1,16 @@
+new Selectr('#preferredBC', {
+    multiple: true,
+    customClass: "preferredBC-style",
+    width: '69%',
+    placeholder: 'Select your preferred blockchain implementations'
+});
+
 function savePolicy(data) {
     superagent
         .post('/api/policies')
         .set('accept', 'json')
         .send(data)
-        .end(function (err, res){
+        .end(function (err, res) {
             if (err) {
                 console.log(res);
                 const errorDiv = document.querySelector('#error');
