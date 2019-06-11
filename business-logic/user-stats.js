@@ -164,7 +164,6 @@ function getUserStats(user, policies, blockchains, transactions) {
     stats.intervalStats = buildIntervalStats(transactions);
     const activePolicy = sortedPolicies.find((policy) => policy.isActive);
     stats.activePolicyId = activePolicy ? activePolicy._id : '';
-
     return stats;
 }
 

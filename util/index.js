@@ -1,8 +1,8 @@
 const constants = require('../constants');
 const moment = require('moment');
 
-const {DEFAULT, DAILY, WEEKLY, MONTHLY, YEARLY} = constants.intervals;
-const {PERFORMANCE, ECONOMIC} = constants.costProfiles;
+const { DEFAULT, DAILY, WEEKLY, MONTHLY, YEARLY } = constants.intervals;
+const { PERFORMANCE, ECONOMIC } = constants.costProfiles;
 
 function buildPolicy(requestBody = null, username) {
     const policy = {};
@@ -177,7 +177,7 @@ function checkValidTemperatures(minTemp, maxTemp) {
 }
 
 function addPrivateRatesToObject(blockchainRates) {
-    const allBlockchainRates = {...blockchainRates};
+    const allBlockchainRates = { ...blockchainRates };
     const allBlockchainKeys = Object.keys(constants.blockchains);
     allBlockchainKeys.forEach((blockchainKey) => {
         if (!allBlockchainRates.hasOwnProperty(blockchainKey)) {
@@ -198,6 +198,32 @@ function publicBlockchainsForCostRequest() {
     return publicBlockchains.join();
 }
 
+function isIntervalCostExceeded(policy, user, cost) {
+    if (policy.interval === DEFAULT) {
+        return false;
+    }
+
+    if (policy.interval === DAILY) {
+        return cost + user.costDaily.cost >= policy.cost;
+    }
+
+    if (policy.interval === WEEKLY) {
+        return cost + user.costWeekly.cost >= policy.cost;
+    }
+
+    if (policy.interval === MONTHLY) {
+        return cost + user.costMonthly.cost >= policy.cost;
+    }
+
+    if (policy.interval === YEARLY) {
+        return cost + user.costYearly.cost >= policy.cost;
+
+    }
+
+    return false
+
+}
+
 module.exports = {
     buildPolicy,
     cleanNumericalParams,
@@ -208,4 +234,5 @@ module.exports = {
     checkValidTemperatures,
     addPrivateRatesToObject,
     publicBlockchainsForCostRequest,
+    isIntervalCostExceeded,
 };

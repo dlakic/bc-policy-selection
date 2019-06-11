@@ -67,6 +67,7 @@ async function selectBlockchainForTransaction(policy, bcCosts, viableBlockchains
             return prev.tps > current.tps ? prev : (prev.tps === current.tps) ? ((viableBcCosts[prev.nameShort] < viableBcCosts[current.nameShort]) ? prev : current) : current;
         });
         bcKey = mostPerformantBlockchain.nameShort;
+        
     } else {
         bcKey = Object.keys(viableBcCosts).reduce((prev, current) => {
             return viableBcCosts[prev] < viableBcCosts[current] ? prev : (viableBcCosts[prev] === viableBcCosts[current]) ? ((getBlockchainInfoByKey(prev, blockchainSelectionPool).tps > getBlockchainInfoByKey(current, blockchainSelectionPool).tps) ? prev : current) : current;

@@ -46,6 +46,15 @@ async function makeTransactions(policies, user, transactionData) {
         currentlyActivePolicy = await policySelector.selectPolicy(policies, user);
         viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
         let chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains, alreadyUsedBlockchains, alreadyUsedBlockchainIndex);
+        if (util.isIntervalCostExceeded(currentlyActivePolicy, user, cost[chosenBlockchainKey])) {
+            let isIntervalCostExceeded = true;
+            while (isIntervalCostExceeded) {
+                currentlyActivePolicy = await policySelector.selectPolicy(policies, user, cost[chosenBlockchainKey]);
+                viableBlockchains = await blockchainSelector.selectBlockchainFromPolicy(currentlyActivePolicy);
+                chosenBlockchainKey = await blockchainSelector.selectBlockchainForTransaction(currentlyActivePolicy, cost, viableBlockchains, alreadyUsedBlockchains, alreadyUsedBlockchainIndex);
+                isIntervalCostExceeded = util.isIntervalCostExceeded(currentlyActivePolicy, user, cost[chosenBlockchainKey])
+            } 
+        }
         if (currentlyActivePolicy['split']) {
             if (previouslyActivePolicy && !previouslyActivePolicy._id.equals(currentlyActivePolicy._id)) {
                 alreadyUsedBlockchains = [];
